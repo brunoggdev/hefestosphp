@@ -7,15 +7,15 @@ class ControllerBase
     * @param array|string|null $index Index para resgatar do $_POST.
     * @author Brunoggdev
     */
-    public function requisicaoPost(?mixed $index = null, $higienizar = true):mixed
+    public function reqPost(null|string|array $index = null, $higienizar = true):mixed
     {
-        $post = $_POST[$index];
+       $retorno = match ( gettype($index) ) {
+           'string' => $_POST[$index],
+           'array' => array_intersect_key($_POST, $index),
+           default => $_POST
+       };
 
-        if (is_array($post)) {
-            return higienizaArray($post);
-        }
-
-        return strip_tags($post);
+        return $higienizar ? higienizar($retorno) : $retorno;
     }
 
 
@@ -23,14 +23,14 @@ class ControllerBase
     * Retorna parametros enviados por get já higienizados.
     * @author Brunoggdev
     */
-    public function requisicaoGet($index = null, $higienizar = true):mixed
+    public function reqGet($index = null, $higienizar = true):mixed
     {
-        $get = $_GET[$index];
-
-        if (is_array($get)) {
-            return higienizaArray($get);
-        }
-
-        return strip_tags($get);
+        $retorno = match ( gettype($index) ) {
+            'string' => $_GET[$index],
+            'array' => array_intersect_key($_GET, $index),
+            default => $_GET
+        };
+ 
+        return $higienizar ? higienizar($retorno) : $retorno;
     }
 }
