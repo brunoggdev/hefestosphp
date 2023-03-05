@@ -104,6 +104,19 @@ function componente(string $componente, ?array $dados = []):string
 
 
 /**
+* Define o código http de resposta e retorna a 
+* view do codigo desejado (404 por padrão);
+* @author Brunoggdev
+*/
+function abortar(?int $codigo = 404):string
+{
+    http_response_code($codigo);
+    return view("$codigo");
+}
+
+
+
+/**
 * Retorna o array ou objeto informado como JSON
 * @author Brunoggdev
 */
@@ -119,9 +132,14 @@ function json(array|object $param):string
 * Se for um array, todos os campos serão higienizados.
 * @author Brunoggdev
 */
-function higienizar(string|array $param):string|array
+function higienizar(null|string|array $param):null|string|array
 {
 
+    if( is_null($param) ){
+        return null;
+    }
+
+    
     if( is_string($param) ){
         return strip_tags($param);
     }

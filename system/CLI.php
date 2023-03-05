@@ -53,11 +53,9 @@ class CLI
 
         }
 
-        require 'app/Config/constantes.php';
 
         $arquivo = ucfirst($arquivo);
         $nome = ucfirst($nome);
-
 
         $caminho = match ($arquivo) {
             'Controller' =>  PASTA_RAIZ . 'app/Controllers/',

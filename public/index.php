@@ -11,10 +11,14 @@ try {
     $metodoRequisicao = $_POST['_method'] ?? $_SERVER['REQUEST_METHOD'];
     
 
-    $rota->mapear($uri, $metodoRequisicao);
+    echo $rota->mapear($uri, $metodoRequisicao);
 
     // echo a resposta do método chamado
 
 } catch (\Throwable $th) {
-    throw $th;
+    // throw $th;
+    echo "Trate de melhorar esse debug aqui";
+    echo '<br>';
+    echo '<br>';
+    dd($th);
 }

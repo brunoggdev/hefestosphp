@@ -12,7 +12,7 @@ class ControllerBase
     public function reqPost(null|string|array $index = null, $higienizar = true):mixed
     {
        $retorno = match ( gettype($index) ) {
-           'string' => $_POST[$index],
+           'string' => $_POST[$index]??null,
            'array' => array_intersect_key($_POST, $index),
            default => $_POST
        };
@@ -28,7 +28,7 @@ class ControllerBase
     public function reqGet(null|string|array $index = null, $higienizar = true):mixed
     {
         $retorno = match ( gettype($index) ) {
-            'string' => $_GET[$index],
+            'string' => $_GET[$index]??null,
             'array' => array_intersect_key($_GET, $index),
             default => $_GET
         };

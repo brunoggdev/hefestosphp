@@ -2,8 +2,7 @@
 
 namespace System;
 
-
- /**
+/**
 * Controla todo o sistema de roteamento da aplicação
 * @author Brunoggdev
 */
@@ -11,18 +10,31 @@ class Roteador {
 
     protected $rotas = [];
 
+
+    /**
+    * Adiciona uma nova rota no array de rotas
+    * @author Brunoggdev
+    */
+    protected function adicionar($requisicao, $uri, $acao):void
+    {
+        $acao = explode(':', $acao);
+
+        $this->rotas[] = [
+            'uri' => $uri,
+            'controller' => $acao[0],
+            'metodo' => $acao[1],
+            'requisicao' => $requisicao
+        ];
+    }
+
+
     /**
     * Adiciona uma rota get no array de rotas
     * @author Brunoggdev
     */
     public function get($uri, $acao)
     {
-        $this->rotas[] = [
-            'uri' => $uri,
-            'controller' => $acao[0],
-            'metodo' => $acao[1],
-            'method' => 'GET'
-        ];
+       $this->adicionar('GET', $uri, $acao);
     }
     
     
@@ -33,12 +45,7 @@ class Roteador {
     */
     public function post($uri, $acao)
     {
-        $this->rotas[] = [
-            'uri' => $uri,
-            'controller' => $acao[0],
-            'metodo' => $acao[1],
-            'method' => 'POST'
-        ];
+        $this->adicionar('POST', $uri, $acao);
     }
     
     
@@ -49,12 +56,7 @@ class Roteador {
     */
     public function put($uri, $acao)
     {
-        $this->rotas[] = [
-            'uri' => $uri,
-            'controller' => $acao[0],
-            'metodo' => $acao[1],
-            'method' => 'PUT'
-        ];
+        $this->adicionar('PUT', $uri, $acao);
     }
 
 
@@ -65,12 +67,7 @@ class Roteador {
     */
     public function patch($uri, $acao)
     {
-        $this->rotas[] = [
-            'uri' => $uri,
-            'controller' => $acao[0],
-            'metodo' => $acao[1],
-            'method' => 'PATCH'
-        ];
+        $this->adicionar('PATCH', $uri, $acao);
     }
 
 
@@ -81,12 +78,7 @@ class Roteador {
     */
     public function delete($uri, $acao)
     {
-        $this->rotas[] = [
-            'uri' => $uri,
-            'controller' => $acao[0],
-            'metodo' => $acao[1],
-            'method' => 'DELETE'
-        ];
+        $this->adicionar('DELETE', $uri, $acao);
     }
 
 
@@ -95,17 +87,18 @@ class Roteador {
     * Tenta mapear a uri requisitada com uma das rotas configuradas
     * @author Brunoggdev
     */
-    public function mapear($uri, $metodoRequisicao)
+    public function mapear($uri, $requisicao):string
     {
         foreach ($this->rotas as $rota) {
 
-            if( $rota['uri'] === $uri){
-                
-
-
-
+            if( $rota['uri'] !== $uri || $rota['requisicao'] !== strtoupper($requisicao) ){
+                abortar();
             }
 
+                            
+            $controller = "App\Controllers\\$rota[controller]";
+                
+            return call_user_func( [new $controller(), $rota['metodo'] ] );
         }
     }
 }
