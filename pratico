@@ -1,8 +1,13 @@
 #!/usr/bin/env php
 <?php
 
-require 'system/CLI.php';
+if( PHP_VERSION < '8.0.0'){
+    die('PHPratico precisa do PHP versão 8.0.0 ou mais alta.');
+}
 
-new CLI($argv);
+require 'app/Config/constantes.php';
+require 'system/autoloader.php';
+
+new \System\CLI($argv);
 
 ?>

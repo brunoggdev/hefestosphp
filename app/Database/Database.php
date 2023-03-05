@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Database;
+
 use PDO, PDOStatement;
 
 class Database

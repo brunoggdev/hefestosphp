@@ -5,8 +5,8 @@
 # abaixo funciona como a função Define() que você talvez conheça.
 # ----------------------------------------------------------------------
 
-const BASE_PATH = __DIR__ . '/../../';
+const PASTA_RAIZ = __DIR__ . '/../../';
 
-const APP_VERSION = '0.0.0';
+const VERSAO_APP = '0.0.0';
 
 const URL_BASE = 'localhost:8080';

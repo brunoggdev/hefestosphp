@@ -11,9 +11,21 @@
 * com um parametero opcional de caminho adicional
 * @author Brunoggdev
 */
+function pasta_raiz(?string $caminhoExtra = ''):string
+{
+    return PASTA_RAIZ . $caminhoExtra;
+}
+
+
+
+/**
+* Retorna o caminho da pasta app concatenado ou não 
+* com um parametero opcional de caminho adicional
+* @author Brunoggdev
+*/
 function pasta_app(?string $caminhoExtra = ''):string
 {
-    return BASE_PATH . "app/$caminhoExtra";
+    return PASTA_RAIZ . "app/$caminhoExtra";
 }
 
 
@@ -25,7 +37,7 @@ function pasta_app(?string $caminhoExtra = ''):string
 */
 function pasta_public(?string $caminhoExtra = ''):string
 {
-    return BASE_PATH . "public/$caminhoExtra";
+    return PASTA_RAIZ . "public/$caminhoExtra";
 }
 
 
@@ -38,6 +50,24 @@ function pasta_public(?string $caminhoExtra = ''):string
 function url_base(?string $caminhoExtra = ''):string
 {
     return URL_BASE . "public/$caminhoExtra";
+}
+
+
+
+
+/**
+* "Die and Dump"
+* Para a execução do app onde quer que for chamada e
+* imprime a que for passado como parametro para debug
+* @author Brunoggdev
+*/
+function dd(mixed $param = null)
+{
+    if ($param) {
+        echo '<pre>';
+        var_dump($param);
+    }
+    exit;
 }
 
 

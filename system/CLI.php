@@ -1,5 +1,7 @@
 <?php
 
+namespace System;
+
 class CLI
 {
     /**
@@ -58,8 +60,8 @@ class CLI
 
 
         $caminho = match ($arquivo) {
-            'Controller' =>  BASE_PATH . 'app/Controllers/',
-            'Model' => BASE_PATH . 'app/Models/',
+            'Controller' =>  PASTA_RAIZ . 'app/Controllers/',
+            'Model' => PASTA_RAIZ . 'app/Models/',
         };
 
         $base = $arquivo . 'Base';

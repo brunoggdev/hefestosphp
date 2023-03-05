@@ -1,21 +1,20 @@
 <?php
+try {
 
-require '../app/Config/constantes.php';
+    require '../system/app.php';
 
-// funções auxiliares do sistema nativas do framework
-require BASE_PATH . 'system/auxiliares.php';
+    // Instanciar roteador
+    $rota = new \System\Roteador();
+    require pasta_app('Config/rotas.php');
 
-// funções auxiliares do usuário do framework
-require BASE_PATH . 'app/auxiliares.php';
+    $uri = parse_url($_SERVER['REQUEST_URI'])['path'];
+    $metodoRequisicao = $_POST['_method'] ?? $_SERVER['REQUEST_METHOD'];
+    
 
-// Instanciar roteador
+    $rota->mapear($uri, $metodoRequisicao);
 
-// echo a resposta do método chamado
+    // echo a resposta do método chamado
 
-
-function controller(){
-    return view('home', ['saudacao' => 'Hello']);
+} catch (\Throwable $th) {
+    throw $th;
 }
-
-
-echo controller();
