@@ -8,8 +8,14 @@ require BASE_PATH . 'system/auxiliares.php';
 // funções auxiliares do usuário do framework
 require BASE_PATH . 'app/auxiliares.php';
 
-function teste(){
+// Instanciar roteador
+
+// echo a resposta do método chamado
+
+
+function controller(){
     return view('home', ['saudacao' => 'Hello']);
 }
 
-echo teste();
+
+echo controller();

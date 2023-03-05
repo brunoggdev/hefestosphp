@@ -25,7 +25,7 @@ class ControllerBase
     * Retorna parametros enviados por get já higienizados.
     * @author Brunoggdev
     */
-    public function reqGet($index = null, $higienizar = true):mixed
+    public function reqGet(null|string|array $index = null, $higienizar = true):mixed
     {
         $retorno = match ( gettype($index) ) {
             'string' => $_GET[$index],

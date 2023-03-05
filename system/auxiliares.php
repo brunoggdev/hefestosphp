@@ -74,6 +74,17 @@ function componente(string $componente, ?array $dados = []):string
 
 
 /**
+* Retorna o array ou objeto informado como JSON
+* @author Brunoggdev
+*/
+function json(array|object $param):string
+{
+    return json_encode($param);
+}
+
+
+
+/**
 * Higieniza o parametro informado.
 * Se for um array, todos os campos serão higienizados.
 * @author Brunoggdev

@@ -42,6 +42,32 @@ class Database
     }
 
 
+
+    /**
+    * Adiciona um INSERT na consulta
+    * @author brunoggdev
+    */
+    public function insert(string $table, array $params):bool
+    {
+
+        $colunas = implode(', ', array_keys($params));
+        $values = ':' . implode(', :', array_keys($params));
+
+        $sql = "INSERT INTO $table ($colunas) VALUES($values)";
+
+        $query = $this->executarQuery($sql, $params);
+        
+
+        if($query->rowCount() > 0){
+            return true;
+        }
+        
+        return false;
+
+    }
+
+
+
     /**
     * Adiciona um WHERE na consulta
     * @param Array $params Associative array 
@@ -84,29 +110,6 @@ class Database
     }
 
 
-    /**
-    * Adiciona um INSERT na consulta
-    * @author brunoggdev
-    */
-    public function insert(string $table, array $params):bool
-    {
-
-        $colunas = implode(', ', array_keys($params));
-        $values = ':' . implode(', :', array_keys($params));
-
-        $sql = "INSERT INTO $table ($colunas) VALUES($values)";
-
-        $query = $this->executarQuery($sql, $params);
-        
-
-        if($query->rowCount() > 0){
-            return true;
-        }
-        
-        return false;
-
-    }
-
 
     /**
     * Adiciona um ORDER BY na query
@@ -140,7 +143,7 @@ class Database
     * Pega o primeiro resultado da consulta
     * @author brunoggdev
     */
-    public function primeiro($fetchMode = PDO::FETCH_ASSOC)
+    public function primeiro(int $fetchMode = PDO::FETCH_ASSOC)
     {
         $query = $this->executarQuery($this->query, $this->params);
         
@@ -152,7 +155,7 @@ class Database
     * Retorna todos os resultados da consulta
     * @author brunoggdev
     */
-    public function todos($fetchMode = PDO::FETCH_ASSOC)
+    public function todos(int $fetchMode = PDO::FETCH_ASSOC)
     {
         $query = $this->executarQuery($this->query, $this->params);
 

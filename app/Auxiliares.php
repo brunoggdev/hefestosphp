@@ -5,3 +5,11 @@
 # elas ficarão disponíveis em toda sua aplicação 
 # pois este arquivo é carregado no inicio  da execução.
 # ----------------------------------------------------------------------
+
+// function exemploPrimeiraFuncao(){
+//     // seu codigo aqui
+// }
+
+// function exemploSegundaFuncao(){
+//     // seu outro codigo aqui
+// }
