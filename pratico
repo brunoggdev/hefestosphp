@@ -1,8 +1,8 @@
 #!/usr/bin/env php
 <?php
 
-if (isset($argc)) {
-    require 'system/CLI/cli.php';
-}
+require 'system/CLI.php';
+
+new CLI($argv);
 
 ?>
