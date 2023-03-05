@@ -64,7 +64,8 @@ class CLI
 
         $base = $arquivo . 'Base';
         $namespace = 'App\\' . $arquivo . 's';
-        
+        $tabela = $arquivo === 'Model' ? 'protected $tabela = \'\';' : '';
+
         $template = <<<EOT
         <?php
 
@@ -72,7 +73,7 @@ class CLI
 
         class $nome extends $base
         {
-            // Seus metodos de controller aqui
+            $tabela
         }
 
         EOT;
