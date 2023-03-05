@@ -35,13 +35,10 @@ class CLI
     */
     private function criar(string $arquivo, string $nome)
     {
-        $arquivo = ucfirst($arquivo);
-        $nome = ucfirst($nome);
-
         if( empty($arquivo) ){
 
             $this->imprimir("Você deve informar um tipo de arquivo para ser gerado (controller ou model)", 0);
-            $this->imprimir("Ex.: php pratico fazer Model Usuario");
+            $this->imprimir("Ex.: php pratico criar Model Usuario");
             exit;
 
         }
@@ -49,13 +46,16 @@ class CLI
         if( empty($nome) ){
 
             $this->imprimir("Você deve informar um nome pro arquivo depois do tipo.", 0);
-            $this->imprimir("Ex.: php pratico fazer $arquivo Usuarios$arquivo.");
+            $this->imprimir("Ex.: php pratico criar $arquivo Usuarios$arquivo.");
             exit;
 
         }
 
-
         require 'app/Config/constantes.php';
+
+        $arquivo = ucfirst($arquivo);
+        $nome = ucfirst($nome);
+
 
         $caminho = match ($arquivo) {
             'Controller' =>  BASE_PATH . 'app/Controllers/',
@@ -112,7 +112,7 @@ class CLI
         $this->imprimir('-------------------------------------------------------------------------------------------', 0);
         $this->imprimir('|  inciar  | porta (opcional, 8080 padrão) | php pratico iniciar                          |', 0);
         $this->imprimir('-------------------------------------------------------------------------------------------', 0);
-        $this->imprimir('|  fazer   | [controller ou model] + nome  | php pratico fazer controller NotasController |', 0);
+        $this->imprimir('|  criar   | [controller ou model] + nome  | php pratico criar controller NotasController |', 0);
         $this->imprimir('-------------------------------------------------------------------------------------------', 0);
     }
 }

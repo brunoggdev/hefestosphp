@@ -6,8 +6,6 @@
 # utilize o arquivo auxiliares.php encontrado na pasta app.
 # ----------------------------------------------------------------------
 
-
-
 /**
 * Retorna o caminho da pasta app concatenado ou não 
 * com um parametero opcional de caminho adicional
@@ -70,22 +68,28 @@ function componente(string $componente, ?array $dados = [])
 
 
 /**
-* Higieniza todos os campos de um array
+* Higieniza o parametro informado.
+* Se for um array, todos os campos serão higienizados.
 * @author Brunoggdev
-* @origem Common.php
 */
-function higienizaArray(array $array):array
+function higienizar(string|array $param):string|array
 {
-    // O "&" antes da variavel indica que estou alterando o array original
-    // e não apenas uma cópia dele;
-    foreach ($array as &$item) {
+
+    if( is_string($param) ){
+        return strip_tags($param);
+    }
+
+    // O "&" antes da variavel indica que estou alterando o 
+    // item em si e não apenas uma cópia dele;
+    foreach ($param as &$item) {
         if (is_array($item)) {
-          $item = higienizaArray($item);
+          $item = higienizar($item);
         } else {
           $item = strip_tags($item);
         }
-      }
-      return $array;
+    }
+
+    return $param;
 }
 
 
@@ -93,9 +97,8 @@ function higienizaArray(array $array):array
 /**
 * Retorna a criptografia da senha informada no padrão adotado pelo PHP
 * @author Brunoggdev
-* @origem Common.php
 */
-function criptografarSenha(string $senha):string
+function protegerSenha(string $senha):string
 {
     return password_hash($senha, PASSWORD_DEFAULT);
 }
