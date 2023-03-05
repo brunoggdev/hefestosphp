@@ -48,21 +48,27 @@ function url_base(?string $caminhoExtra = ''):string
 */
 function view(string $view, ?array $dados = []):string
 {
+    // Transforma um array associativo em variaveis.
     extract($dados);
-    return require pasta_app("Views/$view.php");
+
+    // Guarda o conteúdo da view requerida como string
+    ob_start();
+
+    require pasta_app("Views/$view.php");
+
+    // Retornando o conteúdo da view que foi guardado como string
+    return ob_get_clean();
 }
 
 
 
 /**
-* Retorna o conteúdo de um componente especificada
+* Retorna o conteúdo de um componente especificado como string
 * @author Brunoggdev
 */
-function componente(string $componente, ?array $dados = [])
+function componente(string $componente, ?array $dados = []):string
 {
-    // Note que esta função não usa "return" pois já 
-    // está implicito na função view()
-    view("componentes/$componente", $dados);
+    return view("componentes/$componente", $dados);
 }
 
 
