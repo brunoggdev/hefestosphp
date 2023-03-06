@@ -20,7 +20,7 @@ class Roteador {
         $acao = explode(':', $acao);
 
         $this->rotas[] = [
-            'uri' => $uri,
+            'uri' => strip_tags($uri),
             'controller' => $acao[0],
             'metodo' => $acao[1],
             'requisicao' => $requisicao
