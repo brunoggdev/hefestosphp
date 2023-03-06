@@ -9,3 +9,7 @@ Um mini framework PHP em portuguÃªs com o intuito principal de ser simples e prÃ
 
    ## Query Builder
    - Adicionar metodo delete
+
+   ## Talvez
+   - Adicionar DI container
+   - Adicionar mini sistema de testes
