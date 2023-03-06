@@ -8,12 +8,12 @@ try {
     require pasta_app('Config/rotas.php');
 
     $uri = parse_url($_SERVER['REQUEST_URI'])['path'];
-    $metodoRequisicao = $_POST['_method'] ?? $_SERVER['REQUEST_METHOD'];
+    $requisicao = $_POST['_method'] ?? $_SERVER['REQUEST_METHOD'];
     
 
-    echo $rota->mapear($uri, $metodoRequisicao);
-
     // echo a resposta do método chamado
+    echo $rota->mapear($uri, $requisicao);
+
 
 } catch (\Throwable $th) {
 
