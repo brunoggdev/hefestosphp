@@ -19,6 +19,7 @@ class Database
     */
     public function __construct()
     {
+        // nota: Injeção de dependencias, eu sei
         [$host, $nomeBD, $usuario, $senha] = require 'dbconfig.php';
 
         $dsn = "mysql:host=$host;dbname=$nomeBD";
@@ -50,13 +51,14 @@ class Database
     */
     public function insert(string $table, array $params):bool
     {
+        $this->params = $params;
 
         $colunas = implode(', ', array_keys($params));
         $values = ':' . implode(', :', array_keys($params));
 
-        $sql = "INSERT INTO $table ($colunas) VALUES($values)";
+        $this->query = "INSERT INTO $table ($colunas) VALUES($values)";
 
-        $query = $this->executarQuery($sql, $params);
+        $query = $this->executarQuery();
         
 
         if($query->rowCount() > 0){
@@ -89,9 +91,8 @@ class Database
         $this->query = "UPDATE $table SET $novosValores";
         $this->where($where);
 
-        var_dump([$this->sqlString(), $this->params]);
 
-        $query = $this->executarQuery($this->query, $this->params);
+        $query = $this->executarQuery();
 
         if($query->rowCount() > 0){
             return true;
@@ -180,7 +181,7 @@ class Database
     */
     public function primeiro(int $fetchMode = PDO::FETCH_ASSOC)
     {
-        $query = $this->executarQuery($this->query, $this->params);
+        $query = $this->executarQuery();
         
         return $query->fetch($fetchMode);
     }
@@ -192,7 +193,7 @@ class Database
     */
     public function todos(int $fetchMode = PDO::FETCH_ASSOC)
     {
-        $query = $this->executarQuery($this->query, $this->params);
+        $query = $this->executarQuery();
 
         return $query->fetchAll($fetchMode);
     }
@@ -201,11 +202,11 @@ class Database
     * Executa a consulta no banco de dados e retorna o PDOStatement
     * @author brunoggdev
     */
-    private function executarQuery(string $sql, array $params = []):PDOStatement
+    private function executarQuery():PDOStatement
     {
-        $query = $this->connection->prepare($sql);
+        $query = $this->connection->prepare($this->query);
 
-        $query->execute($params);
+        $query->execute($this->params);
 
         $this->queryInfo = $query;
 

@@ -2,7 +2,7 @@
 
 return [
     'localhost',    //host
-    'teste',        //nomeDB
+    'brasa',        //nomeDB
     'root',         //usuario
     ''              //senha
 ];
