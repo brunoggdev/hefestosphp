@@ -8,5 +8,12 @@
 </head>
 <body>
     <?=componente('saudacao', ['saudacao' => $saudacao])?>
+
+    <ul>
+        <?php foreach($usuarios as $usuario): ?>
+            <li><?=$usuario['nome']?></li>
+        <?php endforeach; ?>
+    </ul>
+    
 </body>
 </html>

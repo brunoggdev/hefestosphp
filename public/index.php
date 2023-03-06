@@ -16,9 +16,15 @@ try {
     // echo a resposta do método chamado
 
 } catch (\Throwable $th) {
-    // throw $th;
-    echo "Trate de melhorar esse debug aqui";
-    echo '<br>';
-    echo '<br>';
-    dd($th);
+
+    if (ENVIROMENT === 'desenvolvimento'){
+        echo '<br>';
+        echo '<h1>PHPratico</h1>';
+        echo 'Encontramos um erro. Aqui está o que o php diz sobre isso:';
+        echo '<br>';
+        echo '<br>';
+        throw $th;
+    }
+
+    echo '<h1>Opa, tivemos um problema.</h1>';
 }

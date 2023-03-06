@@ -66,6 +66,40 @@ class Database
         return false;
 
     }
+   
+   
+   
+    /**
+    * Adiciona um UPDATE na consulta
+    * @author brunoggdev
+    */
+    public function update(string $table, array $params, array $where = []):bool
+    {
+        $this->params = $params;
+
+        $novosValores = '';
+
+        foreach ($params as $key => $value) {
+            $novosValores .= "$key = :$key";
+            if($key !== array_key_last($params)){
+                $novosValores .= ', ';
+            }
+        }
+
+        $this->query = "UPDATE $table SET $novosValores";
+        $this->where($where);
+
+        var_dump([$this->sqlString(), $this->params]);
+
+        $query = $this->executarQuery($this->query, $this->params);
+
+        if($query->rowCount() > 0){
+            return true;
+        }
+        
+        return false;
+
+    }
 
 
 
@@ -81,7 +115,7 @@ class Database
         
         foreach ($params as $key => $value) {
             
-            if (strpos($this->query, 'WHERE') === false) {
+            if (! str_contains($this->query, 'WHERE') ) {
                 $this->query .= ' WHERE ';
             }
             
@@ -179,10 +213,10 @@ class Database
     }
 
     /**
-    * Retorna a string da consulta executada
+    * Retorna a string montada da consulta
     * @author brunoggdev
     */
-    public function consultaExecutada():string
+    public function sqlString():string
     {
         return $this->query;
     }

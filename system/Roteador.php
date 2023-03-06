@@ -95,9 +95,10 @@ class Roteador {
                 abortar();
             }
 
-                            
+            // Adicionando namespace padrão dos controllers para autoload
             $controller = "App\Controllers\\$rota[controller]";
-                
+            
+            // Chamando o controller e seu método
             return call_user_func( [new $controller(), $rota['metodo'] ] );
         }
     }

@@ -9,4 +9,6 @@ const PASTA_RAIZ = __DIR__ . '/../../';
 
 const VERSAO_APP = '0.0.0';
 
+const ENVIROMENT = 'desenvolvimento';
+
 const URL_BASE = 'localhost:8080';
