@@ -12,6 +12,7 @@ class CLI
         match ($comando[1]) {
             'iniciar' => $this->iniciar($comando[2] ?? '8080'),
             'criar' => $this->criar($comando[2]??'', $comando[3]??''),
+            'testar' => $this->testar(),
             'ajuda' => $this->ajuda(),
             default => $this->imprimir("Você precisa informar algum comando.\n# Tente usar 'php pratico ajuda'."),
         };
@@ -24,7 +25,7 @@ class CLI
     * na porta desejada (padrão 8080)
     * @author Brunoggdev
     */
-    private function iniciar(string $porta)
+    private function iniciar(string $porta):void
     {
         exec("php -S localhost:$porta -t public");
     }
@@ -35,7 +36,7 @@ class CLI
     * Cria um novo arquivo com as propriedades desejadas
     * @author Brunoggdev
     */
-    private function criar(string $arquivo, string $nome)
+    private function criar(string $arquivo, string $nome):void
     {
         if( empty($arquivo) ){
 
@@ -88,6 +89,38 @@ class CLI
         $this->imprimir($resposta);
     }
 
+
+
+    /**
+    * Roda todas as closures de teste e imprime seus resultados
+    * @author Brunoggdev
+    */
+    public function testar():void
+    {
+        require PASTA_RAIZ . 'app/testes/testes.php';
+
+        $verde = "\033[42m";
+        $vermelho = "\033[41m";
+        $resetaCor = "\033[0m";
+
+        foreach ($testar->testes() as $teste) {
+            
+            $numeroDePontos = 80 - strlen($teste['descricao']) - 1;
+            $status = "$vermelho Falhou.$resetaCor";
+
+            if(call_user_func($teste['funcao']) ){
+                $status = "$verde Passou.$resetaCor";
+            }
+
+            printf(
+                "%s %s %s %s\n", 
+                $teste['descricao'], 
+                str_repeat(".", $numeroDePontos), 
+                $status, 
+                "\n"
+            );
+        }
+    }
 
 
     /**

@@ -6,6 +6,7 @@ if( PHP_VERSION < '8.0.0'){
 }
 
 require 'app/Config/constantes.php';
+require 'system/auxiliares.php';
 require 'system/autoloader.php';
 
 new \System\CLI($argv);
