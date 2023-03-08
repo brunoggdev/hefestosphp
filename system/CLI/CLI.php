@@ -69,7 +69,7 @@ class CLI
 
 
         if ( file_put_contents("$caminho$nome.php", str_replace('{nome}', $nome, $template)) ) {
-            $resposta = "$arquivo criado sucesso.";
+            $resposta = "$arquivo $nome criado com sucesso.";
         } else {
             $resposta = "Algo deu errado ao gerar o $arquivo.";
         }
@@ -130,12 +130,14 @@ class CLI
     */
     private function ajuda()
     {
-        $this->imprimir('-------------------------------------------------------------------------------------------', 0);
-        $this->imprimir('| Comandos |           Parametros          |                  Exemplos                    |', 0);
-        $this->imprimir('-------------------------------------------------------------------------------------------', 0);
-        $this->imprimir('|  inciar  | porta (opcional, 8080 padrão) | php pratico iniciar                          |', 0);
-        $this->imprimir('-------------------------------------------------------------------------------------------', 0);
-        $this->imprimir('|  criar   | [controller ou model] + nome  | php pratico criar controller NotasController |', 0);
-        $this->imprimir('-------------------------------------------------------------------------------------------', 0);
+        $this->imprimir('-------------------------------------------------------------------------------------------------', 0);
+        $this->imprimir('| Comandos |           Parametros                |                  Exemplos                    |', 0);
+        $this->imprimir('-------------------------------------------------------------------------------------------------', 0);
+        $this->imprimir('|  inciar  | porta (opcional, 8080 padrão)       | php pratico iniciar                          |', 0);
+        $this->imprimir('-------------------------------------------------------------------------------------------------', 0);
+        $this->imprimir('|  criar   | [controller, model, filtro] + nome  | php pratico criar controller NotasController |', 0);
+        $this->imprimir('-------------------------------------------------------------------------------------------------', 0);
+        $this->imprimir('|  testar  |               nenhum                | php pratico testar                           |', 0);
+        $this->imprimir('-------------------------------------------------------------------------------------------------', 0);
     }
 }
