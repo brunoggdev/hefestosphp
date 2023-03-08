@@ -6,6 +6,7 @@ use App\Database\Database;
 
 class ModelBase 
 {
+    // tabela do banco de dados ao qual o model está relacionado
     protected $tabela;
 
 

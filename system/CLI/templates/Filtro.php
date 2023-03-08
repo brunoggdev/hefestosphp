@@ -7,7 +7,14 @@ return <<<EOT
 
     class {nome}
     {
-        
+        /**
+        * Aplica o filtro configurado
+        * @author Brunoggdev
+        */
+        public function aplicar():void
+        {
+            // lógica do seu filtro, normalmente retornará um redirecionar
+        }
     }
 
     EOT;
