@@ -1,10 +1,8 @@
 <?php
 try {
 
-    require '../system/app.php';
+    require '../system/core/app.php';
 
-    // Instanciar roteador
-    $rota = new \System\Roteador();
     require pasta_app('Config/rotas.php');
 
     $uri = parse_url($_SERVER['REQUEST_URI'])['path'];

@@ -57,8 +57,9 @@ function url_base(?string $caminhoExtra = ''):string
 
 /**
 * "Die and Dump"
-* Para a execução do app onde quer que for chamada e
-* imprime a que for passado como parametro para debug
+*
+* Interrompe a execução do app onde quer que for chamada e
+* imprime o que for passado como parametro opcional para debug.
 * @author Brunoggdev
 */
 function dd(mixed $param = null)
@@ -114,6 +115,18 @@ function abortar(?int $codigo = 404):string
     return view("$codigo");
 }
 
+
+/**
+* Redireciona o usuario para a rota informada, 
+* além de atualizar o código http (302 por padrão).
+* @author Brunoggdev
+*/
+function redirecionar(string $url, int $codigo = 302)
+{
+    http_response_code($codigo);
+    header("Location: $url");
+    exit;
+}
 
 
 /**

@@ -1,8 +1,11 @@
 <?php
+$rota = new \System\Core\Roteador();
 # ----------------------------------------------------------------------
-# Configure aqui suas rotas. Um objeto "$rota" está automaticamente
-# disponível neste arquivo e deve ser utilizado da seguinte maneira:
-# $rota->metodoRequisicao('uri', 'Controller:metodo');
+# Configure abaixo suas rotas. O objeto "$rota" pode ser utilizado assim:
+# $rota->[verbohttp]('uri', 'Controller::metodo');
+# $rota->[verbohttp]('uri', [Controller::class, 'metodo']);
+# $rota->[verbohttp]('uri', function(){});
 # ----------------------------------------------------------------------
 
-$rota->get('/', 'PaginasController:index');
+
+$rota->get('/', 'PaginasController::index');

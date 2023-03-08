@@ -1,6 +1,6 @@
 <?php
 
-namespace System;
+namespace System\CLI;
 
 class CLI
 {
@@ -61,26 +61,14 @@ class CLI
         $caminho = match ($arquivo) {
             'Controller' =>  PASTA_RAIZ . 'app/Controllers/',
             'Model' => PASTA_RAIZ . 'app/Models/',
+            'Filtro' => PASTA_RAIZ . 'app/Filtros/',
         };
 
-        $base = $arquivo . 'Base';
-        $namespace = 'App\\' . $arquivo . 's';
-        $tabela = $arquivo === 'Model' ? 'protected $tabela = \'\';' : '';
 
-        $template = <<<EOT
-        <?php
-
-        namespace $namespace;
-
-        class $nome extends $base
-        {
-            $tabela
-        }
-
-        EOT;
+        $template = require "templates/$arquivo.php";
 
 
-        if ( file_put_contents("$caminho$nome.php", $template) ) {
+        if ( file_put_contents("$caminho$nome.php", str_replace('{nome}', $nome, $template)) ) {
             $resposta = "$arquivo criado sucesso.";
         } else {
             $resposta = "Algo deu errado ao gerar o $arquivo.";
@@ -97,7 +85,7 @@ class CLI
     */
     public function testar():void
     {
-        require PASTA_RAIZ . 'app/testes/testes.php';
+        require PASTA_RAIZ . 'app/Testes/testes.php';
 
         $verde = "\033[42m";
         $vermelho = "\033[41m";
@@ -105,15 +93,16 @@ class CLI
 
         foreach ($testar->testes() as $teste) {
             
-            $numeroDePontos = 80 - strlen($teste['descricao']) - 1;
-            $status = "$vermelho Falhou.$resetaCor";
+            $numeroDePontos = 70 - strlen($teste['descricao']) - 1;
+            
 
-            if(call_user_func($teste['funcao']) ){
-                $status = "$verde Passou.$resetaCor";
-            }
+            $status = ( call_user_func($teste['funcao'])
+                ? "$verde Passou.$resetaCor"
+                : "$vermelho Falhou.$resetaCor"
+            );
 
             printf(
-                "%s %s %s %s\n", 
+                "# Testa se: %s %s %s %s\n", 
                 $teste['descricao'], 
                 str_repeat(".", $numeroDePontos), 
                 $status, 

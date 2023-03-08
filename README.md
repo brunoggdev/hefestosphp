@@ -3,14 +3,19 @@ Um mini framework PHP em português com o intuito principal de ser simples e pr�
 
 # TO-DO
    ## Roteador
+   - Adicionar filtros (middleware)
    - Adicionar namespacePadrão
+   - implementar wildcards
    - Tornar possível a utilização de closures e array como laravel nas rotas
-   - higienizar a url
 
    ## Query Builder
    - Adicionar metodo delete
 
+   ## Testes
+   - Adicionar metodo delete
+   - Adicionar mais funções para os testes
+   - Adicionar classe para teste com métodos "esperar" "ser" "nao" "conter" "corresponder"
+
    ## Talvez
    - Adicionar DI container
-   - Adicionar mais funções para os testes
-   - Adicionar classe com métodos "esperar" "ser" "nao"
+   

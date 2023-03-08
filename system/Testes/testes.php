@@ -1,6 +1,6 @@
 <?php
 
-$testar = new \System\SuiteDeTestes();
+$testar = new \System\Testes\SuiteDeTestes();
 
 function confereVerdadeiro(mixed $condicao)
 {

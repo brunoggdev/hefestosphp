@@ -1,5 +1,5 @@
 <?php
-require PASTA_RAIZ . 'system/testes.php';
+require PASTA_RAIZ . 'system/Testes/testes.php';
 
 
 $testar->se('1 + 1 = 2', function(){
