@@ -3,7 +3,7 @@ Um mini framework PHP em português com o intuito principal de ser simples e pr�
 
 # TO-DO (por prioridade)
    - adicionar index no template de controller
-   - função auxiliar para as sessions
+   - adicionar metodo "com" nas views.... good luck with that.
    - Adicionar classe para teste com métodos "esperar" "ser" "nao" "conter" "corresponder"
    - implementar wildcards no roteador
    - Adicionar mais funções para os testes
