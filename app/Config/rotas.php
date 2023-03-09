@@ -8,5 +8,5 @@ $rota = new \System\Core\Roteador();
 # ----------------------------------------------------------------------
 
 
-$rota->get('/asd', 'PaginasController::index')->filtro('logado');
-$rota->get('/', 'PaginasController::index')->filtro('logado');
+$rota->get('/asd', 'PaginasController::index');
+$rota->get('/', 'PaginasController::index');
