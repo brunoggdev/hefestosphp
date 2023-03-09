@@ -19,9 +19,9 @@ class Filtros
             return;
         }
 
-        $filtro = static::MAP[$chave];
-
-        if(!$filtro){
+        try{
+            $filtro = static::MAP[$chave];
+        }catch(\Throwable){
             throw new \Exception("Nenhum filtro encontrado para a chave '{$chave}'.");
         }
 
