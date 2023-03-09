@@ -111,10 +111,10 @@ class Roteador {
 
             if( $rota['uri'] === $uri || $rota['verbo_http'] === strtoupper($verbo_http) ){
 
-                Filtros::filtrar($rota['uri']);
+                Filtros::filtrar($rota['filtro']);
 
                 // Chamando o controller e seu método
-                return call_user_func( [new $rota['metodo'](), $rota['metodo'] ] );
+                return call_user_func( [new $rota['controller'](), $rota['metodo'] ] );
             }
 
             return abortar();
