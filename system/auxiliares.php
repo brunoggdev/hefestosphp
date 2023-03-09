@@ -6,6 +6,8 @@
 # utilize o arquivo auxiliares.php encontrado na pasta app.
 # ----------------------------------------------------------------------
 
+use System\Core\Session;
+
 /**
 * Retorna o caminho da pasta app concatenado ou não 
 * com um parametero opcional de caminho adicional
@@ -72,6 +74,15 @@ function dd(mixed $param = null)
 }
 
 
+/**
+* Retorna o array ou objeto informado como JSON
+* @author Brunoggdev
+*/
+function json(array|object $param):string
+{
+    return json_encode($param);
+}
+
 
 /**
 * Retorna o conteúdo da view especificada
@@ -130,14 +141,18 @@ function redirecionar(string $url, int $codigo = 302)
 
 
 /**
-* Retorna o array ou objeto informado como JSON
+* Retorna uma instancia da Session ou pega um 
+* elemento da sessão caso alguma chave seja passada
+* (retorna null se não houver para a chave indormada).
+* @return Session 
 * @author Brunoggdev
 */
-function json(array|object $param):string
+function sessao(string|false $chave = false):mixed
 {
-    return json_encode($param);
-}
+    $session = new \System\Core\Session();
 
+    return $chave ? $session->pegar($chave) : $session;
+}
 
 
 /**

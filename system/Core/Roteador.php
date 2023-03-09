@@ -85,7 +85,7 @@ class Roteador {
             'controller' => "App\Controllers\\$acao[0]",
             'metodo' => $acao[1],
             'verbo_http' => $verbo_http,
-            'filtro' => null
+            'filtro' => ''
         ];
     }
 

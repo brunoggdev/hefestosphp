@@ -8,5 +8,5 @@ $rota = new \System\Core\Roteador();
 # ----------------------------------------------------------------------
 
 
-$rota->get('/asd', 'PaginasController::index');
+$rota->get('/t', 'PaginasController::teste');
 $rota->get('/', 'PaginasController::index');

@@ -1,17 +1,16 @@
 <?php
 try {
 
-    require '../system/core/app.php';
-
+    require '../system/core/iniciar_app.php';
+    
     require pasta_app('Config/rotas.php');
-
     $uri = parse_url($_SERVER['REQUEST_URI'])['path'];
     $requisicao = $_POST['_method'] ?? $_SERVER['REQUEST_METHOD'];
     
-
     // echo a resposta do método chamado
     echo $rota->mapear($uri, $requisicao);
 
+    exit;
 
 } catch (\Throwable $erro) {
 
