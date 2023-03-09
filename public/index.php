@@ -18,7 +18,7 @@ try {
     if (ENVIROMENT === 'desenvolvimento'){
         echo '<br>';
         echo '<h1>PHPratico</h1>';
-        echo 'Encontramos um erro. Aqui está o que o php diz sobre isso:';
+        echo 'Encontramos o seguinte erro:';
         echo '<br>';
         echo '<br>';
         throw $th;

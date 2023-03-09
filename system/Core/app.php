@@ -4,6 +4,10 @@ if( PHP_VERSION < '8.0.0'){
     die('PHPratico precisa do PHP versão 8.0.0 ou mais alta.');
 }
 
+set_error_handler(function($errno, $errstr, $errfile, $errline){
+    throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
+});
+
 // autoloader simulando o composer autoload
 require 'autoloader.php';
 

@@ -97,8 +97,8 @@ class CLI
             
 
             $status = ( call_user_func($teste['funcao'])
-                ? "$verde Passou.$resetaCor"
-                : "$vermelho Falhou.$resetaCor"
+                ? $verde . 'Passou.' . $resetaCor
+                : $vermelho . 'Falhou.' . $resetaCor
             );
 
             printf(
