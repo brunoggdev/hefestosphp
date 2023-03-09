@@ -109,15 +109,16 @@ class Roteador {
     {
         foreach ($this->rotas as $rota) {
 
-            if( $rota['uri'] === $uri || $rota['verbo_http'] === strtoupper($verbo_http) ){
+            if( $rota['uri'] === $uri && $rota['verbo_http'] === strtoupper($verbo_http) ){
 
                 Filtros::filtrar($rota['filtro']);
 
                 // Chamando o controller e seu método
                 return call_user_func( [new $rota['controller'](), $rota['metodo'] ] );
             }
-
-            return abortar();
+            
         }
+
+        return abortar();
     }
 }
