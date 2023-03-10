@@ -9,7 +9,7 @@ class PaginasController extends ControllerBase
         sessao()->guardar('teste','vamo la');
         if( $this->reqGet('true') === 'red' ){
             sessao()->flash('teste','redirecionarndp');
-            redirecionar('t');
+            redirecionar('t')->com('flash', 'FLASHADO BOYYYY');
         }
         return sessao('teste');
 
@@ -22,6 +22,6 @@ class PaginasController extends ControllerBase
     */
     public function teste():string
     {
-        return sessao('teste')?? 'aa';
+        return sessao('flash')?? 'aa';
     }
 }

@@ -6,7 +6,8 @@
 # utilize o arquivo auxiliares.php encontrado na pasta app.
 # ----------------------------------------------------------------------
 
-use System\Core\Session;
+use System\Core\Classes\Redirecionar;
+use System\Core\Classes\Session;
 
 /**
 * Retorna o caminho da pasta app concatenado ou não 
@@ -132,11 +133,15 @@ function abortar(?int $codigo = 404):string
 * além de atualizar o código http (302 por padrão).
 * @author Brunoggdev
 */
-function redirecionar(string $url, int $codigo = 302)
+function redirecionar(string $url = '', int $codigo = 302):Redirecionar
 {
-    http_response_code($codigo);
-    header("Location: $url");
-    exit;
+    $redirecionar = new Redirecionar();
+
+    if(! empty($url) ){
+        $redirecionar->para($url);
+    }
+
+    return $redirecionar;
 }
 
 
@@ -149,7 +154,7 @@ function redirecionar(string $url, int $codigo = 302)
 */
 function sessao(string|false $chave = false):mixed
 {
-    $session = new \System\Core\Session();
+    $session = new Session();
 
     return $chave ? $session->pegar($chave) : $session;
 }

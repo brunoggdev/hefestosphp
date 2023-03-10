@@ -1,6 +1,6 @@
 <?php
 
-namespace System\Core;
+namespace System\Core\Classes;
 
 use App\Filtros\Filtros;
 

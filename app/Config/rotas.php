@@ -1,5 +1,5 @@
 <?php
-$rota = new \System\Core\Roteador();
+$rota = new \System\Core\Classes\Roteador();
 # ----------------------------------------------------------------------
 # Configure abaixo suas rotas. O objeto "$rota" pode ser utilizado assim:
 # $rota->[verbohttp]('uri', 'Controller::metodo');
