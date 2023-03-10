@@ -3,6 +3,7 @@
 namespace System\Core\Classes;
 
 use App\Filtros\Filtros;
+use Closure;
 
 /**
 * Controla todo o sistema de roteamento da aplicação
@@ -11,13 +12,13 @@ use App\Filtros\Filtros;
 class Roteador {
 
     protected $rotas = [];
-
+    protected $namespacePadrao;
 
     /**
     * Adiciona uma rota get no array de rotas
     * @author Brunoggdev
     */
-    public function get(string $uri, string $acao)
+    public function get(string $uri, string|array|callable $acao)
     {
         $this->adicionar('GET', $uri, $acao);
         return $this;
@@ -29,7 +30,7 @@ class Roteador {
     * Adiciona uma rota post no array de rotas
     * @author Brunoggdev
     */
-    public function post(string $uri, string $acao)
+    public function post(string $uri, string|array|callable $acao)
     {
         $this->adicionar('POST', $uri, $acao);
         return $this;
@@ -41,7 +42,7 @@ class Roteador {
     * Adiciona uma rota put no array de rotas
     * @author Brunoggdev
     */
-    public function put(string $uri, string $acao)
+    public function put(string $uri, string|array|callable $acao)
     {
         $this->adicionar('PUT', $uri, $acao);
         return $this;
@@ -53,7 +54,7 @@ class Roteador {
     * Adiciona uma rota patch no array de rotas
     * @author Brunoggdev
     */
-    public function patch(string $uri, string $acao)
+    public function patch(string $uri, string|array|callable $acao)
     {
         $this->adicionar('PATCH', $uri, $acao);
         return $this;
@@ -65,7 +66,7 @@ class Roteador {
     * Adiciona uma rota delete no array de rotas
     * @author Brunoggdev
     */
-    public function delete(string $uri, string $acao)
+    public function delete(string $uri, string|array|callable $acao)
     {
         $this->adicionar('DELETE', $uri, $acao);
         return $this;
@@ -76,17 +77,37 @@ class Roteador {
     * Adiciona uma nova rota no array de rotas
     * @author Brunoggdev
     */
-    protected function adicionar(string $verbo_http, string $uri, string $acao):void
+    protected function adicionar(string $verbo_http, string $uri, string|array|callable $acao):void
     {
-        $acao = explode('::', $acao);
-
-        $this->rotas[] = [
+        $rota = [
             'uri' => str_replace( '{param}', '(.*)', strip_tags($uri) ),
-            'controller' => "App\Controllers\\$acao[0]",
-            'metodo' => $acao[1],
             'verbo_http' => $verbo_http,
             'filtro' => ''
         ];
+
+        if ( $acao  instanceof Closure) {
+            $rota['callback'] = $acao;
+        }else{
+
+            if(! is_array($acao) ){
+                $acao = explode('::', $acao);
+            }
+            $rota['controller'] = str_contains($acao[0], '\\') ? $acao[0] : "$this->namespacePadrao\\$acao[0]";
+            $rota['metodo'] = $acao[1];
+
+        }
+
+        $this->rotas[] = $rota;
+    }
+
+
+    /**
+    * Configura o namespare padrão para os metodos do controller
+    * @author Brunoggdev
+    */
+    public function namespacePadrao(string $namespace):void
+    {
+        $this->namespacePadrao = $namespace;
     }
 
 
@@ -118,13 +139,29 @@ class Roteador {
 
                 Filtros::filtrar($rota['filtro']);
                 
-                // Chamando o controller e seu método, passando params caso existam
-                return call_user_func( [new $rota['controller'](), $rota['metodo']], ...array_slice($params, 1) );
+                return $this->resposta($rota, $params);
             
             }
             
         }
  
         return abortar();
+    }
+
+
+    /**
+    * Devolve a resposta da rota
+    * @author Brunoggdev
+    */
+    public function resposta($rota, $params):string
+    {
+        // Verificando se a resposta para a rota é uma callback ou metodo de controller
+        if( $rota['callback'] ?? false){
+            // chamando a callback e passando params caso existam
+            return call_user_func($rota['callback'], ...array_slice($params, 1) );
+        }else{
+            // Chamando o controller e seu método, passando params caso existam
+            return call_user_func( [new $rota['controller'](), $rota['metodo']], ...array_slice($params, 1) );
+        }
     }
 }
