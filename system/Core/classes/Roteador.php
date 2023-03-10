@@ -92,6 +92,8 @@ class Roteador {
             if(! is_array($acao) ){
                 $acao = explode('::', $acao);
             }
+            
+            // Adicionando namespace padrão caso não haja nenhum
             $rota['controller'] = str_contains($acao[0], '\\') ? $acao[0] : "$this->namespacePadrao\\$acao[0]";
             $rota['metodo'] = $acao[1];
 
