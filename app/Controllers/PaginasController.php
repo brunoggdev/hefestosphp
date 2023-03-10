@@ -2,17 +2,17 @@
 
 namespace App\Controllers;
 
-use System\Core\Classes\Redirecionar;
-
 class PaginasController extends ControllerBase
 {
-    public function index():string|Redirecionar
-    {
-        // return view();
-        // ou
-        // return json();
-        // ou ainda
-        // return redirecionar(); 
+    public function index(){
+
+        sessao()->guardar('teste','vamo la');
+        if( $this->reqGet('true') === 'true' ){
+            sessao()->flash('teste','redirecionarndp');
+            redirecionar('t')->com('flash', 'FLASHADO BOYYYY');
+        }
+        return sessao('teste');
+
     }
 
 
@@ -20,8 +20,12 @@ class PaginasController extends ControllerBase
     *  Tip > Describe what you want your method to do first
     * @author Brunoggdev
     */
-    public function teste():string
+    public function teste($teste, $testa):string
     {
+        echo $teste;
+        echo '<br>';
+        echo $testa;
+
         return sessao('flash')?? 'aa';
     }
 }

@@ -10,8 +10,8 @@ class CLI
     public function __construct(array $comando)
     {
         match ($comando[1]) {
-            'iniciar, servir, serve' => $this->iniciar($comando[2] ?? '8080'),
-            'criar, fazer, gerar' => $this->criar($comando[2]??'', $comando[3]??''),
+            'iniciar', 'servir', 'serve' => $this->iniciar($comando[2] ?? '8080'),
+            'criar', 'fazer', 'gerar' => $this->criar($comando[2]??'', $comando[3]??''),
             'testar' => $this->testar(),
             'ajuda' => $this->ajuda(),
             default => $this->imprimir("Você precisa informar algum comando válido.\n# Tente usar 'php pratico ajuda'."),

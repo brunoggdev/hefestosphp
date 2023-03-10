@@ -81,7 +81,7 @@ class Roteador {
         $acao = explode('::', $acao);
 
         $this->rotas[] = [
-            'uri' => strip_tags($uri),
+            'uri' => str_replace( '{param}', '(.*)', strip_tags($uri) ),
             'controller' => "App\Controllers\\$acao[0]",
             'metodo' => $acao[1],
             'verbo_http' => $verbo_http,
@@ -97,7 +97,6 @@ class Roteador {
     public function filtro(string $filtro):void
     {
         $this->rotas[array_key_last($this->rotas)]['filtro'] = $filtro;
-        // dd($this->rotas);
     }
 
 
@@ -109,12 +108,19 @@ class Roteador {
     {
         foreach ($this->rotas as $rota) {
 
-            if( $rota['uri'] === $uri && $rota['verbo_http'] === strtoupper($verbo_http) ){
+            if( 
+                // checando se o verbo http está correto
+                $rota['verbo_http'] === strtoupper($verbo_http) 
+                && 
+                // mapeando com regex para identificar coringas e separar em params
+                preg_match('#^'.$rota['uri'].'$#', $uri, $params ) 
+            ){
 
                 Filtros::filtrar($rota['filtro']);
-
-                // Chamando o controller e seu método
-                return call_user_func( [new $rota['controller'](), $rota['metodo'] ] );
+                
+                // Chamando o controller e seu método, passando params caso existam
+                return call_user_func( [new $rota['controller'](), $rota['metodo']], ...array_slice($params, 1) );
+            
             }
             
         }
