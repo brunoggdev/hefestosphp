@@ -2,17 +2,17 @@
 
 namespace App\Controllers;
 
+use System\Core\Classes\Redirecionar;
+
 class PaginasController extends ControllerBase
 {
-    public function index(){
-
-        sessao()->guardar('teste','vamo la');
-        if( $this->reqGet('true') === 'red' ){
-            sessao()->flash('teste','redirecionarndp');
-            redirecionar('t')->com('flash', 'FLASHADO BOYYYY');
-        }
-        return sessao('teste');
-
+    public function index():string|Redirecionar
+    {
+        // return view();
+        // ou
+        // return json();
+        // ou ainda
+        // return redirecionar(); 
     }
 
 

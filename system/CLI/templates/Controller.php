@@ -7,7 +7,14 @@ return <<<EOT
 
     class {nome} extends ControllerBase
     {
-        
+        public function index():string|Redirecionar
+        {
+            // return view();
+            // ou
+            // return json();
+            // ou ainda
+            // return redirecionar(); 
+        }
     }
 
     EOT;
