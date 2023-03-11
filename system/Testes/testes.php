@@ -1,5 +1,7 @@
 <?php
 
+use System\Testes\Esperar;
+
 $testar = new \System\Testes\SuiteDeTestes();
 
 function confereVerdadeiro(mixed $condicao)
@@ -9,4 +11,14 @@ function confereVerdadeiro(mixed $condicao)
     }
     
     return true;
+}
+
+
+/**
+* Atalho para interair com a classe Esperar
+* @author Brunoggdev
+*/
+function esperar(mixed $item):Esperar
+{
+    return new Esperar($item);
 }
