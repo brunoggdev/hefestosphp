@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Database;
+namespace System\Core\Classes;
 
 use PDO, PDOStatement;
 
@@ -20,9 +20,9 @@ class Database
     public function __construct()
     {
         // nota: Injeção de dependencias, eu sei
-        [$host, $nomeBD, $usuario, $senha] = require 'dbconfig.php';
+        [$host, $nomeDB, $usuario, $senha] = require pasta_app('Config/database.php');
 
-        $dsn = "mysql:host=$host;dbname=$nomeBD";
+        $dsn = "mysql:host=$host;dbname=$nomeDB";
 
         $this->connection = new PDO($dsn, $usuario, $senha, [
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
