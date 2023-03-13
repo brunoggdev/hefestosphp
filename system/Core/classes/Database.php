@@ -60,17 +60,29 @@ class Database
 
         $query = $this->executarQuery();
         
-
-        if($query->rowCount() > 0){
-            return true;
-        }
-        
-        return false;
+        return $query->rowCount() > 0 ? true : false;
 
     }
    
    
    
+    /**
+    * Cria uma sql para DELETE
+    * @author Brunoggdev
+    */
+    public function delete(string $table, array $where = []):bool
+    {
+
+        $this->query = "DELETE FROM $table";
+        $this->where($where);
+
+
+        $query = $this->executarQuery();
+        return $query->rowCount() > 0 ? true : false;
+    }
+
+
+
     /**
     * Adiciona um UPDATE na consulta
     * @author brunoggdev
@@ -93,12 +105,7 @@ class Database
 
 
         $query = $this->executarQuery();
-
-        if($query->rowCount() > 0){
-            return true;
-        }
-        
-        return false;
+        return $query->rowCount() > 0 ? true : false;
 
     }
 
@@ -202,7 +209,7 @@ class Database
     * Executa a consulta no banco de dados e retorna o PDOStatement
     * @author brunoggdev
     */
-    private function executarQuery():PDOStatement
+    protected function executarQuery():PDOStatement
     {
         $query = $this->connection->prepare($this->query);
 
@@ -217,7 +224,7 @@ class Database
     * Retorna a string montada da consulta
     * @author brunoggdev
     */
-    public function sqlString():string
+    public function stringDaConsulta():string
     {
         return $this->query;
     }
