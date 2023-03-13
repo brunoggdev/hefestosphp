@@ -4,18 +4,10 @@ use System\Testes\Esperar;
 
 $testar = new \System\Testes\SuiteDeTestes();
 
-function confereVerdadeiro(mixed $condicao)
-{
-    if(! $condicao ){
-        return false;
-    }
-    
-    return true;
-}
-
-
 /**
-* Atalho para interair com a classe Esperar
+* passe qualquer tipo de parametro à ser testado aqui 
+* (String, array, objeto, condição, etc).
+* Atalho para interair com a classe Esperar.
 * @author Brunoggdev
 */
 function esperar(mixed $item):Esperar

@@ -12,7 +12,7 @@ class CLI
         match ($comando[1]) {
             'iniciar', 'servir', 'serve' => $this->iniciar($comando[2] ?? '8080'),
             'criar', 'fazer', 'gerar' => $this->criar($comando[2]??'', $comando[3]??''),
-            'testar' => $this->testar(),
+            'testar' => $this->testar($comando[2]??''),
             'ajuda' => $this->ajuda(),
             default => $this->imprimir("Você precisa informar algum comando válido.\n# Tente usar 'php pratico ajuda'."),
         };
@@ -83,32 +83,69 @@ class CLI
     * Roda todas as closures de teste e imprime seus resultados
     * @author Brunoggdev
     */
-    public function testar():void
+    public function testar(string $caminho):void
     {
-        require PASTA_RAIZ . 'app/Testes/testes.php';
+        $caminho = 'app/Testes/' . $caminho;
 
-        $verde = "\033[42m";
-        $vermelho = "\033[41m";
-        $resetaCor = "\033[0m";
-
-        foreach ($testar->testes() as $teste) {
-            
-            $numeroDePontos = 70 - strlen($teste['descricao']) - 1;
-            
-
-            $status = ( call_user_func($teste['funcao'])
-                ? $verde . 'Passou.' . $resetaCor
-                : $vermelho . 'Falhou.' . $resetaCor
+        // Se for um diretorio, busque todos os arquivos dentro
+        if( is_dir($caminho) ){
+            $arquivos = array_merge(
+                glob($caminho . '*.php'),
+                glob($caminho . '**/*.php')
             );
 
-            printf(
-                "# Testa se: %s %s %s %s\n", 
-                $teste['descricao'], 
-                str_repeat(".", $numeroDePontos), 
-                $status, 
-                "\n"
-            );
+            foreach ($arquivos as $arquivo) {
+                require_once $arquivo;
+            }
+
+        }else{
+            // se não, busque apenas o arquivo informado
+            require_once $caminho;
         }
+        
+        // tomando controle dos erros nativos do php
+        set_error_handler(function($errno, $errstr, $errfile, $errline){
+            throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
+        });
+
+        $testesPassaram = 0;
+        $testesFalhaaram = 0;
+        foreach ($testar->testes() as $i => $teste) {
+
+            try {
+                $resultado = call_user_func($teste['funcao']);
+            } catch (\Throwable $th) {
+                $resultado = false;
+                $erro = 
+                "-> \033[1m Erro encontrado: \033[0m" . $th->getMessage() . "\n" . 
+                "  -> \033[1m Na linha: \033[0m" . $th->getLine() . "\n" . 
+                "  -> \033[1m Do arquivo: \033[0m" . $th->getFile() . "\n\n";
+            }
+
+            if($resultado === true){
+                $status = "\033[42mPassou.\033[0m";
+                $testesPassaram++;
+            }else{
+                $status = "\033[41mFalhou.\033[0m";
+                $testesFalhaaram++;
+            }
+
+
+
+            $trilha = str_repeat('.', 80 - mb_strlen($teste['descricao']) - mb_strlen($status));
+
+            $relatorio = sprintf("%d - %s %s %s", ($i+1), "Testa se $teste[descricao]", $trilha, $status);
+            
+            $this->imprimir($relatorio, isset($erro) ? 0 : 1);
+
+            if(isset($erro)){
+                $this->imprimir($erro, 0);
+                unset($erro);
+            }
+        }
+        echo "\n";
+        $this->imprimir("Passaram: $testesPassaram.", 0);
+        $this->imprimir("Falharam: $testesFalhaaram.");
     }
 
 
@@ -133,11 +170,11 @@ class CLI
         $this->imprimir('-------------------------------------------------------------------------------------------------', 0);
         $this->imprimir('| Comandos |           Parametros                |                  Exemplos                    |', 0);
         $this->imprimir('-------------------------------------------------------------------------------------------------', 0);
-        $this->imprimir('|  inciar  | porta (opcional, 8080 padrão)       | php pratico iniciar                          |', 0);
+        $this->imprimir('|  inciar  | porta (opcional, 8080 padrão)       | php pratico iniciar (8888)                   |', 0);
         $this->imprimir('-------------------------------------------------------------------------------------------------', 0);
         $this->imprimir('|  criar   | [controller, model, filtro] + nome  | php pratico criar controller NotasController |', 0);
         $this->imprimir('-------------------------------------------------------------------------------------------------', 0);
-        $this->imprimir('|  testar  |               nenhum                | php pratico testar                           |', 0);
-        $this->imprimir('-------------------------------------------------------------------------------------------------', 0);
+        $this->imprimir('|  testar  | pasta/arquivo especifico (opcional) | php pratico testar (PHPratico)               |', 0);
+        $this->imprimir('-------------------------------------------------------------------------------------------------');
     }
 }
