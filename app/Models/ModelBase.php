@@ -8,7 +8,17 @@ class ModelBase
 {
     // tabela do banco de dados ao qual o model está relacionado
     protected $tabela;
+    // instancia do banco de dados
+    protected $db;
 
+    /**
+    * Cria uma instancia do banco de dados que será utilizada nas consultas
+    * @author Brunoggdev
+    */
+    public function __construct()
+    {
+        $this->db = new Database();
+    }
 
     /**
     * Atalho para interagir com o método select do query builder
@@ -16,7 +26,7 @@ class ModelBase
     */
     public function select(array $colunas = ['*']):Database
     {
-        return (new Database)->select($this->tabela, $colunas);
+        return $this->db->select($this->tabela, $colunas);
     }
 
 
@@ -26,7 +36,7 @@ class ModelBase
     */
     public function insert(array $params):bool
     {
-        return (new Database)->insert($this->tabela, $params);
+        return $this->db->insert($this->tabela, $params);
     }
 
 
@@ -37,7 +47,7 @@ class ModelBase
     */
     public function update(int|string $id, array $params):bool
     {
-        return (new Database)->update($this->tabela, $params, ['id' => $id]);
+        return $this->db->update($this->tabela, $params, ['id' => $id]);
     }
 
 
@@ -48,7 +58,7 @@ class ModelBase
     */
     public function delete(int|string $id)
     {
-        return (new Database)->delete($this->tabela, ['id' => $id]);
+        return $this->db->delete($this->tabela, ['id' => $id]);
     }
 
 
@@ -59,7 +69,7 @@ class ModelBase
     */
     public function db():Database
     {
-        return new Database;
+        return $this->db;
     }
 
 
@@ -70,6 +80,6 @@ class ModelBase
     */
     public function erros():array
     {
-        return (new Database)->erros();
+        return $this->db->erros();
     }
 }

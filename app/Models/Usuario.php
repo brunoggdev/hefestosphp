@@ -13,7 +13,7 @@ class Usuario extends ModelBase
     */
     public function todos():array
     {
-        return $this->select()->where(['is_admin' => false])->todos();
+        return $this->select()->where(['is_admin' => true])->todos();
     }
 
     public function novo($usuario):bool

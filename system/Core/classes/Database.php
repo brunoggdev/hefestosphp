@@ -38,7 +38,7 @@ class Database
     {
         $colunas = implode(', ', $colunas);
 
-        $this->query = "SELECT $colunas FROM $table ";
+        $this->query = "SELECT $colunas FROM $table";
 
         return $this;
     }
@@ -212,7 +212,7 @@ class Database
     protected function executarQuery():PDOStatement
     {
         $query = $this->connection->prepare($this->query);
-
+// dd($this->stringDaConsulta());
         $query->execute($this->params);
 
         $this->queryInfo = $query;

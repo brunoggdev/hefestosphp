@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\Usuario;
+use System\Core\Classes\Database;
 
 class PaginasController extends ControllerBase
 {
@@ -10,8 +11,8 @@ class PaginasController extends ControllerBase
     {
         $usuario = new Usuario;
         $usuario->update(1, ['usuario' => 'testssse']);
-        $usuario->delete(2);
-        dd($usuario->select()->todos());
+        
+        dd((new Usuario)->todos());
 
     }
 
