@@ -14,7 +14,7 @@ $rota->namespacePadrao('\App\Controllers');
 
 
 $rota->get('/', 'PaginasController::index');
-$rota->get('/teste1', 'PaginasController::index');
+$rota->post('/teste1', 'PaginasController::teste');
 $rota->get('/teste2', [PaginasController::class, 'index']);
 $rota->get('/teste3/{param}', function($teste){
     $retorno = ['teste' => 'sou muito bom cara slc'];

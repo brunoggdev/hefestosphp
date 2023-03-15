@@ -7,6 +7,8 @@
 # ----------------------------------------------------------------------
 
 use System\Core\Classes\Redirecionar;
+use System\Core\Classes\Requisicao;
+use System\Core\Classes\RespostaHttp;
 use System\Core\Classes\Session;
 
 /**
@@ -157,6 +159,31 @@ function sessao(string|false $chave = false):mixed
     $session = new Session();
 
     return $chave ? $session->pegar($chave) : $session;
+}
+
+
+
+/**
+* Atalho para interagir com a classe de Requisicao para 
+* realizar uma requisicao get simples; 
+* Se precisar de mais controle instancie a classe manualmente
+* @author Brunoggdev
+*/
+function requisicaoGet(string $endpoint):Requisicao
+{
+    return (new Requisicao())->get($endpoint);
+}
+
+
+/**
+* Atalho para interagir com a classe de Requisicao para 
+* realizar uma requisicao post simples; 
+* Se precisar de mais controle instancie a classe manualmente
+* @author Brunoggdev
+*/
+function requisicaoPost(string $endpoint, array $dados):Requisicao
+{
+    return (new Requisicao())->post($endpoint, $dados);
 }
 
 
