@@ -20,6 +20,6 @@ class PaginasController extends ControllerBase
     */
     public function teste():string
     {
-        return 'pagina teste';
+        return json( (new Usuario)->tudo() );
     }
 }

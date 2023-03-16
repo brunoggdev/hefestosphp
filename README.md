@@ -3,12 +3,15 @@ Um mini framework PHP em português com o intuito principal de ser simples e pr�
 
 # TO-DO (por prioridade)
    - Adicionar metodo orwhere no query builder
-   - Adicionar auxiliar de requisição http
+   - Adicionar metodos estaticos "tudo" e "buscar" no modelBase
 
    ## Talvez
+   - Models serem instanciados com metodos estaticos
    - Modificar metodo select do query builder para usar terceiro parametro invés de regex
-   - Adicionar namespacePadrão nas rotas
    - Adicionar DI container
    - Pensar sobre a utilização de metodos para multiplas linhas nos models
+   
+   ## Notas
+   - Auxiliar de requisicao http não funcionando para rotas internas
 
    

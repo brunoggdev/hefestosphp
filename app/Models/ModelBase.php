@@ -20,6 +20,27 @@ class ModelBase
         $this->db = new Database();
     }
 
+
+    /**
+    * Retorna todas as linhas com todas as colunas do Model em questão
+    * @author Brunoggdev
+    */
+    public function tudo():array
+    {
+        return $this->select()->todos();
+    }
+
+
+    /**
+    * Retorna o model com o id informado
+    * @author Brunoggdev
+    */
+    public function buscar(int $id):array
+    {
+        return $this->select()->where(['id' => $id])->primeiro();
+    }
+
+
     /**
     * Atalho para interagir com o método select do query builder
     * @author Brunoggdev
