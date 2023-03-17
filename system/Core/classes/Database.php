@@ -126,20 +126,21 @@ class Database
             if (! str_contains($this->query, 'WHERE') ) {
                 $this->query .= ' WHERE ';
             }
+
+            $chave = str_replace('.', '', $key);
             
             // Assume "=" caso nenhum operador seja informado no valor
             if(!preg_match('/^(=|<|>|<=|>=|like)/i', $value)){
-                 
-                $this->params[$key] = $value;
-                $this->query .= "$key = :$key ";
+                $this->params[$chave] = $value;
+                $this->query .= "$key = :$chave ";
                 
             }else{
                 
                 $pieces = explode(' ', $value);
-                $operators = $pieces[0];
-                $this->params[$key] = $pieces[1];
+                $operador = $pieces[0];
+                $this->params[$chave] = $pieces[1];
                 
-                $this->query .= "$key $operators :$key ";
+                $this->query .= "$key $operador :$chave ";
                 
             }
 
@@ -163,6 +164,18 @@ class Database
         $this->query .= ' OR ';
         $this->where($params);
         
+        return $this;
+    }
+
+
+    /**
+    * Adiciona um JOIN na consulta
+    * @author Brunoggdev
+    */
+    public function join(string $tabelaParaJoin, string $condicao, ?string $tipoDeJoin = 'INNER'):self
+    {
+        $this->query .= " $tipoDeJoin JOIN $tabelaParaJoin ON $condicao";
+
         return $this;
     }
 
@@ -226,6 +239,8 @@ class Database
     {
         $query = $this->connection->prepare($this->query);
         
+        $this->queryInfo = $query;
+        // dd($this->params);
         $query->execute($this->params);
 
         $this->queryInfo = $query;
