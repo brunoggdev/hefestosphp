@@ -8,22 +8,11 @@ class PaginasController extends ControllerBase
 {
     public function index()
     {
-        $result = (new Usuario);
-        
-        try{
-            $resultado = $result->select()
-            ->join('pets', 'usuarios.id = pets.id', 'inner')
-            ->where(['usuarios.id' => 2])
+        dd( 
+            (new Usuario)->select()
+            ->where(['id' => 2])
             ->orWhere(['usuario' => 'Like usuario%'])
-            ->todos();
-        }catch(\Throwable $th){
-            throw $th;
-            $a = $result->erros();
-        }
-       dd( 
-
-            $resultado
-
+            ->todos()
         );
     }
 

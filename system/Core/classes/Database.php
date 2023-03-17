@@ -127,6 +127,7 @@ class Database
                 $this->query .= ' WHERE ';
             }
 
+            // retirando pontos pois não são aceitos nas chaves de array
             $chave = str_replace('.', '', $key);
             
             // Assume "=" caso nenhum operador seja informado no valor
