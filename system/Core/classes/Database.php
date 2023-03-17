@@ -127,8 +127,8 @@ class Database
                 $this->query .= ' WHERE ';
             }
             
-
-            if(!preg_match('/[<>=]/', $value)){
+            // Assume "=" caso nenhum operador seja informado no valor
+            if(!preg_match('/^(=|<|>|<=|>=|like)/i', $value)){
                  
                 $this->params[$key] = $value;
                 $this->query .= "$key = :$key ";

@@ -2,9 +2,8 @@
 Um mini framework PHP em português com o intuito principal de ser simples e prático para familiarizar iniciantes aos conceitos básicos da linguagem e arquitetura MVC sem maiores complicações, de modo que quando passem a utilizar algum grande framework como Laravel, CodeIgniter ou Symphony eles já estejam ao menos um pouco habituados ao seu funcionamento.
 
 # TO-DO (por prioridade)
-   - Documentação do Framework
-   - Adicionar metodo like no query builder
    - Adicionar metodo join no query builder
+   - Documentação do Framework
 
    ## Talvez
    - Models serem instanciados com metodos estaticos
