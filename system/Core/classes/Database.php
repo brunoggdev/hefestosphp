@@ -143,6 +143,7 @@ class Database
                 
             }
 
+            
             if($key !== array_key_last($params)){
                 $this->query .= 'AND ';
             }
@@ -152,6 +153,18 @@ class Database
         return $this;
     }
 
+
+    /**
+    * Adiciona um OR na consulta
+    * @author Brunoggdev
+    */
+    public function orWhere(array $params):self
+    {
+        $this->query .= ' OR ';
+        $this->where($params);
+        
+        return $this;
+    }
 
 
     /**
@@ -174,7 +187,6 @@ class Database
     */
     public function query(string $sql, array $params = [])
     {
-       
         $this->query = $sql;
         $this->params = $params;
 
@@ -205,6 +217,7 @@ class Database
         return $query->fetchAll($fetchMode);
     }
 
+
     /**
     * Executa a consulta no banco de dados e retorna o PDOStatement
     * @author brunoggdev
@@ -212,13 +225,14 @@ class Database
     protected function executarQuery():PDOStatement
     {
         $query = $this->connection->prepare($this->query);
-// dd($this->stringDaConsulta());
+        
         $query->execute($this->params);
 
         $this->queryInfo = $query;
 
         return $query;
     }
+
 
     /**
     * Retorna a string montada da consulta
@@ -228,6 +242,7 @@ class Database
     {
         return $this->query;
     }
+
 
     /**
     * Retorna os erros que ocorreram durante a execução da SQL

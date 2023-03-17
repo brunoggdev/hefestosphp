@@ -10,7 +10,13 @@ class PaginasController extends ControllerBase
 {
     public function index()
     {
-        return 'main page';
+       dd( 
+            (new Usuario)
+            ->select()
+            ->where(['id' => 3])
+            ->orWhere([ 'usuario' => 'usuario2'])
+            ->todos()
+        );
     }
 
 

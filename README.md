@@ -2,8 +2,9 @@
 Um mini framework PHP em português com o intuito principal de ser simples e prático para familiarizar iniciantes aos conceitos básicos da linguagem e arquitetura MVC sem maiores complicações, de modo que quando passem a utilizar algum grande framework como Laravel, CodeIgniter ou Symphony eles já estejam ao menos um pouco habituados ao seu funcionamento.
 
 # TO-DO (por prioridade)
-   - Adicionar metodo orwhere no query builder
-   - Adicionar metodos estaticos "tudo" e "buscar" no modelBase
+   - Documentação do Framework
+   - Adicionar metodo like no query builder
+   - Adicionar metodo join no query builder
 
    ## Talvez
    - Models serem instanciados com metodos estaticos
@@ -12,6 +13,6 @@ Um mini framework PHP em português com o intuito principal de ser simples e pr�
    - Pensar sobre a utilização de metodos para multiplas linhas nos models
    
    ## Notas
-   - Auxiliar de requisicao http não funcionando para rotas internas
+   - Auxiliar de requisicao http não funciona para rotas internas por conta do servidor embutido do PHP
 
    
