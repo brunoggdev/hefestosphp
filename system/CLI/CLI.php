@@ -86,7 +86,10 @@ class CLI
     public function testar(string $caminho):void
     {
         $caminho = 'app/Testes/' . $caminho;
-
+        // tomando controle dos erros nativos do php
+        set_error_handler(function($errno, $errstr, $errfile, $errline){
+            throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
+        });
         // Se for um diretorio, busque todos os arquivos dentro
         if( is_dir($caminho) ){
             $arquivos = array_merge(
@@ -100,13 +103,13 @@ class CLI
 
         }else{
             // se não, busque apenas o arquivo informado
-            require_once $caminho;
+            try{
+                require_once $caminho;
+            }catch(\ErrorException){
+                $this->imprimir('Arquivo não encontrado.');
+                exit;
+            }
         }
-        
-        // tomando controle dos erros nativos do php
-        set_error_handler(function($errno, $errstr, $errfile, $errline){
-            throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
-        });
 
         $testesPassaram = 0;
         $testesFalhaaram = 0;
