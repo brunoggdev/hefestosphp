@@ -241,7 +241,7 @@ class Database
         $query = $this->connection->prepare($this->query);
         
         $this->queryInfo = $query;
-        // dd($this->params);
+        
         $query->execute($this->params);
 
         $this->queryInfo = $query;

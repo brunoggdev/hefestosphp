@@ -8,12 +8,7 @@ class PaginasController extends ControllerBase
 {
     public function index()
     {
-        dd( 
-            (new Usuario)->select()
-            ->where(['id' => 2])
-            ->orWhere(['usuario' => 'Like usuario%'])
-            ->todos()
-        );
+        return json(['isso eh' => 'um json']);
     }
 
 

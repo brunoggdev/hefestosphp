@@ -2,7 +2,6 @@
 
 namespace System\Core\Classes;
 
-use App\Filtros\Filtros;
 use Closure;
 
 /**
@@ -139,7 +138,7 @@ class Roteador {
                 preg_match('#^'.$rota['uri'].'$#', $uri, $params ) 
             ){
 
-                Filtros::filtrar($rota['filtro']);
+                (new Filtros)->filtrar($rota['filtro']);
                 
                 return $this->resposta($rota, $params);
             

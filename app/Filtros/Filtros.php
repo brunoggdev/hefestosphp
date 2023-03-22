@@ -1,30 +1,10 @@
 <?php
-namespace App\Filtros;
+// Mapeie no array abaixo o nome do filtro que deseja utilizar
+// para a classe que deve ser utilizada nesse filtro.
+// Lembre-se de utilizar o namespace completo da classe.
 
-class Filtros
-{
-    const MAP = [
-        'logado' => Logado::class
-    ];
+use App\Filtros\Logado;
 
-
-    /**
-    * Mapeia a chave informada com o array de filtros e,
-    * caso um seja encontrado, este será aplicado. 
-    * @author Brunoggdev
-    */
-    public static function filtrar(string $chave):void
-    {
-        if(!$chave){
-            return;
-        }
-
-        try{
-            $filtro = static::MAP[$chave];
-        }catch(\Throwable){
-            throw new \Exception("Nenhum filtro encontrado para a chave '{$chave}'.");
-        }
- 
-        (new $filtro)->aplicar();
-    }
-}
+return [
+    'logado' => Logado::class
+];
