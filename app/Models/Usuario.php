@@ -7,14 +7,7 @@ class Usuario extends ModelBase
     protected $tabela = 'usuarios';
 
 
-    /**
-    * Retorna todos os usuarios
-    * @author Brunoggdev
-    */
-    public function todos():array
-    {
-        return $this->select()->where(['is_admin' => true])->todos();
-    }
+
 
     public function novo($usuario):bool
     {

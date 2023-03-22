@@ -8,6 +8,7 @@ class ModelBase
 {
     // tabela do banco de dados ao qual o model está relacionado
     protected $tabela;
+
     // instancia do banco de dados
     protected $db;
 
@@ -22,12 +23,12 @@ class ModelBase
 
 
     /**
-    * Retorna todas as linhas com todas as colunas do Model em questão
+    * Retorna todas as linhas do Model em questão com todas as colunas ou colunas especificas
     * @author Brunoggdev
     */
-    public function tudo():array
+    public function todos(?array $colunas = ['*']):array
     {
-        return $this->select()->todos();
+        return $this->select($colunas)->todos();
     }
 
 
@@ -45,7 +46,7 @@ class ModelBase
     * Atalho para interagir com o método select do query builder
     * @author Brunoggdev
     */
-    public function select(array $colunas = ['*']):Database
+    public function select(?array $colunas = ['*']):Database
     {
         return $this->db->select($this->tabela, $colunas);
     }
@@ -81,18 +82,6 @@ class ModelBase
     {
         return $this->db->delete($this->tabela, ['id' => $id]);
     }
-
-
-
-    /**
-    * Retorna uma instancia da classe Database.
-    * @author Brunoggdev
-    */
-    public function db():Database
-    {
-        return $this->db;
-    }
-
 
 
     /**

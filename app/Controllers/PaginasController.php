@@ -20,10 +20,7 @@ class PaginasController extends ControllerBase
     {
         dd( 
             (new Usuario)
-            ->select()
-            ->where(['id' => 3])
-            ->orWhere(['usuario' => 'Like usuario%'])
-            ->primeiro()
+            ->todos()
         );
     }
 }
