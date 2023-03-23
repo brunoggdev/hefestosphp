@@ -10,6 +10,6 @@ class Logado
     */
     public function aplicar():void
     {
-        redirecionar('/');
+        redirecionar('/bler');
     }
 }
