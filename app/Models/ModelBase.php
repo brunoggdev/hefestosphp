@@ -26,7 +26,7 @@ class ModelBase
     * Retorna todas as linhas do Model em questão com todas as colunas ou colunas especificas
     * @author Brunoggdev
     */
-    public function todos(?array $colunas = ['*']):array
+    public function tudo(?array $colunas = ['*']):array
     {
         return $this->select($colunas)->todos();
     }

@@ -34,7 +34,7 @@ class Session
     * Pega um item da sessão, retorna null caso não exista
     * @author Brunoggdev
     */
-    public function pegar(string $chave):mixed
+    public function pegar(string $chave, $higienizar = true):mixed
     {
         $retorno = $_SESSION[$chave] ?? null;
 
@@ -45,7 +45,7 @@ class Session
             unset($_SESSION['__flash'][array_search($chave, $_SESSION['__flash'])]);
         }
 
-        return $retorno;
+        return $higienizar ? higienizar($retorno) : $retorno;
     }
 
 

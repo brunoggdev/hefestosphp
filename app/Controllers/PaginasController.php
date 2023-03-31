@@ -8,7 +8,7 @@ class PaginasController extends ControllerBase
 {
     public function index()
     {
-        return json(['isso eh' => 'um json']);
+        return json([]);
     }
 
 
@@ -18,9 +18,6 @@ class PaginasController extends ControllerBase
     */
     public function teste():string
     {
-        dd( 
-            (new Usuario)
-            ->todos()
-        );
+        dd('teste');
     }
 }
