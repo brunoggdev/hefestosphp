@@ -8,7 +8,7 @@ class PaginasController extends ControllerBase
 {
     public function index()
     {
-        return json([]);
+        return json((new Usuario)->tudo());
     }
 
 

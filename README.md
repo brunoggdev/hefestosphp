@@ -6,8 +6,8 @@ Um mini framework PHP em português com o intuito principal de ser simples e pr�
 
    ## Talvez
    - agrupar rotas
-   - .env?
-   - talvez algo como as collections do laravel
+   - coleções
+   - opção de retorno do model como objeto
    - Models serem instanciados com metodos estaticos
    - Modificar metodo where do query builder para usar terceiro parametro invés de regex
    - Adicionar DI container
