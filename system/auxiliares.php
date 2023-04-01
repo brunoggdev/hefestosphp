@@ -228,3 +228,23 @@ function protegerSenha(string $senha):string
     return password_hash($senha, PASSWORD_DEFAULT);
 }
 
+
+
+/**
+* Checa se a url atual corresponde à informada
+* @author Brunoggdev
+*/
+function url_igual(string $url):bool
+{
+    return $_SERVER['REQUEST_URI'] === $url;
+}
+
+
+/**
+* Checa se a url atual contém a parte informada
+* @author Brunoggdev
+*/
+function url_contem(string $parte):bool
+{
+    return str_contains($_SERVER['REQUEST_URI'], $parte);
+}
