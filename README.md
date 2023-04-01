@@ -3,7 +3,7 @@ Um mini framework PHP em português com o intuito principal de ser simples e pr�
 
 # TO-DO (por prioridade)
    - Documentação do Framework
-   - adicionar auxiliares url_igual() e url_contem()
+   - Implementar verbos http para requisicao post
    - Branch com sistemas de roteamento padrão e autenticação de usuario 
 
    ## Talvez
