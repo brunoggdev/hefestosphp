@@ -8,7 +8,7 @@ class PaginasController extends ControllerBase
 {
     public function index()
     {
-        return json((new Usuario)->tudo());
+        return view('home');
     }
 
 
@@ -18,6 +18,6 @@ class PaginasController extends ControllerBase
     */
     public function teste():string
     {
-        dd('teste');
+        dd($this->dadosPost());
     }
 }

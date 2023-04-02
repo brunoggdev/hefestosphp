@@ -248,3 +248,43 @@ function url_contem(string $parte):bool
 {
     return str_contains($_SERVER['REQUEST_URI'], $parte);
 }
+
+
+/**
+* Adiciona um input hidden para especificar o tipo de requisicao desejado
+* @author Brunoggdev
+*/
+function metodoHttp(string $metodoHttp):string
+{
+    $metodoHttp = strtoupper($metodoHttp);
+    return "<input type='hidden' name='_method' value=$metodoHttp>";
+}
+
+
+/**
+* Abre uma tag form e configura os atributos action e method
+* @author Brunoggdev
+*/
+function abreForm(string $metodoHttp, string $action):string
+{
+    $metodoHttp = strtoupper($metodoHttp);
+
+    if($metodoHttp === 'GET' || $metodoHttp === 'POST'){
+        $retorno = "<form action=$action method=$metodoHttp>";
+    }else{
+        $retorno = "<form action=$action method=POST>";
+        $retorno .= "\n" . metodoHttp($metodoHttp);
+    }
+
+    return $retorno;
+}
+
+
+/**
+* Fecha a tag form
+* @author Brunoggdev
+*/
+function fechaForm():string
+{
+    return '</form>';
+}

@@ -7,13 +7,13 @@
     <title>Document</title>
 </head>
 <body>
-    <?=componente('saudacao', ['saudacao' => $saudacao])?>
+    <form action="/teste1" method="post">
+        <?=metodoHttp('delete')?>
+        <input type="text" name="usuario">
+        <input type="password" name="senha">
+        <button type="submit">log in</button>
+        
+    </form>
 
-    <ul>
-        <?php foreach($usuarios as $usuario): ?>
-            <li><?=$usuario['nome']?></li>
-        <?php endforeach; ?>
-    </ul>
-    
 </body>
 </html>

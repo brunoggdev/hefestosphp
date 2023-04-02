@@ -17,7 +17,9 @@ class ControllerBase
            default => $_POST
        };
 
-        return $higienizar ? higienizar($retorno) : $retorno;
+       unset($retorno['_method']); 
+       
+       return $higienizar ? higienizar($retorno) : $retorno;
     }
 
 
@@ -33,6 +35,8 @@ class ControllerBase
             default => $_GET
         };
  
+        unset($retorno['_method']);
+        
         return $higienizar ? higienizar($retorno) : $retorno;
     }
 }

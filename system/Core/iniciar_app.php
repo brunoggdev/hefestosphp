@@ -19,4 +19,4 @@ require '../app/Config/constantes.php';
 require PASTA_RAIZ . 'system/auxiliares.php';
 
 // funções auxiliares do usuário do PHPratico
-require pasta_app('auxiliares.php');
+require PASTA_RAIZ . 'app/auxiliares.php';
