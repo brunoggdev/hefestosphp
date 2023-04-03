@@ -3,7 +3,6 @@ Um framework PHP em português com o intuito principal de ser simples e prático
 
 # TO-DO (por prioridade)
    - Documentação do Framework
-   - Adicionar sistema de coleções
    - Branch com sistemas de roteamento padrão e autenticação de usuario 
 
    ## Talvez

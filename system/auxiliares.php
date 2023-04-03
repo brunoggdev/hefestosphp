@@ -6,9 +6,9 @@
 # utilize o arquivo auxiliares.php encontrado na pasta app.
 # ----------------------------------------------------------------------
 
+use System\Core\Classes\Colecao;
 use System\Core\Classes\Redirecionar;
 use System\Core\Classes\Requisicao;
-use System\Core\Classes\RespostaHttp;
 use System\Core\Classes\Session;
 
 /**
@@ -189,7 +189,7 @@ function requisicaoPost(string $endpoint, array $dados):Requisicao
 
 /**
 * Higieniza o parametro informado.
-* Se for um array, todos os campos serão higienizados.
+* Se for um array, todos os campos serão higienizados de forma recursiva.
 * @author Brunoggdev
 */
 function higienizar(null|string|array $param):null|string|array
@@ -287,4 +287,14 @@ function abreForm(string $metodoHttp, string $action):string
 function fechaForm():string
 {
     return '</form>';
+}
+
+
+/**
+* Atalho para interagir com a classe Colecao
+* @author Brunoggdev
+*/
+function coletar(array $array):Colecao
+{
+    return new Colecao($array);
 }
