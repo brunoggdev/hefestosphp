@@ -20,19 +20,49 @@ class Colecao
         return $this->colecao[$propriedade]
             ?? throw new \Exception("Propriedade '{$propriedade}' não encontrada na colecao.");
     }
+
+    // public function __set($name, $value)
+    // {
+    //     $this->colecao[$name] = $value;
+    // }
     
     public function __toString()
+    {
+        return json_encode($this->colecao);
+    }
+
+    /**
+    * Retorna o array encapsulado
+    * @author Brunoggdev
+    */
+    public function array():array
     {
         return $this->colecao;
     }
 
-
     /**
-    * Executa a função informada para cada item do array.
+    * Executa a função informada para cada item do array comum com um único parametro.
     * Caso queira interromper a execução em algum momento basta retornar false na função.
     * @author Brunoggdev
     */
     public function each(callable $callback)
+    {
+        foreach ($this->colecao as $item) {
+            if( $callback($item) === false ){
+                break;
+            }
+        }
+        
+        return $this;
+    }
+
+
+    /**
+    * Executa a função informada para cada item do array associativo com chave e valor como parametros.
+    * Caso queira interromper a execução em algum momento basta retornar false na função.
+    * @author Brunoggdev
+    */
+    public function eachAssoc(callable $callback)
     {
         foreach ($this->colecao as $key => $value) {
             if( $callback($key, $value) === false ){

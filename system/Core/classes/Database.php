@@ -4,6 +4,10 @@ namespace System\Core\Classes;
 
 use PDO, PDOStatement;
 
+/**
+* Responsável pela conexão, montagem e execução de queries no BD.
+* @author brunoggdev
+*/
 class Database
 {
 
@@ -244,6 +248,7 @@ class Database
         
         $query->execute($this->params);
 
+        $this->params = [];
         $this->queryInfo = $query;
 
         return $query;
