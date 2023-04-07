@@ -26,7 +26,7 @@ class ModelBase
     * Retorna todas as linhas do Model em questão com todas as colunas ou colunas especificas
     * @author Brunoggdev
     */
-    public function tudo(?array $colunas = ['*']):array
+    public function tudo(?array $colunas = ['*']):mixed
     {
         return $this->select($colunas)->todos();
     }
@@ -91,5 +91,17 @@ class ModelBase
     public function erros():array
     {
         return $this->db->erros();
+    }
+
+
+    /**
+    * Define que o retorno da Database será um array associativo
+    * @author Brunoggdev
+    */
+    public function comoArray():self
+    {
+        $this->db->comoArray();
+
+        return $this;
     }
 }

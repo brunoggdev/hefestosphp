@@ -8,7 +8,11 @@ class PaginasController extends ControllerBase
 {
     public function index()
     {
-        return view('home');
+        dd(
+            coletar((new Usuario)->comoArray()->tudo())->eachAssoc(function($key, $value){
+                echo $value['nome'];
+            })
+        );
     }
 
 

@@ -15,6 +15,7 @@ class Database
     protected string $query = '';
     protected $params = [];
     protected PDOStatement $queryInfo;
+    private bool $comoArray = false;
 
     /**
     * Requisita um array contendo [$host, $nomeBD, $usuario, $senha]
@@ -216,11 +217,11 @@ class Database
     * Pega o primeiro resultado da consulta
     * @author brunoggdev
     */
-    public function primeiro(int $fetchMode = PDO::FETCH_ASSOC)
+    public function primeiro(int $fetchMode = PDO::FETCH_OBJ)
     {
         $query = $this->executarQuery();
         
-        return $query->fetch($fetchMode);
+        return $this->comoArray ? $query->fetch(PDO::FETCH_ASSOC) : new Colecao( $query->fetch($fetchMode) );
     }
 
 
@@ -228,11 +229,11 @@ class Database
     * Retorna todos os resultados da consulta
     * @author brunoggdev
     */
-    public function todos(int $fetchMode = PDO::FETCH_ASSOC)
+    public function todos(int $fetchMode = PDO::FETCH_OBJ)
     {
         $query = $this->executarQuery();
 
-        return $query->fetchAll($fetchMode);
+        return $this->comoArray ? $query->fetchAll(PDO::FETCH_ASSOC) : new Colecao( $query->fetchAll($fetchMode) );
     }
 
 
@@ -272,6 +273,18 @@ class Database
     public function erros():array
     {
         return $this->queryInfo->errorInfo();
+    }
+
+
+    /**
+    * Define o retorno do banco de dados como um array associativo
+    * @author Brunoggdev
+    */
+    public function comoArray():self
+    {
+        $this->comoArray = true;
+
+        return $this;
     }
 
 }

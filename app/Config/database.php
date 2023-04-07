@@ -2,7 +2,7 @@
 
 return [
     'localhost',    //host
-    'brasa',        //nome 
+    'teste',        //nome 
     'root',         //usuario
-    ''              //senha
+    '0000'              //senha
 ];
