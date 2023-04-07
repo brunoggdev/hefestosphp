@@ -14,7 +14,7 @@ class CLI
             'criar', 'fazer', 'gerar' => $this->criar($comando[2]??'', $comando[3]??''),
             'testar' => $this->testar($comando[2]??''),
             'ajuda' => $this->ajuda(),
-            default => $this->imprimir("Você precisa informar algum comando válido.\n# Tente usar 'php pratico ajuda'."),
+            default => $this->imprimir("Você precisa informar algum comando válido.\n# Tente usar 'php forja ajuda'."),
         };
     }
 
@@ -41,7 +41,7 @@ class CLI
         if( empty($arquivo) ){
 
             $this->imprimir("Você deve informar um tipo de arquivo para ser gerado (controller ou model)", 0);
-            $this->imprimir("Ex.: php pratico criar Model Usuario");
+            $this->imprimir("Ex.: php forja criar Model Usuario");
             exit;
 
         }
@@ -49,7 +49,7 @@ class CLI
         if( empty($nome) ){
 
             $this->imprimir("Você deve informar um nome pro arquivo depois do tipo.", 0);
-            $this->imprimir("Ex.: php pratico criar $arquivo Usuarios$arquivo.");
+            $this->imprimir("Ex.: php forja criar $arquivo Usuarios$arquivo.");
             exit;
 
         }
@@ -173,11 +173,11 @@ class CLI
         $this->imprimir('-------------------------------------------------------------------------------------------------', 0);
         $this->imprimir('| Comandos |           Parametros                |                  Exemplos                    |', 0);
         $this->imprimir('-------------------------------------------------------------------------------------------------', 0);
-        $this->imprimir('|  inciar  | porta (opcional, 8080 padrão)       | php pratico iniciar (8888)                   |', 0);
+        $this->imprimir('|  inciar  | porta (opcional, 8080 padrão)       | php forja iniciar (8888)                   |', 0);
         $this->imprimir('-------------------------------------------------------------------------------------------------', 0);
-        $this->imprimir('|  criar   | [controller, model, filtro] + nome  | php pratico criar controller NotasController |', 0);
+        $this->imprimir('|  criar   | [controller, model, filtro] + nome  | php forja criar controller NotasController |', 0);
         $this->imprimir('-------------------------------------------------------------------------------------------------', 0);
-        $this->imprimir('|  testar  | pasta/arquivo especifico (opcional) | php pratico testar (PHPratico)               |', 0);
+        $this->imprimir('|  testar  | pasta/arquivo especifico (opcional) | php forja testar (HefestosPHP)             |', 0);
         $this->imprimir('-------------------------------------------------------------------------------------------------');
     }
 }

@@ -20,7 +20,7 @@ try {
 
     }else{
         echo '<br>';
-        echo '<h1>PHPratico</h1>';
+        echo '<h1>HefestosPHP</h1>';
         echo '<h3>Encontramos um erro.</h3>';
         echo '<br>';
         echo '<br>';

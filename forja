@@ -2,7 +2,7 @@
 <?php
 
 if( PHP_VERSION < '8.0.0'){
-    die('PHPratico precisa do PHP versão 8.0.0 ou mais alta.');
+    die('HefestosPHP precisa do PHP na versão 8.0.0 ou mais alta.');
 }
 
 require 'app/Config/constantes.php';

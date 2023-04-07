@@ -1,6 +1,6 @@
 <?php
 # ----------------------------------------------------------------------
-# Arquivo de funções auxiliares padrões do PHPratico.
+# Arquivo de funções auxiliares padrões do HefestosPHP.
 # Normalmente você não deve modificar este arquivo.
 # Caso queira adicionar suas próprias funções auxiliares, 
 # utilize o arquivo auxiliares.php encontrado na pasta app.

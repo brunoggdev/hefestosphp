@@ -1,7 +1,7 @@
 <?php
 
 if( PHP_VERSION < '8.0.0'){
-    die('PHPratico precisa do PHP versão 8.0.0 ou mais alta.');
+    die('HefestosPHP precisa do PHP na versão 8.0.0 ou mais alta.');
 }
 
 // tomando controle dos errros
@@ -15,8 +15,8 @@ require 'autoloader.php';
 // Acessa as constantes do app
 require '../app/Config/constantes.php';
 
-// funções auxiliares nativas do PHPratico
+// funções auxiliares nativas do HefestosPHP
 require PASTA_RAIZ . 'system/auxiliares.php';
 
-// funções auxiliares do usuário do PHPratico
+// funções auxiliares do usuário do HefestosPHP
 require PASTA_RAIZ . 'app/auxiliares.php';
