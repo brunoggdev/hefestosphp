@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use System\Core\Classes\Database;
+use System\Database\Database;
 
 class ModelBase 
 {

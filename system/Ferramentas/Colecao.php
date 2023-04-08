@@ -1,6 +1,6 @@
 <?php
 
-namespace System\Core\Classes;
+namespace System\Ferramentas;
 
 /**
 * Encapsula um array para ser tratado como objeto.

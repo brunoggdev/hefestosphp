@@ -3,7 +3,6 @@
 namespace System\Testes;
 
 use Closure;
-use ReflectionObject;
 
 class Esperar
 {
@@ -149,7 +148,7 @@ class Esperar
     *  Verifica se o item de teste corresponde ao item desejado
     * @author Brunoggdev
     */
-    public function ser(mixed $itemDeComparacao):bool
+    public function serIgual(mixed $itemDeComparacao):bool
     {
         $retorno = $this->itemDeTeste === $itemDeComparacao;
         return $this->negar ? !$retorno : $retorno;

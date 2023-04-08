@@ -6,10 +6,10 @@
 # utilize o arquivo auxiliares.php encontrado na pasta app.
 # ----------------------------------------------------------------------
 
-use System\Core\Classes\Colecao;
-use System\Core\Classes\Redirecionar;
-use System\Core\Classes\Requisicao;
-use System\Core\Classes\Session;
+use System\Rotas\Redirecionar;
+use System\Ferramentas\Colecao;
+use System\Ferramentas\Requisicao;
+use System\Ferramentas\Session;
 
 /**
 * Retorna o caminho da pasta app concatenado ou não 

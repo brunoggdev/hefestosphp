@@ -1,11 +1,11 @@
 <?php
 
-namespace System\Core\Classes;
+namespace System\Database;
 
 use PDO, PDOStatement;
 
 /**
-* Responsável pela conexão, montagem e execução de queries no BD.
+* Responsável pela conexão, montagem e execução de queries no banco de dados.
 * @author brunoggdev
 */
 class Database

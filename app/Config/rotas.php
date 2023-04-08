@@ -1,6 +1,6 @@
 <?php
 
-$rota = new \System\Core\Classes\Roteador();
+$rota = new \System\Rotas\Roteador();
 $rota->namespacePadrao('\App\Controllers');
 # ----------------------------------------------------------------------
 # Configure abaixo suas rotas. O objeto "$rota" pode ser utilizado:

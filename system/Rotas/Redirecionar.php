@@ -1,6 +1,6 @@
 <?php
 
-namespace System\Core\Classes;
+namespace System\Rotas;
 
 class Redirecionar{
 
