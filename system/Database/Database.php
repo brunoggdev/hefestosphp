@@ -1,6 +1,7 @@
 <?php
 
 namespace System\Database;
+use System\Ferramentas\Colecao;
 
 use PDO, PDOStatement;
 

@@ -13,6 +13,7 @@ Um framework PHP em português com o intuito principal de diminuir a curva de ap
 
    ## Talvez
    - agrupar rotas
+   - "migrations"
    - Models serem instanciados com metodos estaticos
    - Modificar metodo where do query builder para usar terceiro parametro invés de regex
    
