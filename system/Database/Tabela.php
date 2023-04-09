@@ -26,12 +26,12 @@ class Tabela
     }
 
     /**
-    * Adiciona uma coluna do tipo varchar com o número de caracteres informado.
+    * Adiciona uma coluna do tipo varchar com o número de caracteres informado e se deve ou não ser único.
     * @author Brunoggdev
     */
-    public function varchar(string $coluna, int $charsNumber): self
+    public function varchar(string $coluna, int $tamanho = 255, $unico = false): self
     {
-        $this->sql .= "$coluna VARCHAR($charsNumber), ";
+        $this->sql .= "$coluna VARCHAR($tamanho)" . ($unico ? ' UNIQUE' : '') . ', ';
         return $this;
     }
 
@@ -39,9 +39,9 @@ class Tabela
     * Atalho para varchar com 255 caracteres.
     * @author Brunoggdev
     */
-    public function string(string $coluna): self
+    public function string(string $coluna, bool $unico = false): self
     {
-        return $this->varchar($coluna, 255);
+        return $this->varchar($coluna, 255, $unico);
     }
 
     /**
@@ -93,6 +93,17 @@ class Tabela
         $this->sql .= "$coluna TIME, ";
         return $this;
     }
+
+    /**
+    * Adiciona uma coluna do tipo float.
+    * @author Brunoggdev
+    */
+    public function int(string $column, int $tamanho): self
+    {
+        $this->sql .= "$column INT($tamanho), ";
+        return $this;
+    }
+
 
     /**
     * Adiciona uma coluna do tipo float.
