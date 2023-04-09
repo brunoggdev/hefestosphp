@@ -10,6 +10,8 @@ class Logado
     */
     public function aplicar():void
     {
-        redirecionar('/bler');
+        if(! usuario('logado') ){
+            redirecionar('/login');
+        }
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+use App\Controllers\PaginasController;
+
 $rota = new \System\Rotas\Roteador();
 $rota->namespacePadrao('\App\Controllers');
 # ----------------------------------------------------------------------
@@ -12,15 +14,6 @@ $rota->namespacePadrao('\App\Controllers');
 
 
 $rota->get('/', 'PaginasController::index');
-$rota->get('/teste1', 'PaginasController::teste');
-$rota->post('/teste1', 'PaginasController::teste');
-$rota->delete('/teste1', 'PaginasController::teste');
-$rota->get('/teste2', [PaginasController::class, 'index'])->filtro('logado');
-$rota->get('/teste3/{param}', function($teste){
-    $retorno = ['teste' => 'sou muito bom cara slc'];
-    if(isset($teste)){
-        $retorno['teste2'] = $teste;
-    }
-    return json($retorno);
-});
-$rota->get('/t/{param}/bb/{param}', 'PaginasController::teste');
+
+// mapeia qualquer rota para um arquivo de mesmo nome (útil para páginas estaticas)
+$rota->get('{param}', 'PaginasController::mostrar');

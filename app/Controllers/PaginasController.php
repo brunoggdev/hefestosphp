@@ -20,8 +20,13 @@ class PaginasController extends ControllerBase
     *  Tip > Describe what you want your method to do first
     * @author Brunoggdev
     */
-    public function teste():string
+    public function mostrar(string $pagina):string
     {
-        dd($this->dadosPost());
+        // Se url não corresponder a um arquivo, renderize 404
+        if(! is_file( pasta_app("Views/$pagina.php") )){
+            abortar();
+        }
+
+        return view($pagina);
     }
 }
