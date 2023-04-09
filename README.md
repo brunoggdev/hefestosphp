@@ -8,6 +8,7 @@ Um framework PHP em português com o intuito principal de diminuir a curva de ap
 # TO-DO (por prioridade)
    - Documentação do Framework
    - Branch com sistemas de roteamento padrão e autenticação de usuario 
+   - Adicionar sqlite para testes
    - Adicionar mais testes
    - Adicionar mais metodos para colecoes
 

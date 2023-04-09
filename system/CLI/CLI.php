@@ -13,6 +13,7 @@ class CLI
             'iniciar', 'servir', 'serve' => $this->iniciar($comando[2] ?? '8080'),
             'criar', 'fazer', 'gerar' => $this->criar($comando[2]??'', $comando[3]??''),
             'testar' => $this->testar($comando[2]??''),
+            'migrar' => $this->migrar($comando[2]??''),
             'ajuda' => $this->ajuda(),
             default => $this->imprimir("Você precisa informar algum comando válido.\n# Tente usar 'php forja ajuda'."),
         };
@@ -49,19 +50,20 @@ class CLI
         if( empty($nome) ){
 
             $this->imprimir("Você deve informar um nome pro arquivo depois do tipo.", 0);
-            $this->imprimir("Ex.: php forja criar $arquivo Usuarios$arquivo.");
+            $this->imprimir("Ex.: php forja criar model UsuariosModel.");
             exit;
 
         }
 
 
         $arquivo = ucfirst($arquivo);
-        $nome = ucfirst($nome);
+        $arquivo === 'Tabela' ? $nome = strtolower($nome) : $nome = ucfirst($nome);
 
         $caminho = match ($arquivo) {
             'Controller' =>  PASTA_RAIZ . 'app/Controllers/',
             'Model' => PASTA_RAIZ . 'app/Models/',
             'Filtro' => PASTA_RAIZ . 'app/Filtros/',
+            'Tabela' => PASTA_RAIZ . 'app/Database/',
         };
 
 
@@ -80,7 +82,7 @@ class CLI
 
 
     /**
-    * Roda todas as closures de teste e imprime seus resultados
+    * Executa todas as closures de teste e imprime seus resultados
     * @author Brunoggdev
     */
     public function testar(string $caminho):void
@@ -153,6 +155,55 @@ class CLI
 
 
     /**
+    * Executa as sql's de criação de tabelas
+    * @author Brunoggdev
+    */
+    public function migrar(string $caminho):void
+    {
+        $caminho = 'app/Database/' . $caminho;
+
+        // Se for um diretorio, busque todos os arquivos dentro
+        if( is_dir($caminho) ){
+            $tabelas = array_merge(
+                glob($caminho . '*.php'),
+                glob($caminho . '**/*.php')
+            );
+
+            // Executa a sql retornada por cada arquivo
+            foreach ($tabelas as $tabela) {
+                $sql = (string) require $tabela;
+
+                if (stripos($sql, 'CREATE TABLE') !== 0){
+                    throw new \Exception('Sql informada não é válida para esta operação.');
+                }
+
+                (new \System\Database\Database)->query($sql);
+                die($sql);
+            }
+
+        }else{
+            // se não, busque apenas o arquivo informado
+            try{
+                $sql = (string) require $caminho;
+
+                if (stripos($sql, 'CREATE TABLE') !== 0){
+                    throw new \Exception('Sql informada não é válida para esta operação.');
+                }
+
+                (new \System\Database\Database)->query($sql);
+            }catch(\ErrorException){
+                $this->imprimir('Arquivo não encontrado.');
+                exit;
+            }
+        }
+
+        echo "\n";
+        $this->imprimir('Tabela(s) criada(s) com sucesso!');
+    }
+
+
+
+    /**
     * Imprime a resposta desejada no terminal
     * @author Brunoggdev
     */
@@ -170,14 +221,16 @@ class CLI
     */
     private function ajuda()
     {
-        $this->imprimir('-------------------------------------------------------------------------------------------------', 0);
-        $this->imprimir('| Comandos |           Parametros                |                  Exemplos                    |', 0);
-        $this->imprimir('-------------------------------------------------------------------------------------------------', 0);
-        $this->imprimir('|  inciar  | porta (opcional, 8080 padrão)       | php forja iniciar (8888)                   |', 0);
-        $this->imprimir('-------------------------------------------------------------------------------------------------', 0);
-        $this->imprimir('|  criar   | [controller, model, filtro] + nome  | php forja criar controller NotasController |', 0);
-        $this->imprimir('-------------------------------------------------------------------------------------------------', 0);
-        $this->imprimir('|  testar  | pasta/arquivo especifico (opcional) | php forja testar (HefestosPHP)             |', 0);
-        $this->imprimir('-------------------------------------------------------------------------------------------------');
+        $this->imprimir('-------------------------------------------------------------------------------------------------------', 0);
+        $this->imprimir('| Comandos |                 Parametros                  |                  Exemplos                  |', 0);
+        $this->imprimir('-------------------------------------------------------------------------------------------------------', 0);
+        $this->imprimir('|  inciar  | porta (opcional, 8080 padrão)               | php forja iniciar (8888)                   |', 0);
+        $this->imprimir('-------------------------------------------------------------------------------------------------------', 0);
+        $this->imprimir('|  criar   | [controller, model, filtro, tabela] + nome  | php forja criar controller NotasController |', 0);
+        $this->imprimir('-------------------------------------------------------------------------------------------------------', 0);
+        $this->imprimir('|  testar  | pasta/arquivo especifico (opcional)         | php forja testar (HefestosPHP)             |', 0);
+        $this->imprimir('----------------------------------------------------------------------------------------------------------');
+        $this->imprimir('|  migrar  | pasta/arquivo especifico (opcional)         | php forja migrar (usuarios.php)             |', 0);
+        $this->imprimir('----------------------------------------------------------------------------------------------------------');
     }
 }

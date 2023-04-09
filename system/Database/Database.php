@@ -209,6 +209,7 @@ class Database
     {
         $this->query = $sql;
         $this->params = $params;
+        $this->executarQuery();
 
         return $this;
     }
