@@ -38,7 +38,7 @@ class ModelBase
     */
     public function buscar(int $id):array
     {
-        return $this->select()->where(['id' => $id])->primeiro();
+        return $this->where(['id' => $id])->primeiro();
     }
 
 
@@ -49,6 +49,16 @@ class ModelBase
     public function select(?array $colunas = ['*']):Database
     {
         return $this->db->select($this->tabela, $colunas);
+    }
+
+
+    /**
+    * Atalho para interagir com o método where do query builder
+    * @author Brunoggdev
+    */
+    public function where(array $params):Database
+    {
+        return $this->db->where($params);
     }
 
 
