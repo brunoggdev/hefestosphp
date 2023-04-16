@@ -29,28 +29,51 @@ class Tabela
     * Adiciona uma coluna do tipo varchar com o número de caracteres informado e se deve ou não ser único.
     * @author Brunoggdev
     */
-    public function varchar(string $coluna, int $tamanho = 255, $unico = false): self
+    public function varchar(string $coluna, int $tamanho = 255, bool $unique = false, bool $nullable = false, mixed $default = false): self
     {
-        $this->sql .= "$coluna VARCHAR($tamanho)" . ($unico ? ' UNIQUE' : '') . ', ';
+        $this->sql .= "$coluna VARCHAR($tamanho) ";
+        if($unique){
+            $this->sql .= 'UNIQUE ';
+        }
+        if (!$nullable) {
+            $this->sql .= 'NOT NULL ';
+        }
+        if($default || $default === null){
+            $this->sql .= $default === null ? 'DEFAULT NULL' : "DEFAULT '$default'";
+        }
+
+        $this->sql .= ', ';
         return $this;
     }
 
     /**
-    * Atalho para varchar com 255 caracteres.
+    * Atalho para varchar com 255 caracteres, segundo parametro define a constraint UNIQUE.
     * @author Brunoggdev
     */
-    public function string(string $coluna, bool $unico = false): self
+    public function string(string $coluna, bool $unique = false, bool $nullable = false, mixed $default = false): self
     {
-        return $this->varchar($coluna, 255, $unico);
+        return $this->varchar($coluna, 255, $unique, $nullable, $default);
     }
 
     /**
     * Adiciona uma coluna do tipo text.
     * @author Brunoggdev
     */
-    public function text(string $coluna): self
+    public function text(string $coluna, bool $unique = false, bool $nullable = false, mixed $default = false): self
     {
-        $this->sql .= "$coluna TEXT, ";
+        $this->sql .= "$coluna TEXT ";
+
+        if($unique){
+            $this->sql .= 'UNIQUE ';
+        }
+        if (!$nullable) {
+            $this->sql .= 'NOT NULL ';
+        }
+        if($default || $default === null){
+            $this->sql .= $default === null ? 'DEFAULT NULL' : "DEFAULT '$default'";
+        }
+        
+        $this->sql .= ', ';
         return $this;
     }
 
@@ -58,19 +81,42 @@ class Tabela
     * Adiciona uma coluna do tipo boolean.
     * @author Brunoggdev
     */
-    public function boolean(string $coluna): self
+    public function boolean(string $coluna, bool $nullable = false, mixed $default = false): self
     {
-        $this->sql .= "$coluna BOOLEAN, ";
+        $this->sql .= "$coluna BOOLEAN ";
+
+        if (!$nullable) {
+            $this->sql .= 'NOT NULL ';
+        }
+        if($default || $default === null){
+            $this->sql .= $default === null ? 'DEFAULT NULL' : "DEFAULT $default";
+        }
+        
+        $this->sql .= ', ';
         return $this;
     }
 
     /**
-    * Adiciona uma coluna do tipo datetime
+    * Adiciona uma coluna do tipo timestamp
     * @author Brunoggdev
     */
-    public function datetime(string $coluna): self
+    public function timestamp(string $coluna, bool $unique = false, bool $nullable = false, mixed $default = 'CURRENT_TIMESTAMP'): self
     {
-        $this->sql .= "$coluna DATETIME, ";
+        $this->sql .= "$coluna TIMESTAMP ";
+
+        if($unique){
+            $this->sql .= 'UNIQUE ';
+        }
+        if (!$nullable) {
+            $this->sql .= 'NOT NULL ';
+        }
+        if($default !== 'CURRENT_TIMESTAMP' || $default === null){
+            $this->sql .= $default === null ? 'DEFAULT NULL' : "DEFAULT '$default'";
+        } else {
+            $this->sql .= "DEFAULT CURRENT_TIMESTAMP";
+        }
+        
+        $this->sql .= ', ';
         return $this;
     }
     
@@ -78,9 +124,23 @@ class Tabela
     * Adiciona uma coluna do tipo date
     * @author Brunoggdev
     */
-    public function date(string $coluna): self
+    public function date(string $coluna, bool $unique = false, bool $nullable = false, string|null $default = 'CURRENT_DATE'): self
     {
-        $this->sql .= "$coluna DATE, ";
+        $this->sql .= "$coluna DATE ";
+
+        if($unique){
+            $this->sql .= 'UNIQUE ';
+        }
+        if (!$nullable) {
+            $this->sql .= 'NOT NULL ';
+        }
+        if($default !== 'CURRENT_DATE' || $default === null){
+            $this->sql .= $default === null ? 'DEFAULT NULL' : "DEFAULT '$default'";
+        } else {
+            $this->sql .= "DEFAULT CURRENT_DATE";
+        }
+        
+        $this->sql .= ', ';
         return $this;
     }
 
@@ -88,9 +148,47 @@ class Tabela
     * Adiciona uma coluna do tipo time
     * @author Brunoggdev
     */
-    public function time(string $coluna): self
+    public function time(string $coluna, bool $unique = false, bool $nullable = false, string|null $default = 'CURRENT_TIME'): self
     {
-        $this->sql .= "$coluna TIME, ";
+        $this->sql .= "$coluna TIME ";
+        
+        if($unique){
+            $this->sql .= 'UNIQUE ';
+        }
+        if (!$nullable) {
+            $this->sql .= 'NOT NULL ';
+        }
+        if($default !== 'CURRENT_TIME'|| $default === null){
+            $this->sql .= $default === null ? 'DEFAULT NULL' : "DEFAULT '$default'";
+        } else {
+            $this->sql .= "DEFAULT CURRENT_DATE";
+        }
+        
+        $this->sql .= ', ';
+        return $this;
+    }
+
+    /**
+    * Adiciona uma coluna do tipo datetime
+    * @author Brunoggdev
+    */
+    public function datetime(string $coluna, bool $unique = false, bool $nullable = false, string|null $default = 'CURRENT_TIMESTAMP'): self
+    {
+        $this->sql .= "$coluna DATETIME ";
+
+        if($unique){
+            $this->sql .= 'UNIQUE ';
+        }
+        if (!$nullable) {
+            $this->sql .= 'NOT NULL ';
+        }
+        if($default !== 'CURRENT_TIMESTAMP' || $default === null){
+            $this->sql .= $default === null ? 'DEFAULT NULL' : "DEFAULT '$default'";
+        } else {
+            $this->sql .= 'DEFAULT CURRENT_TIMESTAMP';
+        }
+        
+        $this->sql .= ', ';
         return $this;
     }
 
@@ -98,9 +196,21 @@ class Tabela
     * Adiciona uma coluna do tipo float.
     * @author Brunoggdev
     */
-    public function int(string $column, int $tamanho): self
+    public function int(string $column, int $tamanho = 11, bool $unique = false, bool $nullable = false, int|bool $default = false): self
     {
-        $this->sql .= "$column INT($tamanho), ";
+        $this->sql .= "$column INT($tamanho) ";
+        
+        if($unique){
+            $this->sql .= 'UNIQUE ';
+        }
+        if (!$nullable) {
+            $this->sql .= 'NOT NULL ';
+        }
+        if($default || $default === null){
+            $this->sql .= $default === null ? 'DEFAULT NULL' : "DEFAULT '$default'";
+        }
+        
+        $this->sql .= ', ';
         return $this;
     }
 
@@ -109,9 +219,21 @@ class Tabela
     * Adiciona uma coluna do tipo float.
     * @author Brunoggdev
     */
-    public function float(string $coluna, int $totalDigits, int $decimalDigits): self
+    public function float(string $coluna, int $totalDigits, int $decimalDigits, bool $unique = false, bool $nullable = false, mixed $default = false): self
     {
-        $this->sql .= "$coluna FLOAT($totalDigits, $decimalDigits), ";
+        $this->sql .= "$coluna FLOAT($totalDigits, $decimalDigits) ";
+                
+        if($unique){
+            $this->sql .= 'UNIQUE ';
+        }
+        if (!$nullable) {
+            $this->sql .= 'NOT NULL ';
+        }
+        if($default || $default === null){
+            $this->sql .= $default === null ? 'DEFAULT NULL' : "DEFAULT '$default'";
+        }
+        
+        $this->sql .= ', ';
         return $this;
     }
 
@@ -119,9 +241,21 @@ class Tabela
     * Adiciona uma coluna do tipo json (nem todos os tipos de sql suportam isso).
     * @author Brunoggdev
     */
-    public function json(string $coluna): self
+    public function json(string $coluna, bool $unique = false, bool $nullable = false, mixed $default = false): self
     {
-        $this->sql .= "$coluna JSON, ";
+        $this->sql .= "$coluna JSON ";
+                
+        if($unique){
+            $this->sql .= 'UNIQUE ';
+        }
+        if (!$nullable) {
+            $this->sql .= 'NOT NULL ';
+        }
+        if($default || $default === null){
+            $this->sql .= $default === null ? 'DEFAULT NULL' : "DEFAULT '$default'";
+        }
+        
+        $this->sql .= ', ';
         return $this;
     }
 

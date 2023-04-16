@@ -37,43 +37,41 @@ class CLI
     * Cria um novo arquivo com as propriedades desejadas
     * @author Brunoggdev
     */
-    private function criar(string $arquivo, string $nome):void
+    private function criar(string $tipo_arquivo, string $nome):void
     {
-        if( empty($arquivo) ){
-
+        if( empty($tipo_arquivo) ){
             $this->imprimir("Você deve informar um tipo de arquivo para ser gerado (controller ou model)", 0);
             $this->imprimir("Ex.: php forja criar Model Usuario");
             exit;
-
         }
 
         if( empty($nome) ){
-
             $this->imprimir("Você deve informar um nome pro arquivo depois do tipo.", 0);
             $this->imprimir("Ex.: php forja criar model UsuariosModel.");
             exit;
-
         }
 
+        $tipo_arquivo = ucfirst($tipo_arquivo);
+        $nome = ucfirst($nome);
 
-        $arquivo = ucfirst($arquivo);
-        $arquivo === 'Tabela' ? $nome = strtolower($nome) : $nome = ucfirst($nome);
-
-        $caminho = match ($arquivo) {
+        $caminho = match ($tipo_arquivo) {
             'Controller' =>  PASTA_RAIZ . 'app/Controllers/',
             'Model' => PASTA_RAIZ . 'app/Models/',
             'Filtro' => PASTA_RAIZ . 'app/Filtros/',
             'Tabela' => PASTA_RAIZ . 'app/Database/',
         };
 
+        $template = require "templates/$tipo_arquivo.php";
+        $arquivo = str_replace('{nome}', $nome, $template);
 
-        $template = require "templates/$arquivo.php";
+        if($tipo_arquivo === 'Tabela'){
+            $nome = date('Y-m-d-His_') . $nome;
+        }
 
-
-        if ( file_put_contents("$caminho$nome.php", str_replace('{nome}', $nome, $template)) ) {
-            $resposta = "$arquivo $nome criado com sucesso.";
+        if ( file_put_contents("$caminho$nome.php", $arquivo) ) {
+            $resposta = "$tipo_arquivo $nome criado com sucesso.";
         } else {
-            $resposta = "Algo deu errado ao gerar o $arquivo.";
+            $resposta = "Algo deu errado ao gerar o $tipo_arquivo.";
         }
 
         $this->imprimir($resposta);
@@ -176,9 +174,14 @@ class CLI
                 if (stripos($sql, 'CREATE TABLE') !== 0){
                     throw new \Exception('Sql informada não é válida para esta operação.');
                 }
+try {
+    //code...
+    (new \System\Database\Database)->query($sql);
+} catch (\Throwable $th) {
+    //throw $th;
+    die($sql);
+}
 
-                (new \System\Database\Database)->query($sql);
-                die($sql);
             }
 
         }else{

@@ -6,9 +6,8 @@ Um framework PHP em português com o intuito principal de diminuir a curva de ap
 ## Forje algo incrível!
 
 # TO-DO (por prioridade)
-   - Fazer migrations serem uma classe anonima
+   - Fazer migrations serem uma classe anonima (talvez)
    - corrigir regex do query builder para ser simbolos nas chaves e nao no valor
-   - iniciar_app ficar diretamente dentro da pasta system (talvez)
    - Documentação do Framework
    - Branch com sistemas de roteamento padrão e autenticação de usuario 
    - Adicionar sqlite para testes

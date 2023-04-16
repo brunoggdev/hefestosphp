@@ -16,7 +16,7 @@ require 'autoloader.php';
 require '../app/Config/constantes.php';
 
 // funções auxiliares nativas do HefestosPHP
-require PASTA_RAIZ . 'system/auxiliares.php';
+require 'auxiliares.php';
 
 // funções auxiliares do usuário do HefestosPHP
 require PASTA_RAIZ . 'app/auxiliares.php';
