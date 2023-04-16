@@ -47,7 +47,7 @@ class Tabela
     }
 
     /**
-    * Atalho para varchar com 255 caracteres, segundo parametro define a constraint UNIQUE.
+    * Apenas um atalho mais legivel para o metodo varchar com 255 caracteres.
     * @author Brunoggdev
     */
     public function string(string $coluna, bool $unique = false, bool $nullable = false, mixed $default = false): self
