@@ -14,8 +14,9 @@ class CLI
             'criar', 'fazer', 'gerar' => $this->criar($comando[2]??'', $comando[3]??''),
             'testar' => $this->testar($comando[2]??''),
             'migrar' => $this->migrar($comando[2]??''),
-            'ajuda' => $this->ajuda(),
-            default => $this->imprimir("Você precisa informar algum comando válido.\n# Tente usar 'php forja ajuda'."),
+            'ajuda'=> $this->ajuda(),
+            default => $this->ajuda(),
+            // default => $this->imprimir("Você precisa informar algum comando válido.\n# Tente usar 'php forja ajuda'."),
         };
     }
 
@@ -174,14 +175,8 @@ class CLI
                 if (stripos($sql, 'CREATE TABLE') !== 0){
                     throw new \Exception('Sql informada não é válida para esta operação.');
                 }
-try {
-    //code...
-    (new \System\Database\Database)->query($sql);
-} catch (\Throwable $th) {
-    //throw $th;
-    die($sql);
-}
 
+                (new \System\Database\Database)->query($sql);
             }
 
         }else{
@@ -232,8 +227,8 @@ try {
         $this->imprimir('|  criar   | [controller, model, filtro, tabela] + nome  | php forja criar controller NotasController |', 0);
         $this->imprimir('-------------------------------------------------------------------------------------------------------', 0);
         $this->imprimir('|  testar  | pasta/arquivo especifico (opcional)         | php forja testar (HefestosPHP)             |', 0);
-        $this->imprimir('----------------------------------------------------------------------------------------------------------');
-        $this->imprimir('|  migrar  | pasta/arquivo especifico (opcional)         | php forja migrar (usuarios.php)             |', 0);
-        $this->imprimir('----------------------------------------------------------------------------------------------------------');
+        $this->imprimir('-------------------------------------------------------------------------------------------------------', 0);
+        $this->imprimir('|  migrar  | pasta/arquivo especifico (opcional)         | php forja migrar (usuarios.php)            |', 0);
+        $this->imprimir('-------------------------------------------------------------------------------------------------------');
     }
 }
