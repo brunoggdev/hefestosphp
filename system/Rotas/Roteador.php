@@ -137,16 +137,13 @@ class Roteador {
                 // mapeando com regex para identificar coringas e separar em params
                 preg_match('#^'.$rota['uri'].'$#', $uri, $params ) 
             ){
-
                 (new Filtros)->filtrar($rota['filtro']);
                 
                 return $this->resposta($rota, $params);
-            
             }
-            
         }
  
-        return abortar();
+        abortar();
     }
 
 

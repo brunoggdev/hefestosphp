@@ -13,7 +13,7 @@ $rota->namespacePadrao('\App\Controllers');
 # ----------------------------------------------------------------------
 
 
-$rota->get('/', 'PaginasController::index');
+$rota->get('/', [PaginasController::class, 'index']);
 
 // mapeia qualquer rota para um arquivo de mesmo nome (útil para páginas estaticas)
-$rota->get('{param}', 'PaginasController::mostrar');
+$rota->get('{param}', [PaginasController::class,'mostrar']);

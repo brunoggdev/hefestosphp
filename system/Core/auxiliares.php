@@ -119,14 +119,14 @@ function componente(string $componente, ?array $dados = []):string
 
 
 /**
-* Define o código http de resposta e retorna a 
-* view do codigo desejado (404 por padrão);
+* Define o código http de resposta e para a execução do app 
+* renderizando a view do codigo desejado (404 por padrão);
 * @author Brunoggdev
 */
-function abortar(?int $codigo = 404):string
+function abortar(?int $codigo = 404):void
 {
     http_response_code($codigo);
-    return view("$codigo");
+    die( view($codigo) );
 }
 
 
@@ -223,7 +223,7 @@ function higienizar(null|string|array $param):null|string|array
 * Retorna a criptografia da senha informada no padrão adotado pelo PHP
 * @author Brunoggdev
 */
-function protegerSenha(string $senha):string
+function encriptar(string $senha):string
 {
     return password_hash($senha, PASSWORD_DEFAULT);
 }

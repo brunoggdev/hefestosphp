@@ -3,7 +3,6 @@
 namespace App\Controllers;
 
 use App\Models\UsuariosModel;
-use System\Rotas\Redirecionar;
 
 class UsuariosController extends ControllerBase
 {

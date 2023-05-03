@@ -9,14 +9,13 @@ class CLI
     */
     public function __construct(array $comando)
     {
-        match ($comando[1]) {
+        match ($comando[1]??false) {
             'iniciar', 'servir', 'serve' => $this->iniciar($comando[2] ?? '8080'),
             'criar', 'fazer', 'gerar' => $this->criar($comando[2]??'', $comando[3]??''),
             'testar' => $this->testar($comando[2]??''),
             'migrar' => $this->migrar($comando[2]??''),
             'ajuda'=> $this->ajuda(),
-            default => $this->ajuda(),
-            // default => $this->imprimir("Você precisa informar algum comando válido.\n# Tente usar 'php forja ajuda'."),
+            default => [$this->imprimir("Você precisa informar algum comando válido."), $this->ajuda()],
         };
     }
 
