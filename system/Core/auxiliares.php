@@ -1,4 +1,9 @@
 <?php
+use System\Rotas\Redirecionar;
+use System\Ferramentas\Colecao;
+use System\Ferramentas\Requisicao;
+use System\Ferramentas\Session;
+
 # ----------------------------------------------------------------------
 # Arquivo de funções auxiliares padrões do HefestosPHP.
 # Normalmente você não deve modificar este arquivo.
@@ -6,10 +11,6 @@
 # utilize o arquivo auxiliares.php encontrado na pasta app.
 # ----------------------------------------------------------------------
 
-use System\Rotas\Redirecionar;
-use System\Ferramentas\Colecao;
-use System\Ferramentas\Requisicao;
-use System\Ferramentas\Session;
 
 /**
 * Retorna o caminho da pasta app concatenado ou não 
