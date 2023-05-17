@@ -1,7 +1,5 @@
 <?php
 
-use App\Controllers\PaginasController;
-
 $rota = new \System\Rotas\Roteador();
 $rota->namespacePadrao('\App\Controllers');
 # ----------------------------------------------------------------------
@@ -13,7 +11,6 @@ $rota->namespacePadrao('\App\Controllers');
 # ----------------------------------------------------------------------
 
 
-$rota->get('/', [PaginasController::class, 'index']);
-
-// mapeia qualquer rota para um arquivo de mesmo nome (útil para páginas estaticas)
-$rota->get('{param}', [PaginasController::class,'mostrar']);
+$rota->get('/', function(){
+    return view('home');
+});
