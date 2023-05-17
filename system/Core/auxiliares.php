@@ -17,7 +17,7 @@ use System\Ferramentas\Session;
 * com um parametero opcional de caminho adicional
 * @author Brunoggdev
 */
-function pasta_raiz(?string $caminhoExtra = ''):string
+function pasta_raiz(string $caminhoExtra = ''):string
 {
     return PASTA_RAIZ . $caminhoExtra;
 }
@@ -29,7 +29,7 @@ function pasta_raiz(?string $caminhoExtra = ''):string
 * com um parametero opcional de caminho adicional
 * @author Brunoggdev
 */
-function pasta_app(?string $caminhoExtra = ''):string
+function pasta_app(string $caminhoExtra = ''):string
 {
     return PASTA_RAIZ . "app/$caminhoExtra";
 }
@@ -41,7 +41,7 @@ function pasta_app(?string $caminhoExtra = ''):string
 * com um parametero opcional de caminho adicional
 * @author Brunoggdev
 */
-function pasta_public(?string $caminhoExtra = ''):string
+function pasta_public(string $caminhoExtra = ''):string
 {
     return PASTA_RAIZ . "public/$caminhoExtra";
 }
@@ -53,7 +53,7 @@ function pasta_public(?string $caminhoExtra = ''):string
 * com um parametero opcional de caminho adicional
 * @author Brunoggdev
 */
-function url_base(?string $caminhoExtra = ''):string
+function url_base(string $caminhoExtra = ''):string
 {
     return URL_BASE . "public/$caminhoExtra";
 }
