@@ -11,9 +11,9 @@ class Tabela
 {
     private string $sql = '';
 
-    public function __construct(string $tablename)
+    public function __construct(public readonly string $nome_tabela)
     {
-        $this->sql = "CREATE TABLE $tablename (";
+        $this->sql = "CREATE TABLE $nome_tabela (";
     }
 
     /**
