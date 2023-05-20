@@ -1,14 +1,10 @@
 <?php
-
 $rota = new \System\Rotas\Roteador();
 $rota->namespacePadrao('\App\Controllers');
-# ----------------------------------------------------------------------
-# Configure abaixo suas rotas. O objeto "$rota" pode ser utilizado:
-# $rota->[verbohttp]('/usuario/{param}', 'Controller::metodo');
-# Para usar uma coringa (wildcard), use {param} ente barras da url
-# $rota->[verbohttp]('uri', [Controller::class, 'metodo']);
-# $rota->[verbohttp]('uri', function(){});
-# ----------------------------------------------------------------------
+/* ----------------------------------------------------------------------
+Cada rota deve ser respondida com o retorno de uma função, seja ela uma
+função anonima ou um metodo de controller. Consulte a documentação.
+---------------------------------------------------------------------- */
 
 
 $rota->get('/', function(){
