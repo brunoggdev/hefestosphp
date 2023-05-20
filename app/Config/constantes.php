@@ -1,9 +1,8 @@
 <?php
-# ----------------------------------------------------------------------
-# Este arquivo deve conter todas as constantes usadas no projeto.
-# Para a maioria dos casos, a palavra reservada "const" usada 
-# abaixo funciona como a função Define() que você talvez conheça.
-# ----------------------------------------------------------------------
+/* ----------------------------------------------------------------------
+Este arquivo deve conter todas as constantes usadas no projeto, similar
+ao arquivo ".env" que você verá em projetos mais complexos.
+---------------------------------------------------------------------- */
 
 const PASTA_RAIZ = __DIR__ . '/../../';
 
