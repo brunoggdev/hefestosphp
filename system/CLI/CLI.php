@@ -52,7 +52,9 @@ class CLI
         }
 
         $tipo_arquivo = ucfirst($tipo_arquivo);
-        $nome = ucfirst($nome);
+        if($tipo_arquivo !== 'Tabela'){
+            $nome = ucfirst($nome);
+        }
 
         $caminho = match ($tipo_arquivo) {
             'Controller' =>  PASTA_RAIZ . 'app/Controllers/',
