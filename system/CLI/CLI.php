@@ -46,8 +46,8 @@ class CLI
         }
 
         if( empty($nome) ){
-            $this->imprimir("Você deve informar um nome pro arquivo depois do tipo.", 0);
-            $this->imprimir("Ex.: php forja criar model UsuariosModel.");
+            $this->imprimir("\033[93mVocê deve informar um nome pro arquivo depois do tipo.\033[0m", 0);
+            $this->imprimir("\033[93mEx.: php forja criar model UsuariosModel.\033[0m");
             exit;
         }
 
@@ -69,9 +69,9 @@ class CLI
         }
 
         if ( file_put_contents("$caminho$nome.php", $arquivo) ) {
-            $resposta = "$tipo_arquivo $nome criado com sucesso.";
+            $resposta = "\033[92m$tipo_arquivo $nome criado com sucesso.\033[0m";
         } else {
-            $resposta = "Algo deu errado ao gerar o $tipo_arquivo.";
+            $resposta = "\033[91mAlgo deu errado ao gerar o $tipo_arquivo.";
         }
 
         $this->imprimir($resposta);
