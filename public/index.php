@@ -1,7 +1,7 @@
 <?php
 try {
 
-    require '../system/core/iniciar_app.php';
+    require '../system/Core/iniciar_app.php';
     require '../app/Config/rotas.php';
 
     $uri = parse_url($_SERVER['REQUEST_URI'])['path'];
