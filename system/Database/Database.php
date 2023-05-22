@@ -23,18 +23,31 @@ class Database
     * para se conectar ao banco de dados e instanciar o PDO.
     * @author brunoggdev
     */
-    public function __construct()
+    public function __construct(?array $dbconfig = null)
     {
-        // nota: Injeção de dependencias, eu sei
-        [$host, $nomeDB, $usuario, $senha] = require pasta_app('Config/database.php');
-
-        $dsn = "mysql:host=$host;dbname=$nomeDB";
+        [$dsn, $usuario, $senha] = $dbconfig ?? $this->connectionConfig();
 
         $this->connection = new PDO($dsn, $usuario, $senha, [
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
         ]); 
     }
 
+    /**
+     * Busca as configurações e formata o dsn de conexão com o banco
+     * @author Brunoggdev
+    */
+    public function connectionConfig():array
+    {
+        $dbconfig = require pasta_app('Config/database.php');
+
+        if($dbconfig['driver'] === 'mysql'){
+            $dsn = "mysql:host=$dbconfig[host];dbname=$dbconfig[nomeDB]";
+        }else{
+            $dsn = "sqlite:$dbconfig[sqlite]";
+        }
+
+        return [$dsn, $dbconfig['usuario'], $dbconfig['senha']];
+    }
 
     /**
     * Adiciona um SELECT na consulta

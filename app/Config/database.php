@@ -1,8 +1,10 @@
 <?php
 
 return [
-    'localhost',    //host
-    'teste',        //nome 
-    'root',         //usuario
-    ''              //senha
+    'driver'  => 'sqlite', // mysql ou sqlite
+    'sqlite'  => 'app/Database/default.sqlite', // caso driver seja sqlite
+    'host'    => 'localhost', // caso driver seja mysql
+    'nomeDB'  => 'teste', // caso driver seja mysql
+    'usuario' => 'root',
+    'senha'   => ''
 ];

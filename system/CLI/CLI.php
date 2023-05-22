@@ -60,7 +60,7 @@ class CLI
             'Controller' =>  PASTA_RAIZ . 'app/Controllers/',
             'Model' => PASTA_RAIZ . 'app/Models/',
             'Filtro' => PASTA_RAIZ . 'app/Filtros/',
-            'Tabela' => PASTA_RAIZ . 'app/Database/',
+            'Tabela' => PASTA_RAIZ . 'app/Database/tabelas/',
         };
 
         $template = require "templates/$tipo_arquivo.php";
