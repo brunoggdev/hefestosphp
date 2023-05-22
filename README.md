@@ -6,14 +6,15 @@ Um framework PHP em português com o intuito principal de diminuir a curva de ap
 ## Forje algo incrível!
 
 # TO-DO (por prioridade)
+   - adicionar suporte à sqlite
    - corrigir regex do query builder para ser simbolos nas chaves e nao no valor
    - Documentação do Framework
    - Adicionar mais testes
    - Adicionar mais metodos para colecoes
    - Adicionar sqlite para testes
-   - Branch com sistemas de roteamento padrão e autenticação de usuario 
 
    ## Talvez
+   - Branch com sistemas de roteamento padrão e autenticação de usuario 
    - Fazer migrations serem uma classe anonima
    - agrupar rotas
    - Models com active record pattern
