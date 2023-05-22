@@ -156,9 +156,9 @@ class Database
                 
             }else{
                 
-                $pieces = explode(' ', $value);
-                $operador = $pieces[0];
-                $this->params[$chave] = $pieces[1];
+                $pieces = explode(' ', $chave);
+                $operador = $pieces[1];
+                $this->params[$pieces[0]] = $value;
                 
                 $this->query .= "$key $operador :$chave ";
                 
