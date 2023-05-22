@@ -1,0 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap');
+body div{
+    height: 100vh;
+    display: grid;
+    place-items: center;
+    font-family: 'JetBrains Mono', monospace;
+}
