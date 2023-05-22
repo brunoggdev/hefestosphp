@@ -21,7 +21,13 @@ class Tabela
     * @author Brunoggdev
     */
     public function id(string $coluna = 'id'): self {
-        $this->sql .= "$coluna int unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
+        if((require pasta_app('Config/database.php'))['driver'] == 'mysql'){
+            $primary_key = "$coluna int unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
+        }else{
+            $primary_key = "$coluna INTEGER PRIMARY KEY, ";
+        }
+        
+        $this->sql .= $primary_key;
         return $this;
     }
 

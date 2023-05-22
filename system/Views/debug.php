@@ -22,7 +22,7 @@
         echo '<h3>Encontramos um erro.</h3>';
         echo '<br>';
         echo '<br>';
-        echo '<strong>ERRO:</strong> ' . $erro->getMessage() . '.';
+        echo '<strong>ERRO:</strong> ' . $erro->getMessage();
         echo '<br>';
         echo '<br>';
         echo '<strong>NA LINHA:</strong> ' . $erro->getLine();

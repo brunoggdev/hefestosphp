@@ -8,4 +8,5 @@ Pode ser utilizando a classe Tabela ou mesmo uma string pura.
 
 
 return ( new Tabela('teste') )
-    ->id();
+    ->id()
+    ->string('teste');
