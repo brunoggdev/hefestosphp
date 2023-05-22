@@ -7,7 +7,7 @@ return <<<EOT
 
     class {nome} extends ControllerBase
     {
-        public function index():string|Redirecionar
+        public function index()
         {
             // return view();
             // ou
