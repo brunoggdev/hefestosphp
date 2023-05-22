@@ -13,34 +13,8 @@ try {
     exit;
 
 } catch (\Throwable $erro) {
-
-    if (ENVIROMENT === 'producao'){
-
-        echo '<h1>Ops, tivemos um problema.</h1>';
-
-    }else{
-        echo '<br>';
-        echo '<h1>HefestosPHP</h1>';
-        echo '<h3>Encontramos um erro.</h3>';
-        echo '<br>';
-        echo '<br>';
-        echo '<strong>ERRO:</strong> ' . $erro->getMessage() . '.';
-        echo '<br>';
-        echo '<br>';
-        echo '<strong>NA LINHA:</strong> ' . $erro->getLine();
-        echo '<br>';
-        echo '<br>';
-        echo '<strong>DO ARQUIVO:</strong> ' . $erro->getFile();
-        echo '<br>';
-        echo '<br>';
-        echo '<br>';
-        echo '<br>';
-        echo '<strong>TRILHA:</strong>'; ;
-        echo '<br>';
-        echo '<pre>';
-        foreach ($erro->getTrace() as $traco) {
-            print_r($traco);
-        }
-        exit;
-    }
+    ob_clean(); // Clean the output buffer
+    http_response_code(500); // Set the appropriate HTTP response code for the error
+    
+    die( view('debug', ['erro' => $erro]) );
 }
