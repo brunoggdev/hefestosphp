@@ -16,5 +16,4 @@ return <<<EOT
             // lógica do seu filtro, normalmente retornará um redirecionar
         }
     }
-
     EOT;

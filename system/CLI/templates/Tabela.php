@@ -11,5 +11,4 @@ return <<<EOT
     
     return ( new Tabela('{nome}') )
         ->id();
-
     EOT;

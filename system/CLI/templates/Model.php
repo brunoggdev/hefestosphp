@@ -9,5 +9,4 @@ return <<<EOT
         // tabela do banco de dados ao qual o model está relacionado
         protected \$tabela = '';
     }
-
     EOT;
