@@ -4,12 +4,12 @@ use System\Ferramentas\Colecao;
 use System\Ferramentas\Requisicao;
 use System\Ferramentas\Session;
 
-# ----------------------------------------------------------------------
-# Arquivo de funções auxiliares padrões do HefestosPHP.
-# Normalmente você não deve modificar este arquivo.
-# Caso queira adicionar suas próprias funções auxiliares, 
-# utilize o arquivo auxiliares.php encontrado na pasta app.
-# ----------------------------------------------------------------------
+/* ----------------------------------------------------------------------
+Arquivo de funções auxiliares padrões do HefestosPHP.
+Normalmente você não deve modificar este arquivo.
+Caso queira adicionar suas próprias funções auxiliares, 
+utilize o arquivo auxiliares.php encontrado na pasta app.
+---------------------------------------------------------------------- */
 
 
 /**
@@ -17,9 +17,13 @@ use System\Ferramentas\Session;
 * com um parametero opcional de caminho adicional
 * @author Brunoggdev
 */
-function pasta_raiz(string $caminhoExtra = ''):string
+function pasta_raiz(string $caminho_extra = ''):string
 {
-    return PASTA_RAIZ . $caminhoExtra;
+    if(!str_starts_with($caminho_extra, '/')){
+        $caminho_extra = '/' . $caminho_extra;
+    }
+
+    return PASTA_RAIZ . $caminho_extra;
 }
 
 
@@ -29,9 +33,13 @@ function pasta_raiz(string $caminhoExtra = ''):string
 * com um parametero opcional de caminho adicional
 * @author Brunoggdev
 */
-function pasta_app(string $caminhoExtra = ''):string
+function pasta_app(string $caminho_extra = ''):string
 {
-    return PASTA_RAIZ . "app/$caminhoExtra";
+    if(!str_starts_with($caminho_extra, '/')){
+        $caminho_extra = '/' . $caminho_extra;
+    }
+
+    return PASTA_RAIZ . 'app' . $caminho_extra;
 }
 
 
@@ -41,9 +49,13 @@ function pasta_app(string $caminhoExtra = ''):string
 * com um parametero opcional de caminho adicional
 * @author Brunoggdev
 */
-function pasta_public(string $caminhoExtra = ''):string
+function pasta_public(string $caminho_extra = ''):string
 {
-    return PASTA_RAIZ . "public/$caminhoExtra";
+    if(!str_starts_with($caminho_extra, '/')){
+        $caminho_extra = '/' . $caminho_extra;
+    }
+
+    return PASTA_RAIZ . 'public' . $caminho_extra;
 }
 
 
@@ -53,9 +65,15 @@ function pasta_public(string $caminhoExtra = ''):string
 * com um parametero opcional de caminho adicional
 * @author Brunoggdev
 */
-function url_base(string $caminhoExtra = ''):string
+function url_base(string $caminho_extra = ''):string
 {
-    return URL_BASE . "public/$caminhoExtra";
+    if(!str_starts_with($caminho_extra, '/')){
+        $caminho_extra = '/' . $caminho_extra;
+    }
+
+    $prefixo = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https://' : 'http://';
+
+    return $prefixo . URL_BASE . $caminho_extra;
 }
 
 
@@ -100,7 +118,13 @@ function view(string $view, ?array $dados = []):string
     // Guarda o conteúdo da view requerida como string
     ob_start();
 
-    require pasta_app("Views/$view.php");
+    if(is_file( $arquivo = PASTA_RAIZ . "app/Views/$view.php" )){
+        require $arquivo;
+    }elseif (is_file( $arquivo = PASTA_RAIZ . "system/Views/$view.php" )) {
+        require $arquivo;
+    }else{
+        throw new Exception("View '$view' não encontrada.", 1);
+    }
 
     // Retornando o conteúdo da view que foi guardado como string
     return ob_get_clean();
