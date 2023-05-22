@@ -131,7 +131,6 @@ function view(string $view, ?array $dados = []):string
 }
 
 
-
 /**
 * Retorna o conteúdo de um componente especificado como string
 * @author Brunoggdev
@@ -141,6 +140,15 @@ function componente(string $componente, ?array $dados = []):string
     return view("componentes/$componente", $dados);
 }
 
+
+/**
+* Atalho para a função componente
+* @author Brunoggdev
+*/
+function comp(string $componente, ?array $dados = []):string
+{
+    return componente($componente, $dados);
+}
 
 
 /**
