@@ -58,7 +58,7 @@ class ModelBase
     */
     public function where(array $params):Database
     {
-        return $this->db->where($params);
+        return $this->select()->where($params);
     }
 
 
