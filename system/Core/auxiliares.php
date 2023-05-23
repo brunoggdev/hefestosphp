@@ -88,9 +88,9 @@ function url_base(string $caminho_extra = ''):string
 */
 function dd(mixed ...$params)
 {
-    if (!empty($params)) {
-        echo '<pre>';
-        var_dump($params);
+    foreach ($params as $param) {
+        echo '<br>';
+        var_dump($param);
     }
     exit;
 }
