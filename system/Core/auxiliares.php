@@ -86,11 +86,11 @@ function url_base(string $caminho_extra = ''):string
 * imprime o que for passado como parametro opcional para debug.
 * @author Brunoggdev
 */
-function dd(mixed $param = null)
+function dd(mixed ...$params)
 {
-    if ($param) {
+    if (!empty($params)) {
         echo '<pre>';
-        var_dump($param);
+        var_dump($params);
     }
     exit;
 }
