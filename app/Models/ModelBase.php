@@ -56,7 +56,7 @@ class ModelBase
     * Atalho para interagir com o método where do query builder
     * @author Brunoggdev
     */
-    public function where(array $params):Database
+    public function where(array|string $params):Database
     {
         return $this->select()->where($params);
     }
