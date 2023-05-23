@@ -196,8 +196,7 @@ class CLI
             }
         }
 
-        echo "\n";
-        $this->imprimir('Tabela(s) criada(s) com sucesso!');
+        echo "\n\033[92m# Tabela(s) criada(s) com sucesso!\033[0m";
     }
 
 
