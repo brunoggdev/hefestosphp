@@ -43,7 +43,8 @@ class Database
         if($dbconfig['driver'] === 'mysql'){
             $dsn = "mysql:host=$dbconfig[host];dbname=$dbconfig[nomeDB]";
         }else{
-            $dsn = "sqlite:$dbconfig[sqlite]";
+            $dsn = 'sqlite:'.PASTA_RAIZ.$dbconfig['sqlite'];
+            // dd($dsn);
         }
 
         return [$dsn, $dbconfig['usuario'], $dbconfig['senha']];
