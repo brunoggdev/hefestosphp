@@ -13,11 +13,13 @@ class ControllerBase
     {
        $retorno = match ( gettype($index) ) {
            'string' => $_POST[$index]??null,
-           'array' => array_intersect_key($_POST, $index),
+           'array' => array_intersect_key($_POST, array_flip($index)),
            default => $_POST
        };
 
-       unset($retorno['_method']); 
+        if(isset($retorno['_method'])){
+            unset($retorno['_method']);
+        }
        
        return $higienizar ? higienizar($retorno) : $retorno;
     }
@@ -31,11 +33,13 @@ class ControllerBase
     {
         $retorno = match ( gettype($index) ) {
             'string' => $_GET[$index]??null,
-            'array' => array_intersect_key($_GET, $index),
+            'array' => array_intersect_key($_GET, array_flip($index)),
             default => $_GET
         };
- 
-        unset($retorno['_method']);
+        
+        if(isset($retorno['_method'])){
+            unset($retorno['_method']);
+        }
         
         return $higienizar ? higienizar($retorno) : $retorno;
     }
