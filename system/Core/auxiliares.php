@@ -100,9 +100,9 @@ function dd(mixed ...$params)
 * Retorna o array ou objeto informado como JSON
 * @author Brunoggdev
 */
-function json(array|object $param):string
+function json(mixed $param):string
 {
-    return json_encode($param);
+    return json_encode($param, JSON_PRETTY_PRINT);
 }
 
 
