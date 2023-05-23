@@ -16,7 +16,7 @@ class Database
     protected string $query = '';
     protected $params = [];
     protected PDOStatement $queryInfo;
-    private bool $comoArray = false;
+    private bool $comoArray = true;
 
     /**
     * Requisita um array contendo [$host, $nomeBD, $usuario, $senha]
@@ -132,38 +132,34 @@ class Database
 
     /**
     * Adiciona um WHERE na consulta
-    * @param Array $params Associative array 
+    * @param array|string $params string ou array associativo
     * @example $params ['id' => '2'] equals: id = 2 in the sql
-    * @example $params ['id' => '>= 1'] equals: id >= 1 in the sql
+    * @example $params ['id >=' => '1'] equals: id >= 1 in the sql
     * @author brunoggdev
     */
-    public function where(array $params): self
+    public function where(array|string $params): self
     {
-        
-        foreach ($params as $key => $value) {
-            
-            if (! str_contains($this->query, 'WHERE') ) {
-                $this->query .= ' WHERE ';
-            }
+        if (! str_contains($this->query, 'WHERE') ) {
+            $this->query .= ' WHERE ';
+        }
 
+        if(is_string($params)){
+            $this->query .= $params;
+            return $this;
+        }
+
+        foreach ($params as $key => $value) {
             // retirando pontos pois não são aceitos nas chaves de array
             $chave = str_replace('.', '', $key);
             
             // Assume "=" caso nenhum operador seja informado no valor
-            if(!preg_match('/^(=|<|>|<=|>=|like)/i', $value)){
-                $this->params[$chave] = $value;
-                $this->query .= "$key = :$chave ";
-                
+            if(!preg_match('/(=|<|>|<=|>=|like)$/i', $chave)){
+                $this->params[] = $value;
+                $this->query .= "$key = ? ";
             }else{
-                
-                $pieces = explode(' ', $value);
-                $operador = $pieces[0];
-                $this->params[$chave] = $pieces[1];
-                
-                $this->query .= "$key $operador :$chave ";
-                
+                $this->params[] = $value;
+                $this->query .= "$chave ? ";
             }
-
             
             if($key !== array_key_last($params)){
                 $this->query .= 'AND ';
@@ -298,6 +294,17 @@ class Database
     public function comoArray():self
     {
         $this->comoArray = true;
+
+        return $this;
+    }
+
+    /**
+    * Define o retorno do banco de dados como um objeto do tipo colecao
+    * @author Brunoggdev
+    */
+    public function comoColecao():self
+    {
+        $this->comoArray = false;
 
         return $this;
     }

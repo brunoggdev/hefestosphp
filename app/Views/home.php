@@ -9,7 +9,22 @@
 </head>
 <body>
     <div>
-        <h1>Hello, World!</h1>
+        <h1></h1>
     </div>
+    <script>
+        const msg = 'Hello, World!'
+        const h1 = document.getElementsByTagName('h1')[0]
+    
+        function digitar(i){
+
+            h1.innerHTML += msg.charAt(i)
+
+            if(i < msg.length){
+                setTimeout(() => {digitar(i+1)}, 100)
+            }
+        }
+
+        digitar(0)
+    </script>
 </body>
 </html>
