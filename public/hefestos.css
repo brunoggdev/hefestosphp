@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap');
 body div{
-    height: 100vh;
+    height: 70vh;
     display: grid;
     place-items: center;
     font-family: 'JetBrains Mono', monospace;
