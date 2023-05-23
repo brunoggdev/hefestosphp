@@ -12,7 +12,7 @@
         <h1></h1>
     </div>
     <script>
-        const msg = 'Hello, World!'
+        const msg = 'HefestosPHP - Hello, World!'
         const h1 = document.getElementsByTagName('h1')[0]
     
         function digitar(i){
