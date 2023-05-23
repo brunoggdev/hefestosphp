@@ -28,7 +28,8 @@ class CLI
     */
     private function iniciar(string $porta):void
     {
-        echo("\033[92m");
+        echo("\n\033[92m# Servidor de desenvolvimento do HefestosPHP iniciando em http://localhost:$porta.\n");
+        echo("\033[93m# Pressione ctrl+c para interromper.\033[0m\n");
         exec("php -S localhost:$porta -t public");
     }
 
