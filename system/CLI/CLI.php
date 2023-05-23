@@ -11,7 +11,8 @@ class CLI
     {
         match ($comando[1]??false) {
             'iniciar', 'servir', 'serve' => $this->iniciar($comando[2] ?? '8080'),
-            'criar', 'fazer', 'gerar' => $this->criar($comando[2]??'', $comando[3]??''),
+            'forjar', 'criar', 'fazer', 'gerar' => $this->criar($comando[2]??'', $comando[3]??''),
+            'brincar' => $this->brincar(),
             'testar' => $this->testar($comando[2]??''),
             'migrar' => $this->migrar($comando[2]??''),
             'ajuda'=> $this->ajuda(),
@@ -72,12 +73,23 @@ class CLI
         }
 
         if ( file_put_contents("$caminho$nome.php", $arquivo) ) {
-            $resposta = "\n\033[92m# $tipo_arquivo $nome criado com sucesso.\033[0m";
+            $resposta = "\n\033[92m# $tipo_arquivo $nome criado com sucesso.\n\033[0m";
         } else {
-            $resposta = "\n\033[91m# Algo deu errado ao gerar o $tipo_arquivo.";
+            $resposta = "\n\033[91m# Algo deu errado ao gerar o $tipo_arquivo.\n";
         }
 
         echo($resposta);
+    }
+
+
+    /**
+     * Inicia um idle repl do PHP no console
+     * @author Brunoggdev
+    */
+    public function brincar():void
+    {
+        exec('php -a');
+        exec('#cli.prompt=hello world :>');
     }
 
 
