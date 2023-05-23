@@ -28,6 +28,7 @@ class CLI
     */
     private function iniciar(string $porta):void
     {
+        echo("\033[92m");
         exec("php -S localhost:$porta -t public");
     }
 
@@ -40,15 +41,13 @@ class CLI
     private function criar(string $tipo_arquivo, string $nome):void
     {
         if( empty($tipo_arquivo) ){
-            $this->imprimir("Você deve informar um tipo de arquivo para ser gerado (controller ou model)", 0);
-            $this->imprimir("Ex.: php forja criar Model Usuario");
-            exit;
+            echo("\n\033[93m# Qual tipo de arquivo deseja criar? [controller, model, filtro ou tabela].\033[0m\n\n");
+            $tipo_arquivo = readline('> ');
         }
 
         if( empty($nome) ){
-            $this->imprimir("\033[93mVocê deve informar um nome pro arquivo depois do tipo.\033[0m", 0);
-            $this->imprimir("\033[93mEx.: php forja criar model UsuariosModel.\033[0m");
-            exit;
+            echo("\n\033[93m# Qual nome do(a) $tipo_arquivo?.\033[0m\n\n");
+            $nome = readline('> ');
         }
 
         $tipo_arquivo = ucfirst($tipo_arquivo);
@@ -61,6 +60,7 @@ class CLI
             'Model' => PASTA_RAIZ . 'app/Models/',
             'Filtro' => PASTA_RAIZ . 'app/Filtros/',
             'Tabela' => PASTA_RAIZ . 'app/Database/tabelas/',
+            default => die("\n\033[91m# Tipo de arquivo '$tipo_arquivo' não suportado.\033[0m")
         };
 
         $template = require "templates/$tipo_arquivo.php";
@@ -71,12 +71,12 @@ class CLI
         }
 
         if ( file_put_contents("$caminho$nome.php", $arquivo) ) {
-            $resposta = "\033[92m$tipo_arquivo $nome criado com sucesso.\033[0m";
+            $resposta = "\n\033[92m# $tipo_arquivo $nome criado com sucesso.\033[0m";
         } else {
-            $resposta = "\033[91mAlgo deu errado ao gerar o $tipo_arquivo.";
+            $resposta = "\n\033[91m# Algo deu errado ao gerar o $tipo_arquivo.";
         }
 
-        $this->imprimir($resposta);
+        echo($resposta);
     }
 
 
