@@ -12,7 +12,7 @@ class CLI
         match ($comando[1]??false) {
             'iniciar', 'servir', 'serve' => $this->iniciar($comando[2] ?? '8080'),
             'forjar', 'criar', 'fazer', 'gerar' => $this->criar($comando[2]??'', $comando[3]??''),
-            'brincar' => $this->brincar(),
+            'brincar' => $this->repl(),
             'testar' => $this->testar($comando[2]??''),
             'migrar' => $this->migrar($comando[2]??''),
             'ajuda'=> $this->ajuda(),
@@ -83,13 +83,31 @@ class CLI
 
 
     /**
-     * Inicia um idle repl do PHP no console
+     * Inicia um idle repl do PHP no terminal
      * @author Brunoggdev
     */
-    public function brincar():void
+    public function repl():void
     {
-        exec('php -a');
-        exec('#cli.prompt=hello world :>');
+        set_error_handler(function($errno, $errstr, $errfile, $errline){
+            throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
+        });
+
+        echo "\n\033[92m# Ambiente interativo do HefestosPHP iniciado.\033[0m";
+        echo "\n\033[93m# Pressione ctrl+c para sair.\033[0m";
+        while (true) {
+            echo "\n\n";
+            try {
+                $entrada = readline("HefestosPHP > ");
+                echo PHP_EOL;
+                $saida = eval($entrada);
+                isset($saida) && var_export($saida);
+            } catch (\Throwable $th) {
+                echo 
+                "\033[91m -> Erro encontrado: \033[0m" . $th->getMessage() . "\n" . 
+                "\033[91m -> Na linha: \033[0m" . $th->getLine() . "\n" . 
+                "\033[91m -> Do arquivo: \033[0m" . $th->getFile();
+            }
+        }
     }
 
 
