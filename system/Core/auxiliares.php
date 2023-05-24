@@ -1,4 +1,7 @@
 <?php
+
+use App\Models\ModelBase;
+use System\Database\Database;
 use System\Rotas\Redirecionar;
 use System\Ferramentas\Colecao;
 use System\Ferramentas\Requisicao;
@@ -332,17 +335,38 @@ function coletar(array $array):Colecao
     return new Colecao($array);
 }
 
+/**
+ * Atalho conveniente para retornar uma instancia da Database
+ * @author Brunoggdev
+*/
+function db():Database
+{
+    return new Database();
+}
+
+
+/**
+ * Atalho conveniente para retornar uma instancia da model desejada
+ * @author Brunoggdev
+*/
+function model(string $model):ModelBase
+{
+    $model = "\\App\\Models\\$model";
+    return new $model;
+}
+
+
 
 /**
 * Atalho para interagir com a sessão do usuário: Retorna o valor desejado da sessão do usuário ou, caso  
 * nenhum valor seja informado, se a sessão está ativa.
 * @author Brunoggdev
 */
-function usuario(string $index = 'logado'):mixed
-{
-    if(empty( sessao('usuario') )){
-        return '';
-    }
+// function usuario(string $index = 'logado'):mixed
+// {
+//     if(empty( sessao('usuario') )){
+//         return '';
+//     }
 
-    return sessao('usuario')[$index];
-}
+//     return sessao('usuario')[$index];
+// }
