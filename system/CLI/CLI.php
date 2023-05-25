@@ -11,10 +11,10 @@ class CLI
     {
         match ($comando[1]??false) {
             'iniciar', 'servir', 'serve' => $this->iniciar($comando[2] ?? '8080'),
-            'forjar', 'criar', 'fazer', 'gerar' => $this->criar($comando[2]??'', $comando[3]??''),
-            'brincar' => $this->repl(),
-            'testar' => $this->testar($comando[2]??''),
+            'criar', 'fazer', 'gerar' => $this->criar($comando[2]??'', $comando[3]??''),
             'migrar' => $this->migrar($comando[2]??''),
+            'fornalha', 'soldar', 'forjar', 'brincar' => $this->fornalha(),
+            'testar' => $this->testar($comando[2]??''),
             'ajuda'=> $this->ajuda(),
             default => [$this->imprimir("Você precisa informar algum comando válido."), $this->ajuda()],
         };
@@ -86,18 +86,18 @@ class CLI
      * Inicia um idle repl do PHP no terminal
      * @author Brunoggdev
     */
-    public function repl():void
+    public function fornalha():void
     {
         set_error_handler(function($errno, $errstr, $errfile, $errline){
             throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
         });
 
-        echo "\n\033[92m# Ambiente interativo do HefestosPHP iniciado.\033[0m";
+        echo "\n\033[92m# Fornalha iniciada - Ambiente interativo do HefestosPHP.\033[0m";
         echo "\n\033[93m# Pressione ctrl+c para sair.\033[0m";
         while (true) {
             echo "\n\n";
             try {
-                $entrada = readline("HefestosPHP > ");
+                $entrada = readline("Fornalha > ");
                 echo PHP_EOL;
                 $saida = eval($entrada);
                 isset($saida) && var_export($saida);
