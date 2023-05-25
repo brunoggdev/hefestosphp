@@ -99,6 +99,11 @@ class CLI
             try {
                 $entrada = readline("Fornalha > ");
                 echo PHP_EOL;
+
+                if(preg_match('/(echo|return|var_dump|print_r)/', $entrada) !== 1){
+                    $entrada = 'return ' . $entrada;
+                }
+
                 $saida = eval($entrada);
                 isset($saida) && var_export($saida);
             } catch (\Throwable $th) {
