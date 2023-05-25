@@ -91,10 +91,19 @@ function url_base(string $caminho_extra = ''):string
 */
 function dd(mixed ...$params)
 {
+    $terminal =  http_response_code() === false;
+
+    if(!$terminal){
+        echo '<pre>';
+    }
+
+    echo  $terminal ? PHP_EOL : '<br>';
+    
     foreach ($params as $param) {
         var_dump($param);
-        echo '<br>';
+        echo  $terminal ? PHP_EOL.PHP_EOL : '<br><hr><br>';
     }
+
     exit;
 }
 
