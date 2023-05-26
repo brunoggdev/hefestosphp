@@ -342,7 +342,8 @@ function metodoHttp(string $metodoHttp):string
 function abreForm(string $metodoHttp, string $action):string
 {
     $metodoHttp = strtoupper($metodoHttp);
-
+    $action = str_starts_with($action, 'http') ? $action : url_base($action);
+    
     if($metodoHttp === 'GET' || $metodoHttp === 'POST'){
         $retorno = "<form action=$action method=$metodoHttp>";
     }else{
