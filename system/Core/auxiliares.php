@@ -1,5 +1,6 @@
 <?php
 
+use App\Controllers\ControllerBase;
 use App\Models\ModelBase;
 use System\Database\Database;
 use System\Rotas\Redirecionar;
@@ -108,14 +109,29 @@ function dd(mixed ...$params)
 }
 
 
+
 /**
-* Retorna o array ou objeto informado como JSON
-* @author Brunoggdev
+ * Atalho conveniente para retornar uma instancia do controller desejada
+ * @author Brunoggdev
 */
-function json(mixed $param):string
+function controller(string $controller):ControllerBase
 {
-    return json_encode($param, JSON_PRETTY_PRINT);
+    $controller = "\\App\\Controllers\\$controller";
+    return new $controller;
 }
+
+
+
+/**
+ * Atalho conveniente para retornar uma instancia da model desejada
+ * @author Brunoggdev
+*/
+function model(string $model):ModelBase
+{
+    $model = "\\App\\Models\\$model";
+    return new $model;
+}
+
 
 
 /**
@@ -124,7 +140,7 @@ function json(mixed $param):string
 */
 function view(string $view, ?array $dados = []):string
 {
-    // Transforma um array associativo em variaveis.
+    // toraando o array de dados em variaveis disponíveis na view;
     extract($dados);
 
     // Guarda o conteúdo da view requerida como string
@@ -141,6 +157,19 @@ function view(string $view, ?array $dados = []):string
     // Retornando o conteúdo da view que foi guardado como string
     return ob_get_clean();
 }
+
+
+
+
+/**
+* Retorna o array ou objeto informado como JSON
+* @author Brunoggdev
+*/
+function json(mixed $param):string
+{
+    return json_encode($param, JSON_PRETTY_PRINT);
+}
+
 
 
 /**
@@ -351,17 +380,6 @@ function coletar(array $array):Colecao
 function db():Database
 {
     return new Database();
-}
-
-
-/**
- * Atalho conveniente para retornar uma instancia da model desejada
- * @author Brunoggdev
-*/
-function model(string $model):ModelBase
-{
-    $model = "\\App\\Models\\$model";
-    return new $model;
 }
 
 
