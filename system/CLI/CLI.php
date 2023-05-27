@@ -11,7 +11,7 @@ class CLI
     {
         match ($comando[1]??false) {
             'iniciar', 'servir', 'serve' => $this->iniciar($comando[2] ?? '8080'),
-            'criar', 'fazer', 'gerar' => $this->criar($comando[2]??'', $comando[3]??''),
+            'criar', 'fazer', 'gerar' => $this->criar($comando[2]??'', $comando[3]??'', $comando[4]??false),
             'migrar' => $this->migrar($comando[2]??''),
             'fornalha', 'soldar', 'forjar', 'brincar' => $this->fornalha(),
             'testar' => $this->testar($comando[2]??''),
@@ -40,11 +40,18 @@ class CLI
     * Cria um novo arquivo com as propriedades desejadas
     * @author Brunoggdev
     */
-    private function criar(string $tipo_arquivo, string $nome):void
+    private function criar(string $tipo_arquivo, string $nome, string|false $controllerRecurso = false):void
     {
         if( empty($tipo_arquivo) ){
             echo("\n\033[93m# Qual tipo de arquivo deseja criar? [controller, model, filtro ou tabela].\033[0m\n\n");
             $tipo_arquivo = readline('> ');
+        }
+
+        if( $tipo_arquivo == 'controller' &&  $controllerRecurso != '--recurso' ){
+            echo("\n\033[93m# Deseja que o controller já contenha todos os metodos http de recurso rest? [y/n]\033[0m\n\n");
+            if((! in_array(readline('> '), ['n', 'no', 'nao'] ))){
+                $controllerRecurso = '--recurso';
+            }
         }
 
         if( empty($nome) ){
@@ -64,8 +71,9 @@ class CLI
             'Tabela' => PASTA_RAIZ . 'app/Database/tabelas/',
             default => die("\n\033[91m# Tipo de arquivo '$tipo_arquivo' não suportado.\033[0m")
         };
+        $template = ($tipo_arquivo == 'Controller' && $controllerRecurso == '--recurso') ? 'ControllerRecurso' : $tipo_arquivo;
 
-        $template = require "templates/$tipo_arquivo.php";
+        $template = require "templates/$template.php";
         $arquivo = str_replace('{nome}', $nome, $template);
 
         if($tipo_arquivo === 'Tabela'){
