@@ -11,7 +11,6 @@ class SuiteDeTestes
 {
     protected $testes = [];
 
-
     /**
     * Adiciona um novo teste na suíte de testes
     * @param string $descricao Comentário a ser exibido no console durante os testes.
@@ -28,11 +27,14 @@ class SuiteDeTestes
 
 
     /**
-    * Retorna todos os testes
-    * @author Brunoggdev
+     * Adiciona propriedades na suite de testes a serem utilizadas em todos os testes
+     * @param array $propiedades Um array associativo com o nome da propriedade e seu valor
+     * @author Brunoggdev
     */
-    public function testes():array
+    public function com(array $propriedades):void
     {
-        return $this->testes;
+        foreach ($propriedades as $propriedade => $valor) {
+            $this->$propriedade = $valor;
+        }
     }
 }

@@ -156,13 +156,16 @@ class CLI
                 exit;
             }
         }
-
+        echo "\n";
+        
+        // $testar é a instancia presente nos testes do usuario
+        $testador = new \system\Testes\Testador($testar);
         $testesPassaram = 0;
         $testesFalhaaram = 0;
-        foreach ($testar->testes() as $i => $teste) {
+        foreach ($testador->testes() as $i => $teste) {
 
             try {
-                $resultado = call_user_func($teste['funcao']);
+                $resultado = $testador->testar($teste['funcao']->bindTo($testador));
             } catch (\Throwable $th) {
                 $resultado = false;
                 $erro = 
@@ -193,8 +196,8 @@ class CLI
             }
         }
         echo "\n";
-        $this->imprimir("Passaram: $testesPassaram.", 0);
-        $this->imprimir("Falharam: $testesFalhaaram.");
+        $this->imprimir("\033[92mPassaram:\033[0m $testesPassaram.", 0);
+        $this->imprimir("\033[91mFalharam:\033[0m $testesFalhaaram.");
     }
 
 
