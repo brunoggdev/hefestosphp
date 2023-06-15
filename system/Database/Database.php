@@ -226,14 +226,18 @@ class Database
 
 
     /**
-    * Pega o primeiro resultado da consulta
+    * Pega o primeiro resultado da consulta, podendo retornar uma coluna especifica
     * @author brunoggdev
     */
-    public function primeiro(int $fetchMode = PDO::FETCH_OBJ)
+    public function primeiro(?string $coluna = null)
     {
-        $query = $this->executarQuery();
-        
-        return $this->comoArray ? $query->fetch(PDO::FETCH_ASSOC) : new Colecao( $query->fetch($fetchMode) );
+        $resultado = $this->executarQuery()->fetch(PDO::FETCH_ASSOC);
+
+        if($coluna){
+            return $resultado[$coluna] ?? null;
+        }else{
+            return $this->comoArray ? $resultado : new Colecao($resultado);
+        }
     }
 
 
