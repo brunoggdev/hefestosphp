@@ -33,12 +33,12 @@ class ModelBase
 
 
     /**
-    * Retorna o model com o id informado
+    * Retorna a linha com o id informado e, opcionalmente, uma coluna especifica
     * @author Brunoggdev
     */
-    public function buscar(int $id):array
+    public function buscar(int $id, ?string $coluna = null):mixed
     {
-        return $this->where(['id' => $id])->primeiro();
+        return $this->where(['id' => $id])->primeiro($coluna);
     }
 
 
@@ -111,6 +111,18 @@ class ModelBase
     public function comoArray():self
     {
         $this->db->comoArray();
+
+        return $this;
+    }
+
+
+    /**
+    * Define que o retorno da Database será uma instacia de Colecao
+    * @author Brunoggdev
+    */
+    public function comoColecao():self
+    {
+        $this->db->comoColecao();
 
         return $this;
     }
