@@ -159,7 +159,13 @@ class Roteador {
             return call_user_func($rota['callback'], ...array_slice($params, 1) );
         }else{
             // Chamando o controller e seu método, passando params caso existam
-            return call_user_func( [new $rota['controller'](), $rota['metodo']], ...array_slice($params, 1) );
+            $retorno = call_user_func( [new $rota['controller'](), $rota['metodo']], ...array_slice($params, 1) );
+            
+            if($retorno instanceof Redirecionar){
+                exit;
+            }
+
+            return $retorno;
         }
     }
 }
