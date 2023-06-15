@@ -17,8 +17,7 @@ class Colecao
 
     public function __get(string|int $propriedade)
     {
-        return $this->colecao[$propriedade]
-            ?? throw new \Exception("Propriedade '{$propriedade}' não encontrada na colecao.");
+        return $this->colecao[$propriedade] ?? null;
     }
 
     // public function __set($name, $value)
