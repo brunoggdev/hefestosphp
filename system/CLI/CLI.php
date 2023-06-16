@@ -74,7 +74,12 @@ class CLI
         $template = ($tipo_arquivo == 'Controller' && $controllerRecurso == '--recurso') ? 'ControllerRecurso' : $tipo_arquivo;
 
         $template = require "templates/$template.php";
-        $arquivo = str_replace('{nome}', $nome, $template);
+        if($tipo_arquivo == 'Model'){
+            $tabela = str_ends_with($tabela = strtolower($nome), 'model') ? substr($tabela, 0, -5) : $tabela;
+            $arquivo = str_replace(['{nome}', '{tabela}'], [$nome, $tabela], $template);
+        }else{
+            $arquivo = str_replace('{nome}', $nome, $template);
+        }
 
         if($tipo_arquivo === 'Tabela'){
             $nome = date('Y-m-d-His_') . $nome;
