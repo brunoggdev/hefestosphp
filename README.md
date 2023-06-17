@@ -1,5 +1,5 @@
 # HefestosPHP
-Um framework PHP em português com o intuito principal de diminuir a curva de aprendizado dos grandes frameworks do mercado sendo simples e prático para familiarizar iniciantes aos conceitos básicos da linguagem e arquitetura MVC sem maiores complicações como o idioma e sobrecarga de informações, de modo que quando passem a utilizar algo como Laravel, CodeIgniter ou Symphony eles já estejam ao menos um pouco habituados ao seu funcionamento.
+Um framework PHP em português com 0 dependências onde o intuito principal é diminuir a curva de aprendizado dos grandes frameworks do mercado. Para tal, este pretende ser simples e prático para familiarizar iniciantes aos conceitos básicos da arquitetura MVC na linguagem, sem maiores complicações como o idioma e sobrecarga de informações dos frameworks mais complexos. Deste modo, quando passarem a utilizar algo como Laravel, CodeIgniter ou Symphony, eles já estarão habituados pelo menos no essencial de seu funcionamento.
 
 #### Hefesto é o deus grego das forjas, dos artesãos e do fogo, daí a ligação com o framework e quem o utiliza.
 
@@ -9,7 +9,7 @@ Um framework PHP em português com o intuito principal de diminuir a curva de ap
    - Documentação do Framework
    - Adicionar mais testes
    - Adicionar mais metodos para colecoes
-   - Adicionar sqlite para testes
+   - Adicionar sqlite padrão para testes
 
    ## Talvez
    - Branch com sistemas de roteamento padrão e autenticação de usuario 
