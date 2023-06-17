@@ -33,12 +33,17 @@ class ModelBase
 
 
     /**
-    * Retorna a linha com o id informado e, opcionalmente, uma coluna especifica
+    * Retorna a linha com o id ou array de condição informado
+    * e, opcionalmente, uma coluna especifica.
     * @author Brunoggdev
     */
-    public function buscar(int $id, ?string $coluna = null):mixed
+    public function buscar(int|string|array $busca, ?string $coluna = null):mixed
     {
-        return $this->where(['id' => $id])->primeiro($coluna);
+        if(is_array($busca)){
+            return $this->where($busca)->primeiro($coluna);
+        }
+
+        return $this->where(['id' => $busca])->primeiro($coluna);
     }
 
 
