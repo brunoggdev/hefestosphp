@@ -1,6 +1,6 @@
 <?php
 
-namespace System\Rotas;
+namespace Hefestos\Rotas;
 
 use Closure;
 

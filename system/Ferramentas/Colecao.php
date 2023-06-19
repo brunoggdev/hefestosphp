@@ -1,6 +1,6 @@
 <?php
 
-namespace System\Ferramentas;
+namespace Hefestos\Ferramentas;
 
 /**
 * Encapsula um array para ser tratado como objeto.

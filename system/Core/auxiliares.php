@@ -2,11 +2,11 @@
 
 use App\Controllers\ControllerBase;
 use App\Models\ModelBase;
-use System\Database\Database;
-use System\Rotas\Redirecionar;
-use System\Ferramentas\Colecao;
-use System\Ferramentas\Requisicao;
-use System\Ferramentas\Session;
+use Hefestos\Database\Database;
+use Hefestos\Rotas\Redirecionar;
+use Hefestos\Ferramentas\Colecao;
+use Hefestos\Ferramentas\Requisicao;
+use Hefestos\Ferramentas\Session;
 
 /* ----------------------------------------------------------------------
 Arquivo de funções auxiliares padrões do HefestosPHP.

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace Hefestos;
 
-use System\Database\Database;
+use Hefestos\Database\Database;
 
 class ModelBase 
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace System\CLI;
+namespace Hefestos\CLI;
 
 class CLI
 {

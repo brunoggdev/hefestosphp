@@ -1,6 +1,6 @@
 <?php
 
-use System\Testes\Esperar;
+use Hefestos\Testes\Esperar;
 
 $testar = new \System\Testes\SuiteDeTestes();
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace System\Testes;
+namespace Hefestos\Testes;
 
 use Closure;
 
