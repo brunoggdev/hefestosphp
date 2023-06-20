@@ -1,5 +1,5 @@
 <?php
-$rota = new \System\Rotas\Roteador();
+$rota = new \Hefestos\Rotas\Roteador();
 $rota->namespacePadrao('\App\Controllers');
 /* ----------------------------------------------------------------------
 Cada rota deve ser respondida com o retorno de uma função, seja ela uma

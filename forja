@@ -9,4 +9,4 @@ require 'app/Config/constantes.php';
 require 'system/Core/auxiliares.php';
 require 'system/Core/autoloader.php';
 
-new \System\CLI\CLI($argv);
+new \Hefestos\CLI\CLI($argv);
