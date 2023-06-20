@@ -47,6 +47,13 @@ class CLI
             $tipo_arquivo = readline('> ');
         }
 
+        if (! in_array(strtolower($tipo_arquivo), ['controller', 'model', 'filtro', 'tabela']) ) {
+            echo("\n\033[93m# O tipo de arquivo informado não parece válido. Qual deseja criar? [controller, model, filtro ou tabela].\033[0m\n\n");
+            $tipo_arquivo = readline('> ');
+            $this->criar($tipo_arquivo, $nome, $controllerRecurso);
+            return;
+        }
+
         if( $tipo_arquivo == 'controller' &&  $controllerRecurso != '--recurso' ){
             echo("\n\033[93m# Deseja que o controller já contenha todos os metodos http de recurso rest? [y/n]\033[0m\n\n");
             if((! in_array(readline('> '), ['n', 'no', 'nao'] ))){
@@ -76,6 +83,7 @@ class CLI
         $template = require "templates/$template.php";
         if($tipo_arquivo == 'Model'){
             $tabela = str_ends_with($tabela = strtolower($nome), 'model') ? substr($tabela, 0, -5) : $tabela;
+            $tabela = str_ends_with($tabela, 's') ? $tabela : $tabela.'s';
             $arquivo = str_replace(['{nome}', '{tabela}'], [$nome, $tabela], $template);
         }else{
             $arquivo = str_replace('{nome}', $nome, $template);
@@ -88,7 +96,7 @@ class CLI
         if ( file_put_contents("$caminho$nome.php", $arquivo) ) {
             $resposta = "\n\033[92m# $tipo_arquivo $nome criado com sucesso.\n\033[0m";
         } else {
-            $resposta = "\n\033[91m# Algo deu errado ao gerar o $tipo_arquivo.\n";
+            $resposta = "\n\033[91m# Algo deu errado ao gerar o $tipo_arquivo.\n\033[0m";
         }
 
         echo($resposta);
