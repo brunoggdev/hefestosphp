@@ -1,7 +1,7 @@
 <?php
 
-namespace System\Database;
-use System\Ferramentas\Colecao;
+namespace Hefestos\Database;
+use Hefestos\Ferramentas\Colecao;
 
 use PDO, PDOStatement;
 

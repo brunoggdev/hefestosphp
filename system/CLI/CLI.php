@@ -1,6 +1,6 @@
 <?php
 
-namespace System\CLI;
+namespace Hefestos\CLI;
 
 class CLI
 {
@@ -164,7 +164,7 @@ class CLI
         echo "\n";
         
         // $testar é a instancia presente nos testes do usuario
-        $testador = new \system\Testes\Testador($testar);
+        $testador = new \Hefestos\Testes\Testador($testar);
         $testesPassaram = 0;
         $testesFalhaaram = 0;
         foreach ($testador->testes() as $i => $teste) {
@@ -229,7 +229,7 @@ class CLI
                     throw new \Exception('Sql informada não é válida para esta operação.');
                 }
 
-                (new \System\Database\Database)->query($sql);
+                (new \Hefestos\Database\Database)->query($sql);
             }
 
         }else{
@@ -241,7 +241,7 @@ class CLI
                     throw new \Exception('Sql informada não é válida para esta operação.');
                 }
 
-                (new \System\Database\Database)->query($sql);
+                (new \Hefestos\Database\Database)->query($sql);
             }catch(\ErrorException){
                 $this->imprimir('Arquivo não encontrado.');
                 exit;

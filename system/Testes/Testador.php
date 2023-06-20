@@ -1,6 +1,6 @@
 <?php
 
-namespace System\Testes;
+namespace Hefestos\Testes;
 
 /**
 * Guarda uma suíte de testes a serem executados pela CLI

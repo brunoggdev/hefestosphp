@@ -1,8 +1,8 @@
 <?php
 
-use System\Testes\Esperar;
+use Hefestos\Testes\Esperar;
 
-$testar = new \System\Testes\SuiteDeTestes();
+$testar = new \Hefestos\Testes\SuiteDeTestes();
 
 /**
 * passe qualquer tipo de parametro à ser testado aqui 
