@@ -25,7 +25,7 @@ class Database
     */
     public function __construct(?array $dbconfig = null)
     {
-        [$dsn, $usuario, $senha] = $dbconfig ?? $this->connectionConfig();
+        [$dsn, $usuario, $senha] = $dbconfig ?? $this->getConexao();
 
         $this->connection = new PDO($dsn, $usuario, $senha, [
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
@@ -36,7 +36,7 @@ class Database
      * Busca as configurações e formata o dsn de conexão com o banco
      * @author Brunoggdev
     */
-    public function connectionConfig():array
+    public function getConexao():array
     {
         $dbconfig = require pasta_app('Config/database.php');
 
@@ -44,7 +44,6 @@ class Database
             $dsn = "mysql:host=$dbconfig[host];dbname=$dbconfig[nomeDB]";
         }else{
             $dsn = 'sqlite:'.PASTA_RAIZ.$dbconfig['sqlite'];
-            // dd($dsn);
         }
 
         return [$dsn, $dbconfig['usuario'], $dbconfig['senha']];
@@ -69,19 +68,18 @@ class Database
     * Adiciona um INSERT na consulta
     * @author brunoggdev
     */
-    public function insert(string $table, array $params):bool
+    public function insert(string $tabela, array $params):bool
     {
         $this->params = $params;
 
         $colunas = implode(', ', array_keys($params));
-        $values = ':' . implode(', :', array_keys($params));
+        $valores = ':' . implode(', :', array_keys($params));
 
-        $this->query = "INSERT INTO $table ($colunas) VALUES($values)";
+        $this->query = "INSERT INTO $tabela ($colunas) VALUES($valores)";
 
         $query = $this->executarQuery();
         
-        return $query->rowCount() > 0 ? true : false;
-
+        return $query->rowCount() > 0;
     }
    
    
@@ -90,10 +88,10 @@ class Database
     * Cria uma sql para DELETE
     * @author Brunoggdev
     */
-    public function delete(string $table, array $where = []):bool
+    public function delete(string $tabela, array $where = []):bool
     {
 
-        $this->query = "DELETE FROM $table";
+        $this->query = "DELETE FROM $tabela";
         $this->where($where);
 
 
@@ -107,26 +105,17 @@ class Database
     * Adiciona um UPDATE na consulta
     * @author brunoggdev
     */
-    public function update(string $table, array $params, array $where = []):bool
+    public function update(string $tabela, array $params, array $where = []): bool
     {
         $this->params = $params;
-
-        $novosValores = '';
-
-        foreach ($params as $key => $value) {
-            $novosValores .= "$key = :$key";
-            if($key !== array_key_last($params)){
-                $novosValores .= ', ';
-            }
-        }
-
-        $this->query = "UPDATE $table SET $novosValores";
+    
+        $novosValores = implode(', ', array_map(fn($key) => "$key = :$key", array_keys($params)));
+    
+        $this->query = "UPDATE $tabela SET $novosValores";
         $this->where($where);
-
-
+    
         $query = $this->executarQuery();
-        return $query->rowCount() > 0 ? true : false;
-
+        return $query->rowCount() > 0;
     }
 
 
