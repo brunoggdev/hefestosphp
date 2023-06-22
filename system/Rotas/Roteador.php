@@ -133,7 +133,7 @@ class Roteador {
             
             if ($verbo_http_corresponde && $uri_corresponde) {
                 (new Filtros)->filtrar($rota['filtro']);
-                return $this->resposta($rota, $params);
+                return $this->resposta($rota['handler'], array_slice($params, 1));
             }
         }
  
@@ -145,9 +145,9 @@ class Roteador {
     * Devolve a resposta da rota
     * @author Brunoggdev
     */
-    public function resposta($rota, $params):string
+    public function resposta(callable $handler, ?array $params):string
     {
-        $retorno = call_user_func($rota['handler'], ...array_slice($params, 1));
+        $retorno = $handler(...$params);
         
         if($retorno instanceof Redirecionar){
             exit;
