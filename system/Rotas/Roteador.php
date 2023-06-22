@@ -84,18 +84,17 @@ class Roteador {
             'filtro' => ''
         ];
 
-        if ( $acao  instanceof Closure) {
-            $rota['callback'] = $acao;
+        if ($acao  instanceof Closure) {
+            $rota['handler'] = $acao;
         }else{
 
-            if(! is_array($acao) ){
+            if (is_string($acao)) {
                 $acao = explode('::', $acao);
             }
             
             // Adicionando namespace padrão caso não haja nenhum
-            $rota['controller'] = str_contains($acao[0], '\\') ? $acao[0] : "$this->namespacePadrao\\$acao[0]";
-            $rota['metodo'] = $acao[1];
-
+            $rota['handler'][0] = str_contains($acao[0], '\\') ? $acao[0] : "$this->namespacePadrao\\$acao[0]";
+            $rota['handler'][1] = $acao[1];
         }
 
         $this->rotas[] = $rota;
@@ -129,21 +128,16 @@ class Roteador {
     public function mapear(string $uri, string $verbo_http):string
     {
         foreach ($this->rotas as $rota) {
-
-            if( 
-                // checando se o verbo http está correto
-                $rota['verbo_http'] === strtoupper($verbo_http) 
-                && 
-                // mapeando com regex para identificar coringas e separar em params
-                preg_match('#^'.$rota['uri'].'$#', $uri, $params ) 
-            ){
+            $verbo_http_corresponde = $rota['verbo_http'] === strtoupper($verbo_http);
+            $uri_corresponde = preg_match('#^'.$rota['uri'].'$#', $uri, $params);
+            
+            if ($verbo_http_corresponde && $uri_corresponde) {
                 (new Filtros)->filtrar($rota['filtro']);
-                
                 return $this->resposta($rota, $params);
             }
         }
  
-        abortar();
+        abortar(404);
     }
 
 
@@ -153,19 +147,12 @@ class Roteador {
     */
     public function resposta($rota, $params):string
     {
-        // Verificando se a resposta para a rota é uma callback ou metodo de controller
-        if( $rota['callback'] ?? false){
-            // chamando a callback e passando params caso existam
-            return call_user_func($rota['callback'], ...array_slice($params, 1) );
-        }else{
-            // Chamando o controller e seu método, passando params caso existam
-            $retorno = call_user_func( [new $rota['controller'](), $rota['metodo']], ...array_slice($params, 1) );
-            
-            if($retorno instanceof Redirecionar){
-                exit;
-            }
-
-            return $retorno;
+        $retorno = call_user_func($rota['handler'], ...array_slice($params, 1));
+        
+        if($retorno instanceof Redirecionar){
+            exit;
         }
+
+        return $retorno;
     }
 }
