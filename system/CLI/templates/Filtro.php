@@ -11,7 +11,7 @@ return <<<EOT
         * Aplica o filtro configurado
         * @author Brunoggdev
         */
-        public function aplicar():void
+        public function aplicar()
         {
             // lógica do seu filtro, normalmente retornará um redirecionar
         }
