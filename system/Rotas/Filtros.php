@@ -30,6 +30,12 @@ class Filtros
             throw new \Exception("Nenhum filtro encontrado para a chave '{$chave}'.");
         }
  
-        (new $filtro)->aplicar();
-    }
+        $filtros = (array) $filtro;
+
+        foreach ($filtros as $filtro) {
+            if ( (new $filtro)->aplicar() instanceof Redirecionar){
+                exit;
+            }
+        }
+    } 
 }
