@@ -13,7 +13,6 @@ Um framework PHP em português com 0 dependências onde o intuito principal é d
 
    ## Talvez
    - Branch com sistemas de roteamento padrão e autenticação de usuario 
-   - agrupar rotas
    - Models com active record pattern
    
    ## Notas
