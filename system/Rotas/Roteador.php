@@ -135,8 +135,8 @@ class Roteador {
 
         $novas_rotas = array_diff_key($this->rotas, $rotas_antigas);
     
-        foreach ($novas_rotas as &$rota) {
-            $rota['filtro'] = $filtro;
+        foreach ($novas_rotas as $key => $rota) {
+            $this->rotas[$key]['filtro'] = $filtro;
         }
     }
 
@@ -144,7 +144,7 @@ class Roteador {
     * Tenta mapear a uri requisitada com uma das rotas configuradas
     * @author Brunoggdev
     */
-    public function mapear(string $uri, string $verbo_http):string
+    public function mapear(string $uri, string $verbo_http):?string
     {
         foreach ($this->rotas as $rota) {
             $verbo_http_corresponde = $rota['verbo_http'] === strtoupper($verbo_http);
@@ -164,7 +164,7 @@ class Roteador {
     * Devolve a resposta da rota
     * @author Brunoggdev
     */
-    public function resposta(callable $handler, ?array $params):string
+    public function resposta(callable $handler, ?array $params):?string
     {
         $retorno = $handler(...$params);
         
