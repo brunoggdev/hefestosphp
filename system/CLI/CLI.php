@@ -29,6 +29,18 @@ class CLI
     */
     private function iniciar(string $porta):void
     {
+        // SCRIPT PARA TESTAR SE A PORTA ESTÁ DISPONÍVEL
+        // while ($porta <= 9000) {
+        //     # code...
+        //     $connection = @fsockopen('localhost', $porta);
+    
+        //     if (is_resource($connection)) {
+        //         fclose($connection);
+        //         $porta++;
+        //     }else{
+        //         break;
+        //     }
+        // }
         echo("\n\033[92m# Servidor de desenvolvimento do HefestosPHP iniciando em http://localhost:$porta.\n");
         echo("\033[93m# Pressione ctrl+c para interromper.\033[0m\n");
         exec("php -S localhost:$porta -t public");
@@ -138,9 +150,10 @@ class CLI
                     $entrada = 'return ' . $entrada;
                 }
 
-                if (!str_ends_with($entrada, '}') && !str_ends_with($entrada, ';')) {
-                    $entrada = $entrada.';';
-                }
+                // SCRIPT PARA ADICIONAR ; SE NECESSÁRIO
+                // if (!str_ends_with($entrada, '}') && !str_ends_with($entrada, ';')) {
+                //     $entrada = $entrada.';';
+                // }
 
                 $saida = eval($entrada);
                 isset($saida) && var_export($saida);
