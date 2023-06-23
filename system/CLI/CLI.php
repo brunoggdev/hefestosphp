@@ -105,6 +105,10 @@ class CLI
             $nome = date('Y-m-d-His_') . $nome;
         }
 
+        if(!is_dir($caminho)){
+            mkdir($caminho);
+        }
+
         if ( file_put_contents("$caminho$nome.php", $arquivo) ) {
             $resposta = "\n\033[92m# $tipo_arquivo $nome criado com sucesso.\n\033[0m";
         } else {
