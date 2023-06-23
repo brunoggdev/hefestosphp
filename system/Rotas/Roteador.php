@@ -122,6 +122,25 @@ class Roteador {
 
 
     /**
+     * Realiza o agrupamento de diversas rotas sob um mesmo filtro.
+     * @author Brunoggdev
+    */
+    public function agrupar(string $filtro, callable $callback):void
+    {
+        $rotas_antigas = $this->rotas;
+
+        $callback_tem_parametros = !empty((new \ReflectionFunction($callback))->getParameters());
+        
+        $callback_tem_parametros ? $callback($this) : $callback();
+
+        $novas_rotas = array_diff_key($this->rotas, $rotas_antigas);
+    
+        foreach ($novas_rotas as &$rota) {
+            $rota['filtro'] = $filtro;
+        }
+    }
+
+    /**
     * Tenta mapear a uri requisitada com uma das rotas configuradas
     * @author Brunoggdev
     */

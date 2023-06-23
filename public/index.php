@@ -8,7 +8,7 @@ try {
     $metodoHttp = $_POST['_method'] ?? $_SERVER['REQUEST_METHOD'];
     
     // echo a resposta do método chamado
-    echo $rota->mapear($uri, $metodoHttp);
+    echo $rotas->mapear($uri, $metodoHttp);
 
     exit;
 
