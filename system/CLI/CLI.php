@@ -115,14 +115,31 @@ class CLI
 
         echo "\n\033[92m# Fornalha iniciada - Ambiente interativo do HefestosPHP.\033[0m";
         echo "\n\033[93m# Pressione ctrl+c para sair.\033[0m";
+
+        if (extension_loaded('readline')) {
+            readline_completion_function('readline');
+            readline_add_history("");
+        }
+
         while (true) {
+
             echo "\n\n";
+
             try {
-                $entrada = readline("Fornalha > ");
+                echo "\033[91mFornalha > \033[0m\033[K";
+                $entrada = readline("");
                 echo PHP_EOL;
 
-                if(preg_match('/(echo|return|var_dump|print_r)/', $entrada) !== 1){
+                if (extension_loaded('readline')) {
+                    readline_add_history($entrada);
+                }
+                
+                if (preg_match('/(echo|return|var_dump|print_r)/', $entrada) !== 1) {
                     $entrada = 'return ' . $entrada;
+                }
+
+                if (!str_ends_with($entrada, '}') && !str_ends_with($entrada, ';')) {
+                    $entrada = $entrada.';';
                 }
 
                 $saida = eval($entrada);
@@ -134,6 +151,7 @@ class CLI
                 "\033[91m -> Do arquivo: \033[0m" . $th->getFile();
             }
         }
+
     }
 
 
