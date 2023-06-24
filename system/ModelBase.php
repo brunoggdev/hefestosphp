@@ -10,7 +10,7 @@ class ModelBase
     protected $tabela;
 
     // instancia do banco de dados
-    protected $db;
+    private $db;
 
     /**
     * Cria uma instancia do banco de dados que será utilizada nas consultas
@@ -130,5 +130,15 @@ class ModelBase
         $this->db->comoColecao();
 
         return $this;
+    }
+
+
+    /**
+     * Retorna a instancia do query builder conecato ao banco de dados
+     * @author Brunoggdev
+    */
+    public function db():Database
+    {
+        return $this->db;
     }
 }
