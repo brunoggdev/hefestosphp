@@ -9,6 +9,9 @@ class ModelBase
     // tabela do banco de dados ao qual o model está relacionado
     protected $tabela;
 
+    // tabela do banco de dados ao qual o model está relacionado
+    protected $tipo_retorno_padrao;
+
     // instancia do banco de dados
     private $db;
 
@@ -19,6 +22,10 @@ class ModelBase
     public function __construct()
     {
         $this->db = new Database();
+        
+        if ($this->tipo_retorno_padrao == 'objeto') {
+            $this->comoColecao();
+        }
     }
 
 
