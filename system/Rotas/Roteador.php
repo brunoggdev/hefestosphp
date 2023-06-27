@@ -87,14 +87,13 @@ class Roteador {
         if ($acao  instanceof Closure) {
             $rota['handler'] = $acao;
         }else{
-
-            if (is_string($acao)) {
-                $acao = explode('::', $acao);
-            }
+            [$controller, $metodo] = is_string($acao) ? explode('::', $acao) : $acao;
             
-            // Adicionando namespace padrão caso não haja nenhum
-            $rota['handler'][0] = str_contains($acao[0], '\\') ? $acao[0] : "$this->namespacePadrao\\$acao[0]";
-            $rota['handler'][1] = $acao[1];
+            if (!str_contains($controller, '\\')) {
+                $controller = "$this->namespacePadrao\\$controller";
+            }
+
+            $rota['handler'] = (new $controller)->$metodo(...);
         }
 
         $this->rotas[] = $rota;
