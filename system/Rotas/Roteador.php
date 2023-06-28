@@ -135,9 +135,7 @@ class Roteador {
     {
         $rotas_antigas = $this->rotas;
 
-        $callback_tem_parametros = !empty((new \ReflectionFunction($callback))->getParameters());
-        
-        $callback_tem_parametros ? $callback($this) : $callback();
+        $callback($this);
 
         $novas_rotas = array_diff_key($this->rotas, $rotas_antigas);
     
