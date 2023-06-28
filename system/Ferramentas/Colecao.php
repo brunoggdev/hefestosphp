@@ -165,9 +165,13 @@ class Colecao
     *  Devolve a soma dos itens do array.
     * @author Brunoggdev
     */
-    public function soma()
+    public function soma(string|int $chave = '')
     {
-        return array_sum($this->colecao);
+        if ($chave === '') {
+            return array_sum($this->colecao);
+        }
+        
+        return array_sum(array_column($this->colecao, $chave));
     }
 
 
