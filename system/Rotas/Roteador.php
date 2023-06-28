@@ -78,25 +78,32 @@ class Roteador {
     */
     protected function adicionar(string $verbo_http, string $uri, string|array|callable $acao):void
     {
-        $rota = [
+        $this->rotas[] = [
             'uri' => str_replace( '{param}', '(.*)', strip_tags($uri) ),
             'verbo_http' => $verbo_http,
+            'acao' => $this->formatarAcao($acao),
             'filtro' => ''
         ];
+    }
 
+
+    /**
+     * Formata a acao como um callable independente do formato inicial
+     * @author Brunoggdev
+    */
+    protected function formatarAcao(string|array|callable $acao):callable
+    {
         if ($acao  instanceof Closure) {
-            $rota['handler'] = $acao;
-        }else{
-            [$controller, $metodo] = is_string($acao) ? explode('::', $acao) : $acao;
-            
-            if (!str_contains($controller, '\\')) {
-                $controller = "$this->namespacePadrao\\$controller";
-            }
-
-            $rota['handler'] = (new $controller)->$metodo(...);
+            return $acao;
         }
 
-        $this->rotas[] = $rota;
+        [$controller, $metodo] = is_string($acao) ? explode('::', $acao) : $acao;
+        
+        if (!str_contains($controller, '\\')) {
+            $controller = "$this->namespacePadrao\\$controller";
+        }
+    
+        return (new $controller)->$metodo(...);
     }
 
 
@@ -151,7 +158,7 @@ class Roteador {
             
             if ($verbo_http_corresponde && $uri_corresponde) {
                 (new Filtros)->filtrar($rota['filtro']);
-                return $this->resposta($rota['handler'], array_slice($params, 1));
+                return $this->resposta($rota['acao'], array_slice($params, 1));
             }
         }
  
@@ -163,11 +170,11 @@ class Roteador {
     * Devolve a resposta da rota
     * @author Brunoggdev
     */
-    public function resposta(callable $handler, ?array $params):?string
+    public function resposta(callable $acao, ?array $params):?string
     {
-        $retorno = $handler(...$params);
+        $retorno = $acao(...$params);
         
-        if($retorno instanceof Redirecionar){
+        if ($retorno instanceof Redirecionar) {
             exit;
         }
 
