@@ -21,8 +21,6 @@ class ModelBase
     */
     public function __construct()
     {
-        $this->db = new Database();
-        
         if ($this->tipo_retorno_padrao == 'objeto') {
             $this->comoColecao();
         }
@@ -60,7 +58,7 @@ class ModelBase
     */
     public function select(?array $colunas = ['*']):Database
     {
-        return $this->db->select($this->tabela, $colunas);
+        return $this->db()->select($this->tabela, $colunas);
     }
 
 
@@ -80,7 +78,7 @@ class ModelBase
     */
     public function insert(array $params):bool
     {
-        return $this->db->insert($this->tabela, $params);
+        return $this->db()->insert($this->tabela, $params);
     }
 
 
@@ -91,7 +89,7 @@ class ModelBase
     */
     public function update(int|string $id, array $params):bool
     {
-        return $this->db->update($this->tabela, $params, ['id' => $id]);
+        return $this->db()->update($this->tabela, $params, ['id' => $id]);
     }
 
 
@@ -102,7 +100,7 @@ class ModelBase
     */
     public function delete(int|string $id)
     {
-        return $this->db->delete($this->tabela, ['id' => $id]);
+        return $this->db()->delete($this->tabela, ['id' => $id]);
     }
 
 
@@ -112,7 +110,7 @@ class ModelBase
     */
     public function erros():array
     {
-        return $this->db->erros();
+        return $this->db()->erros();
     }
 
 
@@ -122,7 +120,7 @@ class ModelBase
     */
     public function comoArray():self
     {
-        $this->db->comoArray();
+        $this->db()->comoArray();
 
         return $this;
     }
@@ -134,7 +132,7 @@ class ModelBase
     */
     public function comoColecao():self
     {
-        $this->db->comoColecao();
+        $this->db()->comoColecao();
 
         return $this;
     }
@@ -146,6 +144,9 @@ class ModelBase
     */
     public function db():Database
     {
+        if (!isset($this->db)) {
+            $this->db = new Database();
+        }
         return $this->db;
     }
 }
