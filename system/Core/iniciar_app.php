@@ -9,8 +9,14 @@ set_error_handler(function($errno, $errstr, $errfile, $errline){
     throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
 });
 
-// autoloader simulando o composer autoload
-require 'autoloader.php';
+// Carregue composer se existir e configure o namespace hefestos
+// do contrário carregue o autoloader do hefestos 
+if (file_exists('../../vendor/autoload.php')) {
+    $composer_autoloader = require '../../vendor/autoload.php';
+    $composer_autoloader->setPsr4('hefestos\\', 'system/');
+}else{
+    require 'autoloader.php';
+}
 
 // Acessa as constantes do app
 require '../app/Config/constantes.php';
