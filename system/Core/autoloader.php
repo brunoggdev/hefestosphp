@@ -8,5 +8,5 @@ spl_autoload_register(function ($classe) {
         $classe = str_replace('hefestos', 'system', $classe);
     }
 
-    require PASTA_RAIZ . "$classe.php";
+    require_once PASTA_RAIZ . "$classe.php";
 });
