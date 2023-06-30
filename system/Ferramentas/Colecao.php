@@ -189,9 +189,9 @@ class Colecao
      * Verifica se uma determinada chave desejado existe no array
      * @author Brunoggdev
     */
-    public function contemChave(mixed $item):bool
+    public function contemChave(mixed $cahve):bool
     {
-        return in_array($item, array_keys($this->colecao));
+        return in_array($cahve, array_keys($this->colecao));
     }
 
 
