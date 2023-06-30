@@ -175,6 +175,26 @@ class Colecao
     }
 
 
+    /**
+     * Verifica se o item desejado existe no array
+     * @author Brunoggdev
+    */
+    public function contem(mixed $item):bool
+    {
+        return in_array($item, $this->colecao);
+    }
+
+
+    /**
+     * Verifica se uma determinada chave desejado existe no array
+     * @author Brunoggdev
+    */
+    public function contemChave(mixed $item):bool
+    {
+        return in_array($item, array_keys($this->colecao));
+    }
+
+
     // ======== Modificam o array ===========
 
 
