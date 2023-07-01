@@ -10,7 +10,7 @@ set_error_handler(function($errno, $errstr, $errfile, $errline){
 });
 
 // Acessa as constantes do app
-require '../app/Config/constantes.php';
+require __DIR__ . '/../../app/Config/constantes.php';
 
 // Carregando autoload do composer caso exista ou do Hefestos caso contrário
 if (file_exists(PASTA_RAIZ . '/vendor/autoload.php')) {
