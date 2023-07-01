@@ -58,7 +58,7 @@ class CLI
             echo("\n\033[93m# Atenção: Caso já tenha um arquivo \"composer.json\" na raiz do projeto ele será reescrito.\033[0m\n");
             echo("\n# Confirma que possui composer está instalado e deseja habilita-lo no hefestos? [y/n]\n\n");
 
-            if((in_array(readline('> '), ['y', 'yes', 's', 'sim'] ))){
+            if((in_array(readline('> '), ['y', 'yes', 's', 'sim', 'Y', 'YES', 'S', 'SIM'] ))){
                 $this->habilitarComposer();
             }else{
                 echo("\n\033[91m# Nada foi feito...\033[0m\n\n");
