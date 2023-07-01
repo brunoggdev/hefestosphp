@@ -5,8 +5,6 @@ if( PHP_VERSION < '8.0.0'){
     die('HefestosPHP precisa do PHP na versão 8.0.0 ou mais alta.');
 }
 
-require 'app/Config/constantes.php';
-require 'system/Core/auxiliares.php';
-require 'system/Core/autoloader.php';
+require 'system/Core/iniciar_app.php';
 
 new \Hefestos\CLI\CLI($argv);
