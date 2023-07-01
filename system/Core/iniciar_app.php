@@ -9,17 +9,15 @@ set_error_handler(function($errno, $errstr, $errfile, $errline){
     throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
 });
 
-// Carregue composer se existir e configure o namespace hefestos
-// do contrário carregue o autoloader do hefestos 
-if (file_exists('../../vendor/autoload.php')) {
-    $composer_autoloader = require '../../vendor/autoload.php';
-    $composer_autoloader->setPsr4('hefestos\\', 'system/');
+// Acessa as constantes do app
+require '../app/Config/constantes.php';
+
+// Carregando autoload do composer caso exista ou do Hefestos caso contrário
+if (file_exists(PASTA_RAIZ . '/vendor/autoload.php')) {
+    require PASTA_RAIZ . '/vendor/autoload.php';
 }else{
     require 'autoloader.php';
 }
-
-// Acessa as constantes do app
-require '../app/Config/constantes.php';
 
 // funções auxiliares nativas do HefestosPHP
 require 'auxiliares.php';
