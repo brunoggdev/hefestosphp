@@ -79,12 +79,13 @@ class CLI
             return;
         }
 
-        if( $tipo_arquivo == 'controller' &&  $controllerRecurso != '--recurso' ){
-            echo("\n\033[93m# Deseja que o controller já contenha todos os metodos http de recurso rest? [y/n]\033[0m\n\n");
-            if((! in_array(readline('> '), ['n', 'no', 'nao'] ))){
-                $controllerRecurso = '--recurso';
-            }
-        }
+        // PERGUNTA AO USUÁRIO SE DEVE SER UM CONTROLLER DE RECURSO
+        // if( $tipo_arquivo == 'controller' &&  $controllerRecurso != '--recurso' ){
+        //     echo("\n\033[93m# Deseja que o controller já contenha todos os metodos http de recurso rest? [y/n]\033[0m\n\n");
+        //     if((! in_array(readline('> '), ['n', 'no', 'nao'] ))){
+        //         $controllerRecurso = '--recurso';
+        //     }
+        // }
 
         if( empty($nome) ){
             echo("\n\033[93m# Qual nome do(a) $tipo_arquivo?.\033[0m\n\n");
@@ -140,7 +141,7 @@ class CLI
     {
         if (file_put_contents('composer.json', require 'templates/composer.php') ) {
             exec('composer install');
-            $resposta = "\n\033[92m# Composer habilitado com sucesso.\n\033[0m";
+            $resposta = "\n\033[92m# Composer habilitado com sucesso! Caso esteja usando git, lembre-se de adicionar a pasta /vendor/ no seu .gitignore.\n\033[0m";
         } else {
             $resposta = "\n\033[91m# Algo deu errado ao gerar o composer.json.\n\033[0m";
         }
