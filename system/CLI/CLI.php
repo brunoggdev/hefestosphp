@@ -54,6 +54,19 @@ class CLI
     */
     private function criar(string $tipo_arquivo, string $nome, string|false $controllerRecurso = false):void
     {
+        if ($tipo_arquivo == 'composer') {
+            echo("\n\033[93m# Atenção: Caso já tenha um arquivo \"composer.json\" na raiz do projeto ele será reescrito.\033[0m\n");
+            echo("\n# Confirma que possui composer está instalado e deseja habilita-lo no hefestos? [y/n]\n\n");
+
+            if((in_array(readline('> '), ['y', 'yes', 's', 'sim'] ))){
+                $this->habilitarComposer();
+            }else{
+                echo("\n\033[91m# Nada foi feito...\033[0m\n\n");
+            }
+
+            return;
+        }
+
         if( empty($tipo_arquivo) ){
             echo("\n\033[93m# Qual tipo de arquivo deseja criar? [controller, model, filtro ou tabela].\033[0m\n\n");
             $tipo_arquivo = readline('> ');
@@ -113,6 +126,23 @@ class CLI
             $resposta = "\n\033[92m# $tipo_arquivo $nome criado com sucesso.\n\033[0m";
         } else {
             $resposta = "\n\033[91m# Algo deu errado ao gerar o $tipo_arquivo.\n\033[0m";
+        }
+
+        echo($resposta);
+    }
+
+
+    /**
+     * Habilita e configura o composer para o framework
+     * @author Brunoggdev
+    */
+    public function habilitarComposer():void
+    {
+        if (file_put_contents('composer.json', require 'templates/composer.php') ) {
+            exec('composer install');
+            $resposta = "\n\033[92m# Composer habilitado com sucesso.\n\033[0m";
+        } else {
+            $resposta = "\n\033[91m# Algo deu errado ao gerar o composer.json.\n\033[0m";
         }
 
         echo($resposta);
