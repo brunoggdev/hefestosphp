@@ -11,9 +11,9 @@ class CLI
     {
         match ($comando[1]??false) {
             'iniciar', 'servir', 'serve' => $this->iniciar($comando[2] ?? '8080'),
-            'criar', 'fazer', 'gerar' => $this->criar($comando[2]??'', $comando[3]??'', $comando[4]??false),
+            'criar', 'forjar', 'fazer', 'gerar' => $this->criar($comando[2]??'', $comando[3]??'', $comando[4]??false),
             'migrar' => $this->migrar($comando[2]??''),
-            'fornalha', 'soldar', 'forjar', 'brincar' => $this->fornalha(),
+            'fornalha', 'soldar', 'brincar' => $this->fornalha(),
             'testar' => $this->testar($comando[2]??''),
             'ajuda'=> $this->ajuda(),
             default => [$this->imprimir("Você precisa informar algum comando válido."), $this->ajuda()],
