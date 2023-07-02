@@ -16,7 +16,7 @@ require __DIR__ . '/../../app/Config/constantes.php';
 if (file_exists(PASTA_RAIZ . '/vendor/autoload.php')) {
     require PASTA_RAIZ . '/vendor/autoload.php';
 }else{
-    require 'hefestos_psr4_autoloader.php';
+    require 'autoloader.php';
 }
 
 // funções auxiliares nativas do HefestosPHP
