@@ -12,7 +12,7 @@ class CLI
         match ($comando[1]??false) {
             'iniciar', 'servir', 'serve' => $this->iniciar($comando[2] ?? '8080'),
             'criar', 'forjar', 'fazer', 'gerar' => $this->criar($comando[2]??'', $comando[3]??'', $comando[4]??false),
-            'migrar' => $this->migrar($comando[2]??''),
+            'migrar' => $this->migrar($comando[2]??'tabelas'),
             'fornalha', 'soldar', 'brincar' => $this->fornalha(),
             'testar' => $this->testar($comando[2]??''),
             'ajuda'=> $this->ajuda(),
@@ -284,10 +284,10 @@ class CLI
     * Executa as sql's de criação de tabelas
     * @author Brunoggdev
     */
-    public function migrar(string $caminho):void
+    public function migrar(string $caminho = 'tabelas'):void
     {
         $caminho = 'app/Database/' . $caminho;
-
+        $db = new \Hefestos\Database\Database;
         // Se for um diretorio, busque todos os arquivos dentro
         if( is_dir($caminho) ){
             $tabelas = array_merge(
@@ -303,7 +303,7 @@ class CLI
                     throw new \Exception('Sql informada não é válida para esta operação.');
                 }
 
-                (new \Hefestos\Database\Database)->query($sql);
+                $db->query($sql);
             }
 
         }else{
@@ -315,7 +315,7 @@ class CLI
                     throw new \Exception('Sql informada não é válida para esta operação.');
                 }
 
-                (new \Hefestos\Database\Database)->query($sql);
+                $db->query($sql);
             }catch(\ErrorException){
                 $this->imprimir('Arquivo não encontrado.');
                 exit;
