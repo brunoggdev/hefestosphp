@@ -12,7 +12,7 @@ class CLI
         match ($comando[1]??false) {
             'iniciar', 'servir', 'serve' => $this->iniciar($comando[2] ?? '8080'),
             'criar', 'forjar', 'fazer', 'gerar' => $this->criar($comando[2]??'', $comando[3]??'', $comando[4]??false),
-            'migrar' => $this->migrar($comando[2]??'tabelas', $comando[2]??''),
+            'migrar' => $this->migrar($comando[2]??'tabelas', $comando[3]??''),
             'fornalha', 'soldar', 'brincar' => $this->fornalha(),
             'testar' => $this->testar($comando[2]??''),
             'ajuda'=> $this->ajuda(),
@@ -311,37 +311,44 @@ class CLI
 
                 if($zerar === 'zero') {
                     $nome_tabela = explode(' ', $sql)[2];
-                    $db->query('DROP TABLE IF EXISTS ?;', [$nome_tabela]);
+                    $db->query("DROP TABLE IF EXISTS $nome_tabela;");
                 }
 
                 $db->query($sql);
+            }
+
+            if($zerar === 'zero') {
+                echo "\n\033[92m# Tabelas criadas do zero com sucesso!\033[0m";
+            }else{
+                echo "\n\033[92m# Tabelas criadas com sucesso!\033[0m";
             }
 
         }else{
             // se não, busque apenas o arquivo informado
             try{
-                $sql = (string) require $caminho;
-
-                if (stripos($sql, 'CREATE TABLE') !== 0){
-                    throw new \Exception('Sql informada não é válida para esta operaçã:' . PHP_EOL . $sql);
-                }
-
-                if($zerar === 'zero') {
-                    $nome_tabela = explode(' ', $sql)[2];
-                    $db->query('DROP TABLE IF EXISTS ?;', [$nome_tabela]);
-                }
-
-                $db->query($sql);
+                $sql = is_file($caminho) ? (string) require $caminho : tabela(explode('/', $caminho)[2]);
             }catch(\ErrorException){
                 $this->imprimir('Arquivo não encontrado.');
                 exit;
             }
-        }
 
-        if($zerar === 'zero') {
-            echo "\n\033[92m# Tabela(s) criada(s) do zero com sucesso!\033[0m";
-        }else{
-            echo "\n\033[92m# Tabela(s) criada(s) com sucesso!\033[0m";
+            if (stripos($sql, 'CREATE TABLE') !== 0){
+                throw new \Exception('Sql informada não é válida para esta operaçã:' . PHP_EOL . $sql);
+            }
+
+            if($zerar === 'zero') {
+                $nome_tabela = explode(' ', $sql)[2];
+                $db->query("DROP TABLE IF EXISTS $nome_tabela;");
+            }
+
+            $db->query($sql);
+
+            if($zerar === 'zero') {
+                echo "\n\033[92m# Tabela '$nome_tabela' criada do zero com sucesso!\033[0m";
+            }else{
+                echo "\n\033[92m# Tabela '$nome_tabela' criada com sucesso!\033[0m";
+            }
+
         }
     }
 
