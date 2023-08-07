@@ -12,7 +12,7 @@ class CLI
         match ($comando[1]??false) {
             'iniciar', 'servir', 'serve' => $this->iniciar($comando[2] ?? '8080'),
             'criar', 'forjar', 'fazer', 'gerar' => $this->criar($comando[2]??'', $comando[3]??'', $comando[4]??false),
-            'migrar' => $this->migrar($comando[2]??'tabelas'),
+            'migrar' => $this->migrar($comando[2]??'tabelas', $comando[2]??''),
             'fornalha', 'soldar', 'brincar' => $this->fornalha(),
             'testar' => $this->testar($comando[2]??''),
             'ajuda'=> $this->ajuda(),
@@ -284,10 +284,16 @@ class CLI
     * Executa as sql's de criação de tabelas
     * @author Brunoggdev
     */
-    public function migrar(string $caminho = 'tabelas'):void
+    public function migrar(string $caminho = 'tabelas', string $zerar = ''):void
     {
+        if ($caminho === 'zero') {
+            $zerar = 'zero';
+            $caminho = 'tabelas';
+        }
+
         $caminho = 'app/Database/' . $caminho;
-        $db = new \Hefestos\Database\Database;
+        $db = db();
+
         // Se for um diretorio, busque todos os arquivos dentro
         if( is_dir($caminho) ){
             $tabelas = array_merge(
@@ -299,8 +305,13 @@ class CLI
             foreach ($tabelas as $tabela) {
                 $sql = (string) require $tabela;
 
-                if (stripos($sql, 'CREATE TABLE') !== 0){
-                    throw new \Exception('Sql informada não é válida para esta operação.');
+                if (! str_starts_with($sql, 'CREATE TABLE')){
+                    throw new \Exception('Sql informada não é válida para esta operaçã:' . PHP_EOL . $sql);
+                }
+
+                if($zerar === 'zero') {
+                    $nome_tabela = explode(' ', $sql)[2];
+                    $db->query('DROP TABLE IF EXISTS ?;', [$nome_tabela]);
                 }
 
                 $db->query($sql);
@@ -312,7 +323,12 @@ class CLI
                 $sql = (string) require $caminho;
 
                 if (stripos($sql, 'CREATE TABLE') !== 0){
-                    throw new \Exception('Sql informada não é válida para esta operação.');
+                    throw new \Exception('Sql informada não é válida para esta operaçã:' . PHP_EOL . $sql);
+                }
+
+                if($zerar === 'zero') {
+                    $nome_tabela = explode(' ', $sql)[2];
+                    $db->query('DROP TABLE IF EXISTS ?;', [$nome_tabela]);
                 }
 
                 $db->query($sql);
@@ -322,7 +338,11 @@ class CLI
             }
         }
 
-        echo "\n\033[92m# Tabela(s) criada(s) com sucesso!\033[0m";
+        if($zerar === 'zero') {
+            echo "\n\033[92m# Tabela(s) criada(s) do zero com sucesso!\033[0m";
+        }else{
+            echo "\n\033[92m# Tabela(s) criada(s) com sucesso!\033[0m";
+        }
     }
 
 
