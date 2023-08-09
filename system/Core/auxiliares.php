@@ -146,13 +146,12 @@ function view(string $view, ?array $dados = []):string
     // Guarda o conteúdo da view requerida como string
     ob_start();
 
-    if(is_file( $arquivo = PASTA_RAIZ . "app/Views/$view.php" )){
-        require $arquivo;
-    }elseif (is_file( $arquivo = PASTA_RAIZ . "system/Views/$view.php" )) {
-        require $arquivo;
-    }else{
-        throw new Exception("View '$view' não encontrada.", 1);
-    }
+    // Busca pela view do usuário ou do sistema respectivamente
+    match (true) {
+        is_file($arquivo = PASTA_RAIZ . "app/Views/$view.php") => require $arquivo,
+        is_file($arquivo = PASTA_RAIZ . "system/Views/$view.php") => require $arquivo,
+        default => throw new Exception("View '$view' não encontrada.", 1)
+    };
 
     // Retornando o conteúdo da view que foi guardado como string
     return ob_get_clean();
