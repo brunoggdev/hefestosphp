@@ -383,17 +383,20 @@ function db():Database
 }
 
 
-
 /**
-* Atalho para interagir com a sessão do usuário: Retorna o valor desejado da sessão do usuário ou, caso  
-* nenhum valor seja informado, se a sessão está ativa.
-* @author Brunoggdev
+ * Retorna a SQL da tabela com o nome desejado (sem a data de criação)
+ * @author Brunoggdev
 */
-// function usuario(string $index = 'logado'):mixed
-// {
-//     if(empty( sessao('usuario') )){
-//         return '';
-//     }
+function tabela(string $tabela)
+{
+    $tabelas = array_values(array_filter(
+        scandir(pasta_app('Database/tabelas')),
+        fn($item) =>  str_ends_with($item, "$tabela.php")
+    ));
 
-//     return sessao('usuario')[$index];
-// }
+    if (empty($tabelas)) {
+        throw new Exception("Nenhuma tabela encontrada com o nome $tabela.");
+    }
+
+    return (string) require pasta_app("Database/tabelas/$tabelas[0]");
+}
