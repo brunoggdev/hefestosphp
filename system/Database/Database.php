@@ -12,22 +12,22 @@ use PDO, PDOStatement;
 class Database
 {
 
-    protected PDO $connection;
+    protected PDO $conexao;
     protected string $query = '';
     protected $params = [];
-    protected PDOStatement $queryInfo;
-    private bool $comoArray = true;
+    protected PDOStatement $query_info;
+    private bool $como_array = true;
 
     /**
-    * Requisita um array contendo [$host, $nomeBD, $usuario, $senha]
-    * para se conectar ao banco de dados e instanciar o PDO.
-    * @author brunoggdev
+     * Busca o array de conexão com o banco de dados e instancia o PDO.
+     * Pode receber uma conexão alternativa na forma de [$dsn, $usuario, $senha].
+     * @author brunoggdev
     */
     public function __construct(?array $dbconfig = null)
     {
         [$dsn, $usuario, $senha] = $dbconfig ?? $this->getConexao();
 
-        $this->connection = new PDO($dsn, $usuario, $senha, [
+        $this->conexao = new PDO($dsn, $usuario, $senha, [
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
         ]); 
     }
@@ -40,11 +40,10 @@ class Database
     {
         $dbconfig = require pasta_app('Config/database.php');
 
-        if($dbconfig['driver'] === 'mysql'){
-            $dsn = "mysql:host=$dbconfig[host];dbname=$dbconfig[nomeDB]";
-        }else{
-            $dsn = 'sqlite:'.PASTA_RAIZ.$dbconfig['sqlite'];
-        }
+        $dsn = match ($dbconfig['driver']) {
+            'mysql' => "mysql:host=$dbconfig[host];dbname=$dbconfig[nomeDB]",
+            default => 'sqlite:' . PASTA_RAIZ . $dbconfig['sqlite']
+        };
 
         return [$dsn, $dbconfig['usuario'], $dbconfig['senha']];
     }
@@ -53,11 +52,11 @@ class Database
     * Adiciona um SELECT na consulta
     * @author brunoggdev
     */
-    public function select(string $table, array $colunas = ['*']): self
+    public function select(string $tabela, array $colunas = ['*']): self
     {
         $colunas = implode(', ', $colunas);
 
-        $this->query = "SELECT $colunas FROM $table";
+        $this->query = "SELECT $colunas FROM $tabela";
 
         return $this;
     }
@@ -224,9 +223,9 @@ class Database
 
         if($coluna){
             return $resultado[$coluna] ?? null;
-        }else{
-            return $this->comoArray ? $resultado : new Colecao($resultado);
         }
+
+        return $this->como_array ? $resultado : new Colecao($resultado);
     }
 
 
@@ -234,11 +233,11 @@ class Database
     * Retorna todos os resultados da consulta
     * @author brunoggdev
     */
-    public function todos(int $fetchMode = PDO::FETCH_OBJ)
+    public function todos(int $fetchMode = PDO::FETCH_ASSOC)
     {
-        $query = $this->executarQuery();
+        $resultado = $this->executarQuery()->fetchAll($fetchMode);
 
-        return $this->comoArray ? $query->fetchAll(PDO::FETCH_ASSOC) : new Colecao( $query->fetchAll($fetchMode) );
+        return $this->como_array ? $resultado : new Colecao($resultado);
     }
 
 
@@ -248,14 +247,14 @@ class Database
     */
     protected function executarQuery():PDOStatement
     {
-        $query = $this->connection->prepare($this->query);
+        $query = $this->conexao->prepare($this->query);
         
-        $this->queryInfo = $query;
+        $this->query_info = $query;
         
         $query->execute($this->params);
 
         $this->params = [];
-        $this->queryInfo = $query;
+        $this->query_info = $query;
 
         return $query;
     }
@@ -265,7 +264,7 @@ class Database
     * Retorna a string montada da consulta
     * @author brunoggdev
     */
-    public function stringDaConsulta():string
+    public function stringDaConsultaSql():string
     {
         return $this->query;
     }
@@ -277,7 +276,7 @@ class Database
     */
     public function erros():array
     {
-        return $this->queryInfo->errorInfo();
+        return $this->query_info->errorInfo();
     }
 
 
@@ -287,7 +286,7 @@ class Database
     */
     public function comoArray():self
     {
-        $this->comoArray = true;
+        $this->como_array = true;
 
         return $this;
     }
@@ -298,7 +297,7 @@ class Database
     */
     public function comoColecao():self
     {
-        $this->comoArray = false;
+        $this->como_array = false;
 
         return $this;
     }
