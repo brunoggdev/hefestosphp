@@ -13,10 +13,10 @@ set_error_handler(function($errno, $errstr, $errfile, $errline){
 require __DIR__ . '/../../app/Config/constantes.php';
 
 // Carregando autoload do composer caso exista ou do Hefestos caso contrário
-if (file_exists(PASTA_RAIZ . '/vendor/autoload.php')) {
-    require PASTA_RAIZ . '/vendor/autoload.php';
+if (file_exists($composer_autoload = PASTA_RAIZ . '/vendor/autoload.php')) {
+    require $composer_autoload;
 }else{
-    require 'autoloader.php';
+    require 'hefestos_autoloader.php';
 }
 
 // funções auxiliares nativas do HefestosPHP

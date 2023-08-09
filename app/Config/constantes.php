@@ -6,7 +6,7 @@ ao arquivo ".env" que você verá em projetos mais complexos.
 
 const PASTA_RAIZ = __DIR__ . '/../../';
 
-const ENVIROMENT = 'desenvolvimento'; //desenvolvimento ou producao
+const ENVIROMENT = 'producao'; //desenvolvimento ou producao
 
 const URL_BASE = 'localhost:8080';
 
