@@ -19,8 +19,12 @@ class ModelBase
     * Cria uma instancia do banco de dados que será utilizada nas consultas
     * @author Brunoggdev
     */
-    public function __construct()
+    public function __construct(Database $db = null)
     {
+        if (! is_null($db)) {
+            $this->db = $db;
+        }
+
         if ($this->tipo_retorno_padrao == 'objeto') {
             $this->comoColecao();
         }
@@ -144,9 +148,10 @@ class ModelBase
     */
     public function db():Database
     {
-        if (!isset($this->db)) {
-            $this->db = new Database();
+        if (! isset($this->db)) {
+            $this->db = Database::singleton();
         }
+        
         return $this->db;
     }
 }
