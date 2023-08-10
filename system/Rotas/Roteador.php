@@ -145,10 +145,11 @@ class Roteador {
     }
 
     /**
-    * Tenta mapear a uri requisitada com uma das rotas configuradas
-    * @author Brunoggdev
+     * Tenta mapear a uri requisitada com uma das rotas configuradas e, 
+     * caso encontre, retorna a sua ação e seus parametros;
+     * @author Brunoggdev
     */
-    public function mapear(string $uri, string $verbo_http):?string
+    public function mapear(string $uri, string $verbo_http):array
     {
         foreach ($this->rotas as $rota) {
             $verbo_http_corresponde = $rota['verbo_http'] === strtoupper($verbo_http);
@@ -156,26 +157,11 @@ class Roteador {
             
             if ($verbo_http_corresponde && $uri_corresponde) {
                 (new Filtros)->filtrar($rota['filtro']);
-                return $this->resposta($rota['acao'], array_slice($params, 1));
+                return [$rota['acao'], array_slice($params, 1)];
             }
         }
  
-        abortar(404);
-    }
-
-
-    /**
-    * Devolve a resposta da rota
-    * @author Brunoggdev
-    */
-    public function resposta(callable $acao, ?array $params):?string
-    {
-        $retorno = $acao(...$params);
-        
-        if ($retorno instanceof Redirecionar) {
-            exit;
-        }
-
-        return $retorno;
+        $codigo_http = 404;
+        abortar($codigo_http, view($codigo_http));
     }
 }
