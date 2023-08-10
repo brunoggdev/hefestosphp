@@ -11,7 +11,7 @@ use PDO, PDOStatement;
 */
 class Database
 {
-
+    private static self $instancia = null;
     protected PDO $conexao;
     protected string $query = '';
     protected $params = [];
@@ -23,7 +23,7 @@ class Database
      * Pode receber uma conexão alternativa na forma de [$dsn, $usuario, $senha].
      * @author brunoggdev
     */
-    public function __construct(?array $dbconfig = null)
+    private function __construct(?array $dbconfig = null)
     {
         [$dsn, $usuario, $senha] = $dbconfig ?? $this->getConexao();
 
@@ -31,6 +31,21 @@ class Database
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
         ]); 
     }
+
+
+    /**
+     * Retorna a conexão ativa do banco de dados (singleton)
+     * @author Brunoggdev
+    */
+    public static function singleton():self
+    {
+        if (is_null(self::$instancia)) {
+            self::$instancia = new self();
+        }
+
+        return self::$instancia;
+    }
+
 
     /**
      * Busca as configurações e formata o dsn de conexão com o banco

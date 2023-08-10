@@ -377,12 +377,17 @@ function coletar(array $array):Colecao
 }
 
 /**
- * Atalho conveniente para retornar uma instancia da Database
+ * Atalho conveniente para retornar uma instancia da Database;
+ * Pode receber um array de configuração customizado.
  * @author Brunoggdev
 */
-function db():Database
+function db(?array $config = null):Database
 {
-    return new Database();
+    if (is_null($config)){
+        return Database::singleton();
+    }
+    
+    return new Database($config);
 }
 
 
