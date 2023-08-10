@@ -2,6 +2,10 @@
 
 use Hefestos\Core\App;
 
-require '../system/Core/iniciar_app.php';
+try {
+    require '../system/Core/iniciar_app.php';
+} catch (\Throwable $erro) {
+    //throw $th;
+}
 
 App::processarRequisicao();

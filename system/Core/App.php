@@ -2,6 +2,8 @@
 
 namespace Hefestos\Core;
 
+use Throwable;
+
 final class App
 {
     /**
@@ -10,21 +12,35 @@ final class App
     */
     public static function processarRequisicao():string
     {
-        try {
-            require PASTA_RAIZ . '/app/Config/rotas.php';
+        require PASTA_RAIZ . '/app/Config/rotas.php';
+    
+        [$uri, $metodo_http] = static::processarURL();
         
-            $uri = parse_url($_SERVER['REQUEST_URI'])['path'];
-            $metodoHttp = $_POST['_method'] ?? $_SERVER['REQUEST_METHOD'];
-            
-            // Enviando resposta da requisicao e finalizando o app
-            echo $rotas->mapear($uri, $metodoHttp);
-            exit;
+        return $rotas->mapear($uri, $metodo_http);   
+    }
 
-        } catch (\Throwable $erro) {
-            ob_clean(); // Limpa o buffer de saída
-            
-            $retorno = ENVIROMENT === 'producao' ? abortar(500)
-            die( view('debug', ['erro' => $erro]) );
-        }        
+    private function processarURL(): array
+    {
+        $uri = parse_url($_SERVER['REQUEST_URI'])['path'];
+        $metodo_http = $_POST['_method'] ?? $_SERVER['REQUEST_METHOD'];
+
+        return [$uri, $metodo_http];
+    }
+
+    public function encerrar(string $resposta): void
+    {
+        echo $resposta;
+        exit;
+    }
+
+    private function lidarComErro(Throwable $erro): void
+    {
+        $codigo_http = 500;
+
+        $retorno = ENVIROMENT === 'desenvolvimento' // se for desenvolvimento
+        ? view('debug', ['erro' => $erro])          // carregue view de debug com erros
+        : view($codigo_http);                       // senão uma view genérica
+        
+        abortar($codigo_http, $retorno);
     }
 }

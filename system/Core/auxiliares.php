@@ -147,9 +147,10 @@ function view(string $view, ?array $dados = []):string
     ob_start();
 
     // Busca pela view do usuário ou do sistema respectivamente
+    $view = "Views/$view.php";
     match (true) {
-        is_file($arquivo = PASTA_RAIZ . "app/Views/$view.php") => require $arquivo,
-        is_file($arquivo = PASTA_RAIZ . "system/Views/$view.php") => require $arquivo,
+        is_file($arquivo = PASTA_RAIZ . "app/$view") => require $arquivo,
+        is_file($arquivo = PASTA_RAIZ . "system/$view") => require $arquivo,
         default => throw new Exception("View '$view' não encontrada.", 1)
     };
 
@@ -192,14 +193,16 @@ function comp(string $componente, ?array $dados = []):string
 
 
 /**
-* Define o código http de resposta e para a execução do app 
-* renderizando a view do codigo desejado (404 por padrão);
-* @author Brunoggdev
+ * Define o código http desejado e para a execução; Opcionalmente
+ * envia também uma string de resposta (pode ser uma view);
+ * @author Brunoggdev
 */
-function abortar(?int $codigo = 404):void
+function abortar(int $codigo_http, string $retorno = ''):void
 {
-    http_response_code($codigo);
-    die( view($codigo) );
+    ob_clean(); // limpa o buffer de saída
+    http_response_code($codigo_http);
+
+    die($retorno);
 }
 
 
