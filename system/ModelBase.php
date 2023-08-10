@@ -16,8 +16,9 @@ class ModelBase
     private $db;
 
     /**
-    * Cria uma instancia do banco de dados que será utilizada nas consultas
-    * @author Brunoggdev
+     * Pode receber uma conexão alternativa com o banco para utilizar na model
+     * invés da conexão padrão do sistema.
+     * @author Brunoggdev
     */
     public function __construct(Database $db = null)
     {
@@ -151,7 +152,7 @@ class ModelBase
         if (! isset($this->db)) {
             $this->db = Database::singleton();
         }
-        
+
         return $this->db;
     }
 }
