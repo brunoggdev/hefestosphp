@@ -3,4 +3,8 @@
 
 require 'system/Core/iniciar_app.php';
 
+if (ENVIROMENT !== 'desenvolvimento') {
+    die("\n\033[91m# CLI não disponível fora do ambiente de desenvolvimento.\033[0m\n");
+}
+
 new \Hefestos\CLI\CLI($argv);
