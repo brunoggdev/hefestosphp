@@ -1,7 +1,7 @@
 <?php
 
-use Hefestos\ControllerBase;
-use Hefestos\ModelBase;
+use Hefestos\Controller;
+use Hefestos\Model;
 use Hefestos\Database\Database;
 use Hefestos\Rotas\Redirecionar;
 use Hefestos\Ferramentas\Colecao;
@@ -114,7 +114,7 @@ function dd(mixed ...$params)
  * Atalho conveniente para retornar uma instancia do controller desejada
  * @author Brunoggdev
 */
-function controller(string $controller):ControllerBase
+function controller(string $controller):Controller
 {
     $controller = "\\App\\Controllers\\$controller";
     return new $controller;
@@ -126,7 +126,7 @@ function controller(string $controller):ControllerBase
  * Atalho conveniente para retornar uma instancia da model desejada
  * @author Brunoggdev
 */
-function model(string $model):ModelBase
+function model(string $model):Model
 {
     $model = "\\App\\Models\\$model";
     return new $model;

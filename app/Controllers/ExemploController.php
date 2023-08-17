@@ -2,9 +2,9 @@
 
 namespace App\Controllers;
 
-use Hefestos\ControllerBase;
+use Hefestos\Controller;
 
-class ExemploController extends ControllerBase
+class ExemploController extends Controller
 {
     public function index()
     {

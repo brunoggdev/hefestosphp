@@ -4,9 +4,9 @@ return <<<EOT
 
     namespace App\Models;
 
-    use Hefestos\ModelBase;
+    use Hefestos\Model;
     
-    class {nome} extends ModelBase
+    class {nome} extends Model
     {
         // tabela do banco de dados ao qual o model está relacionado
         protected \$tabela = '{tabela}';

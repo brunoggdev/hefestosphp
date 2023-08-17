@@ -5,9 +5,9 @@ return <<<EOT
 
     namespace App\Controllers;
 
-    use Hefestos\ControllerBase;
+    use Hefestos\Controller;
 
-    class {nome} extends ControllerBase
+    class {nome} extends Controller
     {
         public function index()
         {
