@@ -78,8 +78,9 @@ class Model
 
 
     /**
-    * Atalho para interagir com o método insert do query builder
-    * @author Brunoggdev
+     * Atalho para interagir com o método insert do query builder
+     * @return bool true se sucesso, false caso contrário;
+     * @author Brunoggdev
     */
     public function insert(array $params):bool
     {
@@ -88,13 +89,16 @@ class Model
 
 
     /**
-    * Atalho para interagir com o método update do query builder
-    * e editar um único id
-    * @author Brunoggdev
+     * Atalho para interagir com o método update do query builder
+     * e editar um registro, sendo a condição padrão o id;
+     * @return bool true se sucesso, false caso contrário;
+     * @author Brunoggdev
     */
-    public function update(int|string $id, array $params):bool
+    public function update(int|string|array $condicao, array $params):bool
     {
-        return $this->db()->update($this->tabela, $params, ['id' => $id]);
+        $where = is_array($condicao) ? $condicao : ['id' => $condicao];
+
+        return $this->db()->update($this->tabela, $params, $where);
     }
 
 

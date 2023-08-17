@@ -99,8 +99,9 @@ class Database
    
    
     /**
-    * Cria uma sql para DELETE
-    * @author Brunoggdev
+     * Cria uma sql para DELETE
+     * @return bool true se sucesso, false caso contrário;
+     * @author Brunoggdev
     */
     public function delete(string $tabela, array $where = []):bool
     {
@@ -110,7 +111,7 @@ class Database
 
 
         $query = $this->executarQuery();
-        return $query->rowCount() > 0 ? true : false;
+        return $query->rowCount() > 0;
     }
 
 
@@ -143,6 +144,10 @@ class Database
     */
     public function where(array|string $params): self
     {
+        if (empty($params)) {
+            return $this;
+        }
+
         if (! str_contains($this->query, 'WHERE') ) {
             $this->query .= ' WHERE ';
         }
