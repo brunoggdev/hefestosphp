@@ -176,7 +176,7 @@ class Database
 
 
     /**
-    * Adiciona um OR na consulta
+    * Adiciona um OR na consulta e em seguida um where novamente
     * @author Brunoggdev
     */
     public function orWhere(array $params):self

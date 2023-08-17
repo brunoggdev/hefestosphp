@@ -6,14 +6,14 @@ use Hefestos\Database\Database;
 
 class ModelBase 
 {
-    // tabela do banco de dados ao qual o model está relacionado
-    protected $tabela;
+    /** Tabela do banco de dados ao qual o model está relacionado */
+    protected string $tabela;
 
-    // tabela do banco de dados ao qual o model está relacionado
-    protected $tipo_retorno_padrao;
+    /** Indica o tipo de retorno pela database ('array' ou 'objeto') */
+    protected string $retorno_padrao;
 
-    // instancia do banco de dados
-    private $db;
+    /** instancia do banco de dados */
+    private Database $db;
 
     /**
      * Pode receber uma conexão alternativa com o banco para utilizar na model
@@ -26,7 +26,7 @@ class ModelBase
             $this->db = $db;
         }
 
-        if ($this->tipo_retorno_padrao == 'objeto') {
+        if ($this->retorno_padrao == 'objeto') {
             $this->comoColecao();
         }
     }
