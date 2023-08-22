@@ -156,6 +156,10 @@ class CLI
     */
     public function fornalha():void
     {
+        if (ENVIROMENT !== 'desenvolvimento') {
+            die("\n\033[91m# Fornalha não disponível fora do ambiente de desenvolvimento.\033[0m\n");
+        }
+
         set_error_handler(function($errno, $errstr, $errfile, $errline){
             throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
         });
