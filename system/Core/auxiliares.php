@@ -6,7 +6,7 @@ use Hefestos\Database\Database;
 use Hefestos\Rotas\Redirecionar;
 use Hefestos\Ferramentas\Colecao;
 use Hefestos\Ferramentas\Requisicao;
-use Hefestos\Ferramentas\Session;
+use Hefestos\Ferramentas\Sessao;
 
 /* ----------------------------------------------------------------------
 Arquivo de funções auxiliares padrões do HefestosPHP.
@@ -224,17 +224,17 @@ function redirecionar(string $url = '', int $codigo = 302):Redirecionar
 
 
 /**
-* Retorna uma instancia da Session ou pega um 
+* Retorna uma instancia da Sessao ou pega um 
 * elemento da sessão caso alguma chave seja passada
 * (retorna null se não houver para a chave indormada).
-* @return Session 
+* @return Sessao 
 * @author Brunoggdev
 */
 function sessao(string|false $chave = false):mixed
 {
-    $session = new Session();
+    $sessao = new Sessao();
 
-    return $chave ? $session->pegar($chave) : $session;
+    return $chave ? $sessao->pegar($chave) : $sessao;
 }
 
 

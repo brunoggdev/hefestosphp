@@ -164,6 +164,9 @@ class CLI
             throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
         });
 
+        // Habilitando sessão previamente por conta de buffer
+        session_start();
+
         echo "\n\033[92m# Fornalha iniciada - Ambiente interativo do HefestosPHP.\033[0m";
         echo "\n\033[93m# Pressione ctrl+c para sair.\033[0m";
 

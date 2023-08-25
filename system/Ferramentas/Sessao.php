@@ -2,7 +2,7 @@
 
 namespace Hefestos\Ferramentas;
 
-class Session
+class Sessao
 {
 
 
@@ -16,6 +16,7 @@ class Session
             session_start();
         }
 
+        // Utilizado para marcar itens como flash
         $_SESSION['__flash'] ??= [];
     }
 
@@ -38,10 +39,10 @@ class Session
     {
         $retorno = $_SESSION[$chave] ?? null;
 
+        // Verifica se a chave foi marcada como flash
         if( in_array($chave, $_SESSION['__flash']) ){
-            // removendo a chave da sessão pois é flash
+            // removendo a chave da sessão e sua marca como flash
             unset($_SESSION[$chave]);
-            // removendo a chave do array flash 
             unset($_SESSION['__flash'][array_search($chave, $_SESSION['__flash'])]);
         }
 
@@ -55,7 +56,7 @@ class Session
     */
     public function tem(string $chave):bool
     {
-        return $_SESSION[$chave]??false ? true : false;
+        return isset($_SESSION[$chave]);
     }
 
 
@@ -65,7 +66,10 @@ class Session
     */
     public function flash(string $chave, mixed $valor):void
     {
+        // Adiciona item na sessão normalmente
         $this->guardar($chave, $valor);
+
+        // Marca que esse item é do tipo flash
         $_SESSION['__flash'][] = $chave;
     }
 
