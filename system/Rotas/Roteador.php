@@ -11,7 +11,7 @@ use Closure;
 class Roteador {
 
     protected $rotas = [];
-    protected $namespacePadrao;
+    protected $namespacePadrao = '\App\Controllers';
 
     /**
     * Adiciona uma rota get no array de rotas
