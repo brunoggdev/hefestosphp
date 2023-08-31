@@ -117,7 +117,7 @@ class Model
      * Retorna o último id inserido pela sql mais recente
      * @author Brunoggdev
     */
-    public function id_inserido():string
+    public function id_inserido():string|false
     {
         return $this->db()->id_inserido();
     }
