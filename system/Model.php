@@ -78,13 +78,13 @@ class Model
 
 
     /**
-     * Atalho para interagir com o método insert do query builder
-     * @return bool true se sucesso, false caso contrário;
+     * Atalho para interagir com o método insert do query builder;
+     * Retorna o id inserido (por padrão) ou um bool para sucesso ou falha.
      * @author Brunoggdev
     */
-    public function insert(array $params):bool
+    public function insert(array $params, bool $retornar_id = true):string|bool
     {
-        return $this->db()->insert($this->tabela, $params);
+        return $this->db()->insert($this->tabela, $params, $retornar_id);
     }
 
 
@@ -110,6 +110,16 @@ class Model
     public function delete(int|string $id)
     {
         return $this->db()->delete($this->tabela, ['id' => $id]);
+    }
+
+
+    /**
+     * Retorna o último id inserido pela sql mais recente
+     * @author Brunoggdev
+    */
+    public function id_inserido():string
+    {
+        return $this->db()->id_inserido();
     }
 
 

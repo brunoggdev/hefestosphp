@@ -51,7 +51,7 @@ class Database
      * Busca as configurações e formata o dsn de conexão com o banco
      * @author Brunoggdev
     */
-    public function getConexao():array
+    private function getConexao():array
     {
         $dbconfig = require pasta_app('Config/database.php');
 
@@ -82,7 +82,7 @@ class Database
     * Adiciona um INSERT na consulta
     * @author brunoggdev
     */
-    public function insert(string $tabela, array $params):bool
+    public function insert(string $tabela, array $params, bool $retornar_id = true):string|bool
     {
         $this->params = $params;
 
@@ -91,9 +91,9 @@ class Database
 
         $this->query = "INSERT INTO $tabela ($colunas) VALUES($valores)";
 
-        $query = $this->executarQuery();
-        
-        return $query->rowCount() > 0;
+        $resultado = $this->executarQuery();
+
+        return $retornar_id ? $this->id_inserido() : $resultado;
     }
    
    
@@ -110,8 +110,7 @@ class Database
         $this->where($where);
 
 
-        $query = $this->executarQuery();
-        return $query->rowCount() > 0;
+        return $this->executarQuery();
     }
 
 
@@ -128,9 +127,8 @@ class Database
     
         $this->query = "UPDATE $tabela SET $novosValores";
         $this->where($where);
-    
-        $query = $this->executarQuery();
-        return $query->rowCount() > 0;
+        
+        return $this->executarQuery();
     }
 
 
@@ -239,7 +237,7 @@ class Database
     */
     public function primeiro(?string $coluna = null)
     {
-        $resultado = $this->executarQuery()->fetch(PDO::FETCH_ASSOC);
+        $resultado = $this->executarQuery(true)->fetch(PDO::FETCH_ASSOC);
 
         if($coluna){
             return $resultado[$coluna] ?? null;
@@ -255,28 +253,29 @@ class Database
     */
     public function todos(int $fetchMode = PDO::FETCH_ASSOC)
     {
-        $resultado = $this->executarQuery()->fetchAll($fetchMode);
+        $resultado = $this->executarQuery(true)->fetchAll($fetchMode);
 
         return $this->como_array ? $resultado : new Colecao($resultado);
     }
 
 
     /**
-    * Executa a consulta no banco de dados e retorna o PDOStatement
-    * @author brunoggdev
+     * Executa a sql no banco de dados e retorna o boolean do resultado ou,
+     * opcionalmente, o PDOStatement;
+     * @author brunoggdev
     */
-    protected function executarQuery():PDOStatement
+    protected function executarQuery(bool $retornar_query = false):bool|PDOStatement
     {
         $query = $this->conexao->prepare($this->query);
         
         $this->query_info = $query;
         
-        $query->execute($this->params);
+        $resultado = $query->execute($this->params);
 
         $this->params = [];
         $this->query_info = $query;
 
-        return $query;
+        return $retornar_query ? $query : $resultado;
     }
 
 
@@ -287,6 +286,26 @@ class Database
     public function stringDaConsultaSql():string
     {
         return $this->query;
+    }
+
+
+    /**
+     * Retorna o número de linhas afetadas pela ultima sql
+     * @author Brunoggdev
+    */
+    public function linhasAfetadas():int
+    {
+        return $this->query_info->rowCount();
+    }
+
+
+    /**
+     * Retorna o último id inserido pela sql mais recente
+     * @author Brunoggdev
+    */
+    public function id_inserido():string
+    {
+        return $this->conexao->lastInsertId();
     }
 
 
@@ -311,6 +330,7 @@ class Database
         return $this;
     }
 
+    
     /**
     * Define o retorno do banco de dados como um objeto do tipo colecao
     * @author Brunoggdev
@@ -321,5 +341,4 @@ class Database
 
         return $this;
     }
-
 }
