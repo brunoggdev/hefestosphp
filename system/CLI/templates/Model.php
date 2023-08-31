@@ -9,6 +9,6 @@ return <<<EOT
     class {nome} extends Model
     {
         // tabela do banco de dados ao qual o model está relacionado
-        protected \$tabela = '{tabela}';
+        protected string \$tabela = '{tabela}';
     }
     EOT;

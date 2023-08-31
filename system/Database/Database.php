@@ -11,7 +11,7 @@ use PDO, PDOStatement;
 */
 class Database
 {
-    private static self $instancia = null;
+    private static ?self $instancia = null;
     protected PDO $conexao;
     protected string $query = '';
     protected $params = [];

@@ -26,7 +26,7 @@ class Model
             $this->db = $db;
         }
 
-        if ($this->retorno_padrao == 'objeto') {
+        if (isset($this->retorno_padrao) && $this->retorno_padrao == 'objeto') {
             $this->comoColecao();
         }
     }
