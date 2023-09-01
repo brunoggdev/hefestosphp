@@ -102,9 +102,11 @@ class Model
     * e deletar um único id
     * @author Brunoggdev
     */
-    public function delete(int|string $id)
+    public function delete(int|string|array $condicao)
     {
-        return $this->db()->delete($this->tabela, ['id' => $id]);
+        $where = is_array($condicao) ? $condicao : ['id' => $condicao];
+
+        return $this->db()->delete($this->tabela, $where);
     }
 
 
