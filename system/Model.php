@@ -36,24 +36,19 @@ class Model
     * Retorna todas as linhas do Model em questão com todas as colunas ou colunas especificas
     * @author Brunoggdev
     */
-    public function tudo(?array $colunas = ['*']):mixed
+    public function buscarTodos(?array $colunas = ['*']):mixed
     {
         return $this->select($colunas)->todos();
     }
 
 
     /**
-    * Retorna a linha com o id ou array de condição informado
-    * e, opcionalmente, uma coluna especifica.
-    * @author Brunoggdev
+     * Retorna a linha com o id informado ou, opcionalmente, uma coluna especifica.
+     * @author Brunoggdev
     */
-    public function buscar(int|string|array $busca, ?string $coluna = null):mixed
+    public function buscar(int|string $id, ?string $coluna = null):mixed
     {
-        if(is_array($busca)){
-            return $this->where($busca)->primeiro($coluna);
-        }
-
-        return $this->where(['id' => $busca])->primeiro($coluna);
+        return $this->where(['id' => $id])->primeiro($coluna);
     }
 
 
