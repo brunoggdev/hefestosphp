@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use Hefestos\Controller;
+use Hefestos\Core\Controller;
 
 class ExemploController extends Controller
 {

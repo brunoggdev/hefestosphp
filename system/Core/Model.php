@@ -1,6 +1,6 @@
 <?php
 
-namespace Hefestos;
+namespace Hefestos\Core;
 
 use Hefestos\Database\Database;
 

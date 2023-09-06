@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Hefestos\Model;
+use Hefestos\Core\Model;
 
 class ExemploModel extends Model
 {

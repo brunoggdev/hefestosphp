@@ -1,7 +1,7 @@
 <?php
 
-use Hefestos\Controller;
-use Hefestos\Model;
+use Hefestos\Core\Controller;
+use Hefestos\Core\Model;
 use Hefestos\Database\Database;
 use Hefestos\Rotas\Redirecionar;
 use Hefestos\Ferramentas\Colecao;

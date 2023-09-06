@@ -4,7 +4,7 @@ return <<<EOT
 
     namespace App\Models;
 
-    use Hefestos\Model;
+    use Hefestos\Core\Model;
     
     class {nome} extends Model
     {
