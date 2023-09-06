@@ -7,4 +7,13 @@ if (ENVIROMENT !== 'desenvolvimento') {
     die("\n\033[91m# CLI não disponível fora do ambiente de desenvolvimento.\033[0m\n");
 }
 
-new \Hefestos\CLI\CLI($argv);
+try {
+
+    new \Hefestos\CLI\CLI($argv);
+    
+} catch (\Throwable $th) {
+    echo 
+    "\033[91m -> Erro encontrado: \033[0m" . $th->getMessage() . "\n" . 
+    "\033[91m -> Na linha: \033[0m" . $th->getLine() . "\n" . 
+    "\033[91m -> Do arquivo: \033[0m" . $th->getFile();
+}

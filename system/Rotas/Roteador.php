@@ -2,8 +2,6 @@
 
 namespace Hefestos\Rotas;
 
-use Closure;
-
 /**
 * Controla todo o sistema de roteamento da aplicação
 * @author Brunoggdev
@@ -93,7 +91,7 @@ class Roteador {
     */
     protected function formatarAcao(string|array|callable $acao):callable
     {
-        if ($acao  instanceof Closure) {
+        if (is_callable( $acao )) {
             return $acao;
         }
 

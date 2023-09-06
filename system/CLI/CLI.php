@@ -2,6 +2,8 @@
 
 namespace Hefestos\CLI;
 
+use Hefestos\Testes\SuiteDeTestes;
+
 class CLI
 {
     /**
@@ -212,11 +214,12 @@ class CLI
 
 
     /**
-    * Executa todas as closures de teste e imprime seus resultados
+    * Executa todas as funcoes de teste e imprime seus resultados
     * @author Brunoggdev
     */
     public function testar(string $caminho):void
     {
+        require_once PASTA_RAIZ . 'system/Testes/auxiliares_de_testes.php';
         $caminho = 'app/Testes/' . $caminho;
         // tomando controle dos erros nativos do php
         set_error_handler(function($errno, $errstr, $errfile, $errline){
@@ -244,8 +247,7 @@ class CLI
         }
         echo "\n";
         
-        // $testar é a instancia presente nos testes do usuario
-        $testador = new \Hefestos\Testes\Testador($testar);
+        $testador = new \Hefestos\Testes\Testador(SuiteDeTestes::singleton());
         $testesPassaram = 0;
         $testesFalhaaram = 0;
         foreach ($testador->testes() as $i => $teste) {
@@ -254,25 +256,33 @@ class CLI
                 $resultado = $testador->testar($teste['funcao']->bindTo($testador));
             } catch (\Throwable $th) {
                 $resultado = false;
+                if ($th->getCode() === 420) {
+                    $trace = $th->getTrace();
+                    $linhaErr =  $trace[1]['line'];
+                    $arquivoErr =  $trace[1]['file'];
+                }else{
+                    $linhaErr =  $th->getLine();
+                    $arquivoErr =  $th->getFile();
+                }
                 $erro = 
                 "-> \033[1m Erro encontrado: \033[0m" . $th->getMessage() . "\n" . 
-                "  -> \033[1m Na linha: \033[0m" . $th->getLine() . "\n" . 
-                "  -> \033[1m Do arquivo: \033[0m" . $th->getFile() . "\n\n";
+                "  -> \033[1m Na linha: \033[0m" . $linhaErr . "\n" . 
+                "  -> \033[1m Do arquivo: \033[0m" . $arquivoErr . "\n\n";
             }
 
-            if($resultado === true){
-                $status = "\033[42mPassou.\033[0m";
-                $testesPassaram++;
-            }else{
+            if($resultado === false) {
                 $status = "\033[41mFalhou.\033[0m";
                 $testesFalhaaram++;
+            }else{
+                $status = "\033[42mPassou.\033[0m";
+                $testesPassaram++;
             }
 
 
 
             $trilha = str_repeat('.', 80 - mb_strlen($teste['descricao']) - mb_strlen($status));
 
-            $relatorio = sprintf("%d - %s %s %s", ($i+1), "Testa se $teste[descricao]", $trilha, $status);
+            $relatorio = sprintf("%d - %s %s %s", ($i+1), "Testa $teste[descricao]", $trilha, $status);
             
             $this->imprimir($relatorio, isset($erro) ? 0 : 1);
 

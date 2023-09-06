@@ -17,15 +17,12 @@ class Testador extends SuiteDeTestes
     }
 
     public function __get(mixed $propriedade) {
-        if (property_exists($this->suite, $propriedade)) {
-            return $this->suite->$propriedade;
-        }
-        return null;
+        return $this->suite::$propriedades[$propriedade] ?? null;
     }
 
-    public function testar(callable $teste):bool
+    public function testar(callable $teste)
     {
-        return call_user_func($teste);
+        return $teste();
     }
 
     
@@ -35,6 +32,6 @@ class Testador extends SuiteDeTestes
     */
     public function testes():array
     {
-        return $this->suite->testes;
+        return $this->suite::$testes;
     }
 }

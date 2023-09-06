@@ -7,7 +7,7 @@ Um framework PHP em português com 0 dependências onde o intuito principal é d
 
 # TO-DO (por prioridade)
    - Documentação do Framework
-   - Adicionar mais testes
+   - Adicionar mais testes (corrigir contem())
    - Adicionar mais metodos para colecoes
    - Adicionar sqlite padrão para testes
 

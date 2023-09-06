@@ -1,13 +1,36 @@
 <?php
-require_once PASTA_RAIZ . 'system/Testes/testes.php';
 
-$testar->com(['teste' => "funciona memo meu parsero"]);
+usar([
+    'teste0' => 100,
+    'teste1' => "com uma string",
+    'teste2' => ['com um array', 200],
+]);
 
-$testar->se('a funcionalidade "com" da suite de testes funciona', function(){
-    echo $this->teste;
-    return esperar($this->teste)->serIgual('funciona memo meu parsero');
+testar('se a propriedade teste0 é um número', function(){
+
+    return esperar($this->teste0)->serNumero();
+
 });
 
-$testar->se('hello world tem só essas duas palavras', function(){
-    return esperar('hello world')->nao()->conter('lucas');
+testar('se teste0 é um float', function(){
+
+    return esperar($this->teste0)->serFloat();
+
+});
+
+testar('se teste0 é maior que 200', function(){
+
+    $teste = ($this->teste0 > 200);
+    return esperar($teste)->serVerdadeiro();
+
+});
+
+testar('se a propriedade teste2 contém 200', function(){
+
+    return esperar($this->teste2)->conter('200');
+
+});
+
+testar('se PASTA_RAIZ/public é um diretório válido', function(){
+    return esperar(PASTA_RAIZ.'/public')->serDiretório();
 });
