@@ -256,10 +256,10 @@ class CLI
                 $resultado = $testador->testar($teste['funcao']->bindTo($testador));
             } catch (\Throwable $th) {
                 $resultado = false;
-                if ($th->getCode() === 420) {
+                if ($th->getCode() >= 69) {
                     $trace = $th->getTrace();
-                    $linhaErr =  $trace[1]['line'];
-                    $arquivoErr =  $trace[1]['file'];
+                    $linhaErr =  $trace[$th->getCode()-69]['line'];
+                    $arquivoErr =  $trace[$th->getCode()-69]['file'];
                 }else{
                     $linhaErr =  $th->getLine();
                     $arquivoErr =  $th->getFile();

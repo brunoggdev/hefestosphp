@@ -20,15 +20,38 @@ class Esperar
     {
         if ($this->negar) {
             $retorno = !$retorno;
+            $negado = true;
             $this->negar = false;
         }
 
         if (!$retorno) {
-            throw new \Exception($mensagem, 420);
+            throw new \Exception(
+                "Falha ao conferir que ". 
+                $this->processarSaida().
+                (isset($negado) ? " não " : " ").
+                $mensagem, 70
+            );
         }
 
         return $this;
     }
+
+
+    /**
+     * Processa o retorno, reseta a negação e retorna a instancia;
+     * @author Brunoggdev
+    */
+    protected function processarSaida():mixed
+    {
+        $retorno = get_debug_type($this->itemDeTeste);
+
+        if (in_array($retorno, ['int', 'float', 'string'])) {
+            return $retorno . " ({$this->itemDeTeste})";
+        }
+
+        return $retorno;
+    }
+
 
     /**
      * Nega qualquer que seja o resultado da próxima chamada
@@ -49,7 +72,7 @@ class Esperar
     {
         $retorno = is_bool($this->itemDeTeste);
         
-        return $this->processarRetorno($retorno, "Falha ao conferir que {$this->itemDeTeste} é booleano.");
+        return $this->processarRetorno($retorno, "é booleano.");
     }
 
 
@@ -61,7 +84,7 @@ class Esperar
     {
         $retorno = is_numeric($this->itemDeTeste);
         
-        return $this->processarRetorno($retorno, "Falha ao conferir que {$this->itemDeTeste} é numérico.");
+        return $this->processarRetorno($retorno, "é numérico.");
     }
 
 
@@ -73,7 +96,7 @@ class Esperar
     {
         $retorno = is_int($this->itemDeTeste);
         
-        return $this->processarRetorno($retorno, "Falha ao conferir que {$this->itemDeTeste} é um inteiro.");
+        return $this->processarRetorno($retorno, "é um inteiro.");
     }
 
 
@@ -85,7 +108,7 @@ class Esperar
     {
         $retorno = is_float($this->itemDeTeste);
         
-        return $this->processarRetorno($retorno, "Falha ao conferir que {$this->itemDeTeste} é um float.");
+        return $this->processarRetorno($retorno, "é um float.");
     }
 
 
@@ -97,7 +120,7 @@ class Esperar
     {
         $retorno = is_string($this->itemDeTeste);
         
-        return $this->processarRetorno($retorno, "Falha ao conferir que {$this->itemDeTeste} é uma string.");
+        return $this->processarRetorno($retorno, "é uma string.");
     }
 
     
@@ -109,7 +132,7 @@ class Esperar
     {
         $retorno = is_array($this->itemDeTeste);
         
-        return $this->processarRetorno($retorno, "Falha ao conferir que {$this->itemDeTeste} é um array.");
+        return $this->processarRetorno($retorno, "é um array.");
     }
 
 
@@ -121,7 +144,7 @@ class Esperar
     {
         $retorno = is_object($this->itemDeTeste);
         
-        return $this->processarRetorno($retorno, "Falha ao conferir que {$this->itemDeTeste} é um objeto.");
+        return $this->processarRetorno($retorno, "é um objeto.");
     }
 
 
@@ -133,7 +156,7 @@ class Esperar
     {
         $retorno = ($this->itemDeTeste === true);
         
-        return $this->processarRetorno($retorno, "Falha ao conferir que {$this->itemDeTeste} é verdadeiro.");
+        return $this->processarRetorno($retorno, "é verdadeiro.");
     }
 
 
@@ -145,7 +168,7 @@ class Esperar
     {
         $retorno = ($this->itemDeTeste === false);
         
-        return $this->processarRetorno($retorno, "Falha ao conferir que {$this->itemDeTeste} é falso.");
+        return $this->processarRetorno($retorno, "é falso.");
     }
 
 
@@ -157,7 +180,7 @@ class Esperar
     {
         $retorno = is_null($this->itemDeTeste);
         
-        return $this->processarRetorno($retorno, "Falha ao conferir que {$this->itemDeTeste} é nulo.");
+        return $this->processarRetorno($retorno, "é nulo.");
     }
 
 
@@ -169,7 +192,7 @@ class Esperar
     {
         $retorno = is_callable($this->itemDeTeste);
         
-        return $this->processarRetorno($retorno, "Falha ao conferir que {$this->itemDeTeste} é uma função.");
+        return $this->processarRetorno($retorno, "é uma função.");
     }
 
 
@@ -204,7 +227,7 @@ class Esperar
     public function serIgual(mixed $itemDeComparacao)
     {
         $retorno = $this->itemDeTeste === $itemDeComparacao;
-        return $this->processarRetorno($retorno, "Falha ao conferir que {$this->itemDeTeste} é igual a {$itemDeComparacao}.");
+        return $this->processarRetorno($retorno, "é igual a {$itemDeComparacao}.");
     }
 
 
@@ -215,7 +238,7 @@ class Esperar
     public function existir()
     {
         $retorno = isset($this->itemDeTeste);
-        return $this->processarRetorno($retorno, "Falha ao conferir que {$this->itemDeTeste} existe.");
+        return $this->processarRetorno($retorno, "existe.");
     }
 
 
@@ -226,7 +249,7 @@ class Esperar
     public function serArquivo()
     {
         $retorno = is_file($this->itemDeTeste);
-        return $this->processarRetorno($retorno, "Falha ao conferir que {$this->itemDeTeste} é um arquivo válido.");
+        return $this->processarRetorno($retorno, "é um arquivo válido.");
     }
 
     /**
@@ -236,6 +259,6 @@ class Esperar
     public function serDiretório()
     {
         $retorno = is_dir($this->itemDeTeste);
-        return $this->processarRetorno($retorno, "Falha ao conferir que {$this->itemDeTeste} é um diretório válido.");
+        return $this->processarRetorno($retorno, "é um diretório válido.");
     }
 }
