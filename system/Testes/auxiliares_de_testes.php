@@ -4,7 +4,7 @@ use Hefestos\Testes\Esperar;
 use Hefestos\Testes\SuiteDeTestes;
 
 /**
-* Adiciona um novo teste na suíte de testes, recebendo uma descrição pro teste e uma função que deve retornar um booleano;
+* Adiciona um novo teste na suíte de testes, recebendo uma descrição de até 75 caracteres pro teste e uma função que deve retornar um booleano;
 * @param string $descricao Comentário a ser exibido no console durante os testes.
 * @param callable $teste Função de teste que deve sempre retornar um bool (como as esperas).
 * @author Brunoggdev

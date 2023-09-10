@@ -15,7 +15,7 @@ class SuiteDeTestes
 
     /**
     * Adiciona um novo teste na suíte de testes
-    * @param string $descricao Comentário a ser exibido no console durante os testes.
+    * @param string $descricao Comentário até 75 caracteres a ser exibido no console durante os testes.
     * @param callable $teste Função de teste que deve sempre retornar um bool (como as esperas).
     * @author Brunoggdev
     */
