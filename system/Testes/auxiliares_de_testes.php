@@ -20,7 +20,7 @@ function testar(string $descricao, callable $teste):void
  * @param array $propiedades Um array associativo com o nome da propriedade e seu valor
  * @author Brunoggdev
 */
-function usar(array $propriedades):void
+function usar(array|callable $propriedades):void
 {
     SuiteDeTestes::usarPropriedades($propriedades);
 }

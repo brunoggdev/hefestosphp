@@ -30,11 +30,15 @@ class SuiteDeTestes
 
     /**
      * Adiciona propriedades na suite de testes a serem utilizadas em todos os testes
-     * @param array $propiedades Um array associativo com o nome da propriedade e seu valor
+     * @param array|callable $propiedades Um array associativo com o nome da propriedade e seu valor ou uma função que retorne o array associativo desejado
      * @author Brunoggdev
     */
-    public static function usarPropriedades(array $propriedades):void
+    public static function usarPropriedades(array|callable $propriedades):void
     {
+        if (is_callable($propriedades)) {
+            $propriedades = $propriedades();
+        }
+
         foreach ($propriedades as $propriedade => $valor) {
             static::$propriedades[$propriedade] = $valor;
         }
