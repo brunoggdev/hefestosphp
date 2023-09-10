@@ -24,6 +24,6 @@ testar('se pode retornar sua própria condicional pros testes', function(){
 });
 
 
-testar('se pode usar Exceptions normalmente (deve falhar!)', function(){
+testar('se pode usar Exceptions normalmente (deve falhar!)aaaaaaaaaaaaaaaaaaaaaaaaa', function(){
     throw new Exception("Devo ver esse errno no console ao testar!");
 });

@@ -279,10 +279,15 @@ class CLI
             }
 
 
+            $descricao = "Testa $teste[descricao]";
 
-            $trilha = str_repeat('.', 80 - mb_strlen($teste['descricao']) - mb_strlen($status));
+            if(  mb_strlen($teste['descricao']) >= 75) {
+                $descricao = "Descrição omitida por exceder limite de até 75 caracteres!";
+            }
 
-            $relatorio = sprintf("%d - %s %s %s", ($i+1), "Testa $teste[descricao]", $trilha, $status);
+            $trilha = str_repeat('.', 90 - mb_strlen($descricao) - mb_strlen($status));
+
+            $relatorio = sprintf("%d - %s %s %s", ($i+1), $descricao, $trilha, $status);
             
             $this->imprimir($relatorio, isset($erro) ? 0 : 1);
 
