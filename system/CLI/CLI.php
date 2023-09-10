@@ -265,9 +265,9 @@ class CLI
                     $arquivoErr =  $th->getFile();
                 }
                 $erro = 
-                "-> \033[1m Erro encontrado: \033[0m" . $th->getMessage() . "\n" . 
-                "  -> \033[1m Na linha: \033[0m" . $linhaErr . "\n" . 
-                "  -> \033[1m Do arquivo: \033[0m" . $arquivoErr . "\n\n";
+                " \033[91m > Erro encontrado: \033[0m" . $th->getMessage() . "\n" . 
+                "   \033[91m > Na linha: \033[0m" . $linhaErr . "\n" . 
+                "   \033[91m > Do arquivo: \033[0m" . $arquivoErr . "\n\n";
             }
 
             if($resultado === false) {
