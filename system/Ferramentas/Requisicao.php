@@ -66,9 +66,18 @@ class Requisicao {
         return $this->codigo;
     }
 
-
-    public function resposta(){
-        return $this->resposta;
+    /**
+     * Retorna a resposta da requisicao ou possíveis erros;
+     * @param string $tipo_de_retorno O se o retorno deve ser em formato json (padrão), array ou objeto;
+     * @author Brunoggdev
+    */
+    public function resposta(string $tipo_de_retorno = 'json'){
+        return match ($tipo_de_retorno) {
+            'json' => $this->resposta,
+            'objeto' => json_decode($this->resposta),
+            'array' => json_decode($this->resposta, true),
+            default => null
+        };;
     }
     
     
@@ -87,7 +96,8 @@ class Requisicao {
             curl_setopt($this->curl, CURLOPT_POSTFIELDS, $data);
         }
 
-        $this->resposta = !curl_exec($this->curl) ? [curl_error($this->curl), curl_errno($this->curl)] : 'aaaaa';
+        $resposta = curl_exec($this->curl);
+        $this->resposta = $resposta ?: [curl_error($this->curl), curl_errno($this->curl)];
         $this->erros = curl_error($this->curl);
         $this->codigo = curl_getinfo($this->curl, CURLINFO_HTTP_CODE);
     
