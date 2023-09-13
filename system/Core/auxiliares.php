@@ -192,12 +192,13 @@ function comp(string $componente, ?array $dados = []):string
 }
 
 /**
- * Retorna a string para importação do arquivo JavaScript na pasta publica 'js/' com o nome informado (se existir), podendo "defer".
+ * Retorna a string para importação do arquivo JavaScript na pasta publica 'js/' 
+ * com o nome informado (se existir), podendo "defer".
  * @author Brunoggdev
 */
-function importarJS(string $nomeArquivo, bool $defer = false)
+function importarJS(string $nome_arquivo, bool $defer = false)
 {
-    $arquivo = "js/$nomeArquivo.js";
+    $arquivo = "js/$nome_arquivo.js";
     if (file_exists($arquivo)) {
         return '<script '.($defer?'defer ':'').' src="'.url_base("$arquivo?v=").VERSAO_APP.'"></script>';
     }
