@@ -199,7 +199,7 @@ function comp(string $componente, ?array $dados = []):string
 function importarJS(string $nome_arquivo, bool $defer = false)
 {
     $arquivo = "js/$nome_arquivo.js";
-    if (file_exists($arquivo)) {
+    if (file_exists(pasta_public($arquivo))) {
         return '<script '.($defer?'defer ':'').' src="'.url_base("$arquivo?v=").VERSAO_APP.'"></script>';
     }
 }
