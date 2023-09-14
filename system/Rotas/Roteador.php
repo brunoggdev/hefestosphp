@@ -9,7 +9,7 @@ namespace Hefestos\Rotas;
 class Roteador {
 
     protected $rotas = [];
-    protected $namespacePadrao = '\App\Controllers';
+    protected $namespace_padrao = '\App\Controllers';
 
     /**
     * Adiciona uma rota get no array de rotas
@@ -98,7 +98,7 @@ class Roteador {
         [$controller, $metodo] = is_string($acao) ? explode('::', $acao) : $acao;
         
         if (!str_contains($controller, '\\')) {
-            $controller = "$this->namespacePadrao\\$controller";
+            $controller = "$this->namespace_padrao\\$controller";
         }
     
         return (new $controller)->$metodo(...);
@@ -111,7 +111,7 @@ class Roteador {
     */
     public function namespacePadrao(string $namespace):void
     {
-        $this->namespacePadrao = $namespace;
+        $this->namespace_padrao = $namespace;
     }
 
 

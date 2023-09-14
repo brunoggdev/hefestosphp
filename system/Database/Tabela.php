@@ -225,9 +225,9 @@ class Tabela
     * Adiciona uma coluna do tipo float.
     * @author Brunoggdev
     */
-    public function float(string $coluna, int $totalDigits, int $decimalDigits, bool $unique = false, bool $nullable = false, mixed $default = false): self
+    public function float(string $coluna, int $total_digitos, int $decimais, bool $unique = false, bool $nullable = false, mixed $default = false): self
     {
-        $this->sql .= "$coluna FLOAT($totalDigits, $decimalDigits) ";
+        $this->sql .= "$coluna FLOAT($total_digitos, $decimais) ";
                 
         if($unique){
             $this->sql .= 'UNIQUE ';
@@ -270,9 +270,9 @@ class Tabela
     * (lembre-se de usar este metodo apenas no final da sql).
     * @author Brunoggdev
     */
-    public function foreignKey(string $coluna, string $tabelaRef, string $colunaRef): self
+    public function foreignKey(string $coluna, string $tabela_ref, string $coluna_ref): self
     {
-        $this->sql .= "FOREIGN KEY ($coluna) REFERENCES $tabelaRef($colunaRef)";
+        $this->sql .= "FOREIGN KEY ($coluna) REFERENCES $tabela_ref($coluna_ref)";
         return $this;
     }
 

@@ -9,7 +9,7 @@ class Requisicao {
     private $codigo;
     private $erros;
     
-    public function __construct(private string $urlBase = '') {
+    public function __construct(private string $url_base = '') {
         $this->curl = curl_init();
         curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, true);
     }
@@ -50,8 +50,8 @@ class Requisicao {
     }
 
 
-    public function setopt(int $curlOpt, mixed $valor) {
-        curl_setopt($this->curl, $curlOpt, $valor);
+    public function setopt(int $curl_opt, mixed $valor) {
+        curl_setopt($this->curl, $curl_opt, $valor);
         return $this;
     }
 
@@ -88,7 +88,7 @@ class Requisicao {
 
     private function requisitar($endpoint, $data = null) {
         
-        $url = $this->urlBase . $endpoint;
+        $url = $this->url_base . $endpoint;
         
         curl_setopt($this->curl, CURLOPT_URL, $url);
         

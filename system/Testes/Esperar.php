@@ -7,7 +7,7 @@ class Esperar
     
     protected bool $negar = false;
 
-    public function __construct(protected mixed $itemDeTeste)
+    public function __construct(protected mixed $item_de_teste)
     {
     }
 
@@ -43,10 +43,10 @@ class Esperar
     */
     protected function processarSaida():mixed
     {
-        $retorno = get_debug_type($this->itemDeTeste);
+        $retorno = get_debug_type($this->item_de_teste);
 
         if (in_array($retorno, ['int', 'float', 'string'])) {
-            return $retorno . " ({$this->itemDeTeste})";
+            return $retorno . " ({$this->item_de_teste})";
         }
 
         return $retorno;
@@ -70,7 +70,7 @@ class Esperar
     */
     public function serBool()
     {
-        $retorno = is_bool($this->itemDeTeste);
+        $retorno = is_bool($this->item_de_teste);
         
         return $this->processarRetorno($retorno, "é booleano.");
     }
@@ -82,7 +82,7 @@ class Esperar
     */
     public function serNumero()
     {
-        $retorno = is_numeric($this->itemDeTeste);
+        $retorno = is_numeric($this->item_de_teste);
         
         return $this->processarRetorno($retorno, "é numérico.");
     }
@@ -94,7 +94,7 @@ class Esperar
     */
     public function serInteiro()
     {
-        $retorno = is_int($this->itemDeTeste);
+        $retorno = is_int($this->item_de_teste);
         
         return $this->processarRetorno($retorno, "é um inteiro.");
     }
@@ -106,7 +106,7 @@ class Esperar
     */
     public function serFloat()
     {
-        $retorno = is_float($this->itemDeTeste);
+        $retorno = is_float($this->item_de_teste);
         
         return $this->processarRetorno($retorno, "é um float.");
     }
@@ -118,7 +118,7 @@ class Esperar
     */
     public function serString()
     {
-        $retorno = is_string($this->itemDeTeste);
+        $retorno = is_string($this->item_de_teste);
         
         return $this->processarRetorno($retorno, "é uma string.");
     }
@@ -130,7 +130,7 @@ class Esperar
     */
     public function serArray()
     {
-        $retorno = is_array($this->itemDeTeste);
+        $retorno = is_array($this->item_de_teste);
         
         return $this->processarRetorno($retorno, "é um array.");
     }
@@ -142,7 +142,7 @@ class Esperar
     */
     public function serObjeto()
     {
-        $retorno = is_object($this->itemDeTeste);
+        $retorno = is_object($this->item_de_teste);
         
         return $this->processarRetorno($retorno, "é um objeto.");
     }
@@ -154,7 +154,7 @@ class Esperar
     */
     public function serVerdadeiro()
     {
-        $retorno = ($this->itemDeTeste === true);
+        $retorno = ($this->item_de_teste === true);
         
         return $this->processarRetorno($retorno, "é verdadeiro.");
     }
@@ -166,7 +166,7 @@ class Esperar
     */
     public function serFalso()
     {
-        $retorno = ($this->itemDeTeste === false);
+        $retorno = ($this->item_de_teste === false);
         
         return $this->processarRetorno($retorno, "é falso.");
     }
@@ -178,7 +178,7 @@ class Esperar
     */
     public function serNulo()
     {
-        $retorno = is_null($this->itemDeTeste);
+        $retorno = is_null($this->item_de_teste);
         
         return $this->processarRetorno($retorno, "é nulo.");
     }
@@ -190,7 +190,7 @@ class Esperar
     */
     public function serFuncao()
     {
-        $retorno = is_callable($this->itemDeTeste);
+        $retorno = is_callable($this->item_de_teste);
         
         return $this->processarRetorno($retorno, "é uma função.");
     }
@@ -203,11 +203,11 @@ class Esperar
     */
     public function conter(string|array|object $agulha)
     {
-        $retorno = match (gettype($this->itemDeTeste)) {
-            'string' => str_contains($this->itemDeTeste, $agulha),
-            'array' => in_array($agulha, $this->itemDeTeste) || array_key_exists($agulha, $this->itemDeTeste),
+        $retorno = match (gettype($this->item_de_teste)) {
+            'string' => str_contains($this->item_de_teste, $agulha),
+            'array' => in_array($agulha, $this->item_de_teste) || array_key_exists($agulha, $this->item_de_teste),
             'object' => (
-                in_array($agulha, ($object = (new \ReflectionObject($this->itemDeTeste)))->getAttributes())
+                in_array($agulha, ($object = (new \ReflectionObject($this->item_de_teste)))->getAttributes())
                 ||
                 in_array($agulha, $object->getConstants())
                 ||
@@ -224,10 +224,10 @@ class Esperar
      *  Verifica se o item de teste corresponde ao item desejado
      * @author Brunoggdev
     */
-    public function serIgual(mixed $itemDeComparacao)
+    public function serIgual(mixed $item_de_comparacao)
     {
-        $retorno = $this->itemDeTeste === $itemDeComparacao;
-        return $this->processarRetorno($retorno, "é igual a {$itemDeComparacao}.");
+        $retorno = $this->item_de_teste === $item_de_comparacao;
+        return $this->processarRetorno($retorno, "é igual a {$item_de_comparacao}.");
     }
 
 
@@ -237,7 +237,7 @@ class Esperar
     */
     public function existir()
     {
-        $retorno = isset($this->itemDeTeste);
+        $retorno = isset($this->item_de_teste);
         return $this->processarRetorno($retorno, "existe.");
     }
 
@@ -248,7 +248,7 @@ class Esperar
     */
     public function serArquivo()
     {
-        $retorno = is_file($this->itemDeTeste);
+        $retorno = is_file($this->item_de_teste);
         return $this->processarRetorno($retorno, "é um arquivo válido.");
     }
 
@@ -258,7 +258,7 @@ class Esperar
     */
     public function serDiretório()
     {
-        $retorno = is_dir($this->itemDeTeste);
+        $retorno = is_dir($this->item_de_teste);
         return $this->processarRetorno($retorno, "é um diretório válido.");
     }
 }

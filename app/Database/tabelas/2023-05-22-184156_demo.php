@@ -6,4 +6,4 @@ use Hefestos\Database\Tabela;
 
 return ( new Tabela('demo') )
     ->id()
-    ->string('colDemo');
+    ->string('col_demo');

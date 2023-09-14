@@ -54,7 +54,7 @@ class CLI
     * Cria um novo arquivo com as propriedades desejadas
     * @author Brunoggdev
     */
-    private function criar(string $tipo_arquivo, string $nome, string|false $controllerRecurso = false):void
+    private function criar(string $tipo_arquivo, string $nome, string|false $controller_recurso = false):void
     {
         if ($tipo_arquivo == 'composer') {
             echo("\n\033[93m# Atenção: Caso já tenha um arquivo \"composer.json\" na raiz do projeto ele será reescrito.\033[0m\n");
@@ -77,15 +77,15 @@ class CLI
         if (! in_array(strtolower($tipo_arquivo), ['controller', 'model', 'filtro', 'tabela']) ) {
             echo("\n\033[93m# O tipo de arquivo informado não parece válido. Qual deseja criar? [controller, model, filtro ou tabela].\033[0m\n\n");
             $tipo_arquivo = readline('> ');
-            $this->criar($tipo_arquivo, $nome, $controllerRecurso);
+            $this->criar($tipo_arquivo, $nome, $controller_recurso);
             return;
         }
 
         // PERGUNTA AO USUÁRIO SE DEVE SER UM CONTROLLER DE RECURSO
-        // if( $tipo_arquivo == 'controller' &&  $controllerRecurso != '--recurso' ){
+        // if( $tipo_arquivo == 'controller' &&  $controller_recurso != '--recurso' ){
         //     echo("\n\033[93m# Deseja que o controller já contenha todos os metodos http de recurso rest? [y/n]\033[0m\n\n");
         //     if((! in_array(readline('> '), ['n', 'no', 'nao'] ))){
-        //         $controllerRecurso = '--recurso';
+        //         $controller_recurso = '--recurso';
         //     }
         // }
 
@@ -106,7 +106,7 @@ class CLI
             'Tabela' => PASTA_RAIZ . 'app/Database/tabelas/',
             default => die("\n\033[91m# Tipo de arquivo '$tipo_arquivo' não suportado.\033[0m")
         };
-        $template = ($tipo_arquivo == 'Controller' && $controllerRecurso == '--recurso') ? 'ControllerRecurso' : $tipo_arquivo;
+        $template = ($tipo_arquivo == 'Controller' && $controller_recurso == '--recurso') ? 'ControllerRecurso' : $tipo_arquivo;
 
         $template = require "templates/$template.php";
         if($tipo_arquivo == 'Model'){
@@ -248,8 +248,8 @@ class CLI
         echo "\n";
         
         $testador = new \Hefestos\Testes\Testador(SuiteDeTestes::singleton());
-        $testesPassaram = 0;
-        $testesFalhaaram = 0;
+        $testes_passaram = 0;
+        $testes_falharam = 0;
         foreach ($testador->testes() as $i => $teste) {
 
             try {
@@ -258,24 +258,24 @@ class CLI
                 $resultado = false;
                 if ($th->getCode() >= 69) {
                     $trace = $th->getTrace();
-                    $linhaErr =  $trace[$th->getCode()-69]['line'];
-                    $arquivoErr =  $trace[$th->getCode()-69]['file'];
+                    $linha_err =  $trace[$th->getCode()-69]['line'];
+                    $arquivo_err =  $trace[$th->getCode()-69]['file'];
                 }else{
-                    $linhaErr =  $th->getLine();
-                    $arquivoErr =  $th->getFile();
+                    $linha_err =  $th->getLine();
+                    $arquivo_err =  $th->getFile();
                 }
                 $erro = 
                 " \033[91m > Erro encontrado: \033[0m" . $th->getMessage() . "\n" . 
-                "   \033[91m > Na linha: \033[0m" . $linhaErr . "\n" . 
-                "   \033[91m > Do arquivo: \033[0m" . $arquivoErr . "\n\n";
+                "   \033[91m > Na linha: \033[0m" . $linha_err . "\n" . 
+                "   \033[91m > Do arquivo: \033[0m" . $arquivo_err . "\n\n";
             }
 
             if($resultado === false) {
                 $status = "\033[41mFalhou.\033[0m";
-                $testesFalhaaram++;
+                $testes_falharam++;
             }else{
                 $status = "\033[42mPassou.\033[0m";
-                $testesPassaram++;
+                $testes_passaram++;
             }
 
 
@@ -297,8 +297,8 @@ class CLI
             }
         }
         echo "\n";
-        $this->imprimir("\033[92mPassaram:\033[0m $testesPassaram.", 0);
-        $this->imprimir("\033[91mFalharam:\033[0m $testesFalhaaram.");
+        $this->imprimir("\033[92mPassaram:\033[0m $testes_passaram.", 0);
+        $this->imprimir("\033[91mFalharam:\033[0m $testes_falharam.");
     }
 
 

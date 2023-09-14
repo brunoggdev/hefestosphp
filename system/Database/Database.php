@@ -123,9 +123,9 @@ class Database
     {
         $this->params = $params;
     
-        $novosValores = implode(', ', array_map(fn($key) => "$key = :$key", array_keys($params)));
+        $novos_valores = implode(', ', array_map(fn($key) => "$key = :$key", array_keys($params)));
     
-        $this->query = "UPDATE $tabela SET $novosValores";
+        $this->query = "UPDATE $tabela SET $novos_valores";
         $this->where($where);
         
         return $this->executarQuery();
@@ -195,9 +195,9 @@ class Database
     * Adiciona um JOIN na consulta
     * @author Brunoggdev
     */
-    public function join(string $tabelaParaJoin, string $condicao, ?string $tipoDeJoin = 'INNER'):self
+    public function join(string $tabela_para_join, string $condicao, ?string $tipo_de_join = 'INNER'):self
     {
-        $this->query .= " $tipoDeJoin JOIN $tabelaParaJoin ON $condicao";
+        $this->query .= " $tipo_de_join JOIN $tabela_para_join ON $condicao";
 
         return $this;
     }
@@ -251,9 +251,9 @@ class Database
     * Retorna todos os resultados da consulta
     * @author brunoggdev
     */
-    public function todos(int $fetchMode = PDO::FETCH_ASSOC)
+    public function todos(int $fetch_mode = PDO::FETCH_ASSOC)
     {
-        $resultado = $this->executarQuery(true)->fetchAll($fetchMode);
+        $resultado = $this->executarQuery(true)->fetchAll($fetch_mode);
 
         return $this->como_array ? $resultado : new Colecao($resultado);
     }
