@@ -11,7 +11,7 @@ class Redirecionar{
     public function para(string $url, int $codigo = 302):void
     {
         if(! $url) {
-            throw new \Exception('Nenhuma URL recebida para redirecionamento.');
+            throw new \Exception('Nenhuma URL recebida para redirecionamento.', 69);
         }
         
         http_response_code($codigo);

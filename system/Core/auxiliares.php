@@ -135,10 +135,10 @@ function model(string $model):Model
 
 
 /**
-* Retorna o conteúdo da view especificada
+* Retorna o conteúdo da view especificada, podendo receber um array de dados a serem utilizados nela
 * @author Brunoggdev
 */
-function view(string $view, ?array $dados = []):string
+function view(string $nome_view, ?array $dados = []):string
 {
     // toraando o array de dados em variaveis disponíveis na view;
     extract($dados);
@@ -147,11 +147,11 @@ function view(string $view, ?array $dados = []):string
     ob_start();
 
     // Busca pela view do usuário ou do sistema respectivamente
-    $view = "Views/$view.php";
+    $view = "Views/$nome_view.php";
     match (true) {
         is_file($arquivo = PASTA_RAIZ . "app/$view") => require $arquivo,
         is_file($arquivo = PASTA_RAIZ . "system/$view") => require $arquivo,
-        default => throw new Exception("View '$view' não encontrada.", 1)
+        default => throw new Exception("View '$nome_view' não encontrada.", 69)
     };
 
     // Retornando o conteúdo da view que foi guardado como string
@@ -173,22 +173,33 @@ function json(mixed $param):string
 
 
 /**
-* Retorna o conteúdo de um componente especificado como string
-* @author Brunoggdev
+ * Retorna uma string com o conteúdo de um componente especificado se existir ou vazia caso contrário.
+ * Também receber um array associativo de dados a serem utilizados.
+ * @author Brunoggdev
 */
-function componente(string $componente, ?array $dados = []):string
+function componente(string $nome_componente, ?array $dados = []):string
 {
-    return view("componentes/$componente", $dados);
+    $componente = "/componentes/$nome_componente";
+    $componente_existe = file_exists(pasta_app("Views/$componente.php"));
+
+    return $componente_existe ? view($componente, $dados) : '';
 }
 
 
 /**
-* Atalho para a função componente
-* @author Brunoggdev
+ * Retorna uma string com o conteúdo de um componente especificado ou exceção se não existir.
+ * Também receber um array associativo de dados a serem utilizados.
+ * @author Brunoggdev
 */
-function comp(string $componente, ?array $dados = []):string
+function comp(string $nome_componente, ?array $dados = []):string
 {
-    return componente($componente, $dados);
+    $componente = "/componentes/$nome_componente";
+
+    if (!file_exists(pasta_app("Views/$componente.php"))) {
+        throw new Exception("Componente '$nome_componente' não encontrado.", 70);
+    }
+
+    return view($componente, $dados);
 }
 
 /**
@@ -196,12 +207,15 @@ function comp(string $componente, ?array $dados = []):string
  * com o nome informado (se existir), podendo "defer".
  * @author Brunoggdev
 */
-function importarJS(string $nome_arquivo, bool $defer = false)
+function importarJS(string $nome_arquivo, bool $defer = false):string
 {
     $arquivo = "js/$nome_arquivo.js";
-    if (file_exists(pasta_public($arquivo))) {
-        return '<script '.($defer?'defer ':'').' src="'.url_base("$arquivo?v=").VERSAO_APP.'"></script>';
+
+    if (!file_exists(pasta_public($arquivo))) {
+        return '';
     }
+    
+    return '<script '.($defer?'defer ':'').' src="'.url_base("$arquivo?v=").VERSAO_APP.'"></script>';
 }
 
 
@@ -343,10 +357,10 @@ function url_contem(string $parte):bool
 * Adiciona um input hidden para especificar o tipo de requisicao desejado
 * @author Brunoggdev
 */
-function metodoHttp(string $metodoHttp):string
+function metodoHttp(string $metodo_http):string
 {
-    $metodoHttp = strtoupper($metodoHttp);
-    return "<input type='hidden' name='_method' value=$metodoHttp>";
+    $metodo_http = strtoupper($metodo_http);
+    return "<input type='hidden' name='_method' value=$metodo_http>";
 }
 
 
@@ -354,16 +368,16 @@ function metodoHttp(string $metodoHttp):string
 * Abre uma tag form e configura os atributos action e method
 * @author Brunoggdev
 */
-function abreForm(string $metodoHttp, string $action):string
+function abreForm(string $metodo_http, string $action):string
 {
-    $metodoHttp = strtoupper($metodoHttp);
+    $metodo_http = strtoupper($metodo_http);
     $action = str_starts_with($action, 'http') ? $action : url_base($action);
     
-    if($metodoHttp === 'GET' || $metodoHttp === 'POST'){
-        $retorno = "<form action=$action method=$metodoHttp>";
+    if($metodo_http === 'GET' || $metodo_http === 'POST'){
+        $retorno = "<form action=$action method=$metodo_http>";
     }else{
         $retorno = "<form action=$action method=POST>";
-        $retorno .= "\n" . metodoHttp($metodoHttp);
+        $retorno .= "\n" . metodoHttp($metodo_http);
     }
 
     return $retorno;
@@ -416,7 +430,7 @@ function tabela(string $tabela)
     ));
 
     if (empty($tabelas)) {
-        throw new Exception("Nenhuma tabela encontrada com o nome $tabela.");
+        throw new Exception("Nenhuma tabela encontrada com o nome $tabela.", 69);
     }
 
     return (string) require pasta_app("Database/tabelas/$tabelas[0]");
