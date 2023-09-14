@@ -188,7 +188,7 @@ function componente(string $nome_componente, ?array $dados = []):string
 
 /**
  * Retorna uma string com o conteúdo de um componente especificado ou exceção se não existir.
- * Também receber um array associativo de dados a serem utilizados.
+ * Também receber um array associativo de dados a serem utilizados. 
  * @author Brunoggdev
 */
 function comp(string $nome_componente, ?array $dados = []):string
