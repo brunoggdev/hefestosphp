@@ -1,8 +1,8 @@
-# # ----------------------------------------------------------------------
-# Arquivo necessário para roteamento, sinta-se livre para 
-# modificar caso observe problemas relacionados a isso no servidor.
+#----------------------------------------------------------------------
+# Arquivo necessário para roteamento de urls amigaveis, sinta-se livre 
+# para modificar caso observe problemas relacionados a isso no servidor.
 # -Brunoggdev
-# # ----------------------------------------------------------------------
+#----------------------------------------------------------------------
 
 Options -Indexes
 
@@ -15,5 +15,3 @@ RewriteCond %{REQUEST_FILENAME} -d
 
 RewriteRule ^.*$ - [NC,L]
 RewriteRule ^.*$ index.php [NC,L]
-
-Disable directory browsing
