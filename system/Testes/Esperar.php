@@ -232,7 +232,7 @@ class Esperar
 
 
     /**
-     * Verifica se o item de teste exite
+     * Verifica se o item de teste existe
      * @author Brunoggdev
     */
     public function existir()
@@ -243,7 +243,7 @@ class Esperar
 
 
     /**
-     * Verifica se o item de teste exite
+     * Verifica se o item de teste é um arquivo válido
      * @author Brunoggdev
     */
     public function serArquivo()
@@ -253,7 +253,7 @@ class Esperar
     }
 
     /**
-     * Verifica se o item de teste exite
+     * Verifica se o item de teste é um diretório válido
      * @author Brunoggdev
     */
     public function serDiretório()
