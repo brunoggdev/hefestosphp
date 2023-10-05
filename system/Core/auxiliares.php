@@ -71,13 +71,15 @@ function pasta_public(string $caminho_extra = ''):string
 */
 function url_base(string $caminho_extra = ''):string
 {
-    if(!str_starts_with($caminho_extra, '/')){
-        $caminho_extra = '/' . $caminho_extra;
+    $url_completa = rtrim(URL_BASE, '/') . '/' . ltrim($caminho_extra, '/');
+
+    if (!str_starts_with($url_completa, 'http')) {
+
+        $prefixo = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https://' : 'http://';
+        $url_completa = $prefixo . $url_completa;
     }
 
-    $prefixo = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https://' : 'http://';
-
-    return $prefixo . URL_BASE . $caminho_extra;
+    return $url_completa;
 }
 
 
