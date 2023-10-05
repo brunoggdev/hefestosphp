@@ -1,6 +1,7 @@
 #!/usr/bin/env php
 <?php
 
+const PASTA_PUBLIC = __DIR__ . '/public';
 require 'system/Core/iniciar_app.php';
 
 if (ENVIROMENT !== 'desenvolvimento') {

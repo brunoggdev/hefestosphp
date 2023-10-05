@@ -59,7 +59,7 @@ function pasta_public(string $caminho_extra = ''):string
         $caminho_extra = '/' . $caminho_extra;
     }
 
-    return PASTA_RAIZ . 'public' . $caminho_extra;
+    return PASTA_PUBLIC . $caminho_extra;
 }
 
 
