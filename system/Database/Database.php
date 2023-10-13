@@ -221,7 +221,7 @@ class Database
     * @example $params ['id' => 1]
     * @author brunoggdev
     */
-    public function query(string $sql, array $params = [])
+    public function consultar(string $sql, array $params = [])
     {
         $this->query = $sql;
         $this->params = $params;
