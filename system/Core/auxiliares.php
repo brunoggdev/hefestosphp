@@ -228,7 +228,11 @@ function importarJS(string $nome_arquivo, bool $defer = false):string
 */
 function abortar(int $codigo_http, string $retorno = ''):void
 {
-    ob_clean(); // limpa o buffer de saída
+    // limpa o buffer de saída se estiver ativo
+    if (ob_get_status()) {
+        ob_clean();
+    }
+
     http_response_code($codigo_http);
 
     die($retorno);

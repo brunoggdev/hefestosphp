@@ -151,7 +151,7 @@ class Roteador {
     {
         foreach ($this->rotas as $rota) {
             $verbo_http_corresponde = $rota['verbo_http'] === strtoupper($verbo_http);
-            $uri_corresponde = preg_match('#^'.$rota['uri'].'$#', $uri, $params);
+            $uri_corresponde = preg_match('#^'.rtrim($rota['uri'], '/').'$#', rtrim($uri, '/'), $params);
             
             if ($verbo_http_corresponde && $uri_corresponde) {
                 (new Filtros)->filtrar($rota['filtro']);
