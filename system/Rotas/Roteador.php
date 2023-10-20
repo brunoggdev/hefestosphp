@@ -91,7 +91,7 @@ class Roteador {
     */
     protected function formatarAcao(string|array|callable $acao):callable
     {
-        if (is_callable( $acao )) {
+        if ($acao instanceof \Closure) {
             return $acao;
         }
 
