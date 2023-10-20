@@ -12,6 +12,9 @@ class Requisicao {
     public function __construct(private string $url_base = '') {
         $this->curl = curl_init();
         curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, true);
+        if (ENVIROMENT == 'desenvolvimento') {
+            curl_setopt($this->curl, CURLOPT_SSL_VERIFYPEER, 0);
+        }
     }
 
 
@@ -68,12 +71,12 @@ class Requisicao {
 
     /**
      * Retorna a resposta da requisicao ou possíveis erros;
-     * @param string $tipo_de_retorno O se o retorno deve ser em formato json (padrão), array ou objeto;
+     * @param string $tipo_de_retorno Se o retorno deve ser string pura (json [padrão], html, etc), array ou objeto;
      * @author Brunoggdev
     */
     public function resposta(string $tipo_de_retorno = 'json'){
         return match ($tipo_de_retorno) {
-            'json' => $this->resposta,
+            'json', 'html', 'string' => $this->resposta,
             'objeto' => json_decode($this->resposta),
             'array' => json_decode($this->resposta, true),
             default => null
