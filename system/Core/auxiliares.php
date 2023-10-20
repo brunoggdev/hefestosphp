@@ -441,3 +441,19 @@ function tabela(string $tabela)
 
     return (string) require pasta_app("Database/tabelas/$tabelas[0]");
 }
+
+/**
+ * Extrai e retorna um item de um array associativo, modificando o array original 
+ * (retorna null caso a chave não seja encontrada.)
+ * @author Brunoggdev
+*/
+function extrairItem(string $chave, array &$array):mixed
+{
+    if(isset($array[$chave])){
+        $item = $array[$chave];
+        unset($array[$chave]);
+    }else{
+        $item = null;
+    }
+    return $item;
+}
