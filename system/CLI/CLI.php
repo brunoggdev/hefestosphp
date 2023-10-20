@@ -78,7 +78,7 @@ class CLI
         // }
 
         if( empty($nome) ){
-            echo("\n\033[93m# Qual nome do(a) $tipo_arquivo?.\033[0m\n\n");
+            echo("\n\033[93m# Qual o nome do(a) $tipo_arquivo?\033[0m\n\n");
             $nome = readline('> ');
         }
 
