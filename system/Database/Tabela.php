@@ -58,7 +58,8 @@ class Tabela
     */
     public function string(string $coluna, bool $unique = false, bool $nullable = false, mixed $default = false): self
     {
-        return $this->varchar($coluna, 255, $unique, $nullable, $default);
+        // 250 quando unique para evitar erros de sql
+        return $this->varchar($coluna, $unique ? 250 : 255, $unique, $nullable, $default);
     }
 
     /**
