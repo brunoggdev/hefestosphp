@@ -45,7 +45,7 @@
         echo '<br>';
         echo '<pre>';
         foreach ($erro->getTrace() as $traco) {
-            print_r($traco);
+            echo htmlspecialchars(print_r($traco, true));
         }
     }
     ?>
