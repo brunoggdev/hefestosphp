@@ -1,8 +1,8 @@
 <?php
 
 namespace Hefestos\Database;
-use Hefestos\Ferramentas\Colecao;
 
+use Hefestos\Ferramentas\Colecao;
 use PDO, PDOStatement;
 
 /**
@@ -17,18 +17,19 @@ class Database
     protected $params = [];
     protected PDOStatement $query_info;
     private bool $como_array = true;
+    private int $fetch_mode = PDO::FETCH_ASSOC;
 
     /**
      * Busca o array de conexão com o banco de dados e instancia o PDO.
      * Pode receber uma conexão alternativa na forma de [$dsn, $usuario, $senha].
      * @author brunoggdev
     */
-    private function __construct(?array $dbconfig = null)
+    private function __construct(?array $dbconfig = null, $fetch_mode_padrao = PDO::FETCH_ASSOC)
     {
         [$dsn, $usuario, $senha] = $dbconfig ?? $this->getConexao();
 
         $this->conexao = new PDO($dsn, $usuario, $senha, [
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+            PDO::ATTR_DEFAULT_FETCH_MODE => $fetch_mode_padrao
         ]); 
     }
 
@@ -93,7 +94,7 @@ class Database
 
         $resultado = $this->executarQuery();
 
-        return $retornar_id ? $this->id_inserido() : $resultado;
+        return $retornar_id ? $this->idInserido() : $resultado;
     }
    
    
@@ -237,7 +238,7 @@ class Database
     */
     public function primeiro(?string $coluna = null)
     {
-        $resultado = $this->executarQuery(true)->fetch(PDO::FETCH_ASSOC);
+        $resultado = $this->executarQuery(true)->fetch($this->fetch_mode);
 
         if($coluna){
             return $resultado[$coluna] ?? null;
@@ -248,11 +249,13 @@ class Database
 
 
     /**
-    * Retorna todos os resultados da consulta
-    * @author brunoggdev
+     * Retorna todos os resultados da consulta.
+     * @param bool $coluna_unica retorna diretamente os valores da coluna sendo buscada 
+     * @author brunoggdev
     */
-    public function todos(int $fetch_mode = PDO::FETCH_ASSOC)
+    public function todos(bool $coluna_unica = false)
     {
+        $fetch_mode = $coluna_unica ? PDO::FETCH_COLUMN : $this->fetch_mode;
         $resultado = $this->executarQuery(true)->fetchAll($fetch_mode);
 
         return $this->como_array ? $resultado : new Colecao($resultado);
@@ -303,7 +306,7 @@ class Database
      * Retorna o último id inserido pela sql mais recente
      * @author Brunoggdev
     */
-    public function id_inserido():string|false
+    public function idInserido():string|false
     {
         return $this->conexao->lastInsertId();
     }
@@ -338,6 +341,18 @@ class Database
     public function comoColecao():self
     {
         $this->como_array = false;
+
+        return $this;
+    }
+
+
+    /**
+    * Define o fetch mode do PDO
+    * @author Brunoggdev
+    */
+    public function fetchMode(int $fetch_mode):self
+    {
+        $this->fetch_mode = $fetch_mode;
 
         return $this;
     }
