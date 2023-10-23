@@ -23,8 +23,9 @@ class Redirecionar{
     * Adiciona uma mensagem flash para o redirecionamento
     * @author Brunoggdev
     */
-    public function com(string $chave, mixed $valor):void
+    public function com(string $chave, mixed $valor):self
     {
         sessao()->flash($chave, $valor);
+        return $this;
     }
 }
