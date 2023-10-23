@@ -249,7 +249,7 @@ function redirecionar(string $url = '', int $codigo = 302):Redirecionar
     $redirecionar = new Redirecionar();
 
     if(! empty($url) ){
-        $redirecionar->para($url);
+        $redirecionar->para($url, $codigo);
     }
 
     return $redirecionar;
