@@ -57,6 +57,18 @@ final class App
             exit;
         }
 
+        if (! is_string($resposta)) {
+            $reflection = new \ReflectionFunction($acao);
+
+            $funcao = $reflection->getName();
+            $arquivo = basename($reflection->getFileName());
+            $linha = $reflection->getStartLine();
+
+            throw new \Exception("A resposta deve redirecionar ou retornar uma string. Tipo '"
+            . ucfirst(get_debug_type($resposta)) . "' recebido de '$funcao', na linha '$linha' do arquivo '$arquivo'.");
+            
+        }
+
         return $resposta;
     }
 
