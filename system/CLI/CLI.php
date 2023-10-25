@@ -244,7 +244,7 @@ class CLI
                 $resultado = $testador->testar($teste['funcao']->bindTo($testador));
             } catch (\Throwable $th) {
                 $resultado = false;
-                if ($th->getCode() >= 69) {
+                if ($th->getCode() >= 69 && $th->getCode() <= 69) {
                     $trace = $th->getTrace();
                     $linha_err =  $trace[$th->getCode()-69]['line'];
                     $arquivo_err =  $trace[$th->getCode()-69]['file'];
