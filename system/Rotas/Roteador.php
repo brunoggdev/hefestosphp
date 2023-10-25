@@ -101,7 +101,7 @@ class Roteador {
             $controller = "$this->namespace_padrao\\$controller";
         }
     
-        return (new $controller)->$metodo(...);
+        return fn() => [new $controller, $metodo];
     }
 
 
