@@ -17,7 +17,7 @@
     if (ENVIROMENT === 'producao'){
         echo '<h1>Ops, tivemos um problema.</h1>';
     }else{
-        if ($erro->getCode() >= 69) {
+        if ($erro->getCode() >= 69 && $erro->getCode() <= 69) {
             $trace = $erro->getTrace();
             $linha_err =  $trace[$erro->getCode()-69]['line'];
             $arquivo_err =  $trace[$erro->getCode()-69]['file'];
