@@ -13,6 +13,10 @@ class Redirecionar{
         if(! $url) {
             throw new \Exception('Nenhuma URL recebida para redirecionamento.', 69);
         }
+
+        if (!str_starts_with($url, 'http') || !str_starts_with($url, 'www')) {
+            $url = url_base($url);
+        }
         
         http_response_code($codigo);
         header("Location: $url");
