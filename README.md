@@ -6,6 +6,7 @@ Um framework PHP em português com 0 dependências onde o intuito principal é d
 ## Forje algo incrível!
 
 # TO-DO (por prioridade)
+   - Adicionar verificação de disponibilidade ded cURL no servidor para classe Requisicao
    - Adicionar mais testes (corrigir contem())
    - Adicionar mais metodos para colecoes
    - Adicionar sqlite padrão para testes
