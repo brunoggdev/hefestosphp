@@ -6,8 +6,6 @@ Um framework PHP em português com 0 dependências onde o intuito principal é d
 ## Forje algo incrível!
 
 # TO-DO (por prioridade)
-   - Finalizar documentação do Framework
-   - Testar .htaccess
    - Adicionar mais testes (corrigir contem())
    - Adicionar mais metodos para colecoes
    - Adicionar sqlite padrão para testes
