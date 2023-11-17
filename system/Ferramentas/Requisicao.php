@@ -10,8 +10,14 @@ class Requisicao {
     private $erros;
     
     public function __construct(private string $url_base = '') {
+        if (!function_exists('curl_version')) {
+            throw new \Exception('Parece que seu servidor não possui cURL habilitado.');
+        }
+        
         $this->curl = curl_init();
+        
         curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, true);
+        
         if (ENVIROMENT == 'desenvolvimento') {
             curl_setopt($this->curl, CURLOPT_SSL_VERIFYPEER, 0);
         }
