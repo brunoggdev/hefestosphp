@@ -198,7 +198,7 @@ function comp(string $nome_componente, ?array $dados = []):string
     $componente = "/componentes/$nome_componente";
 
     if (!file_exists(pasta_app("Views/$componente.php"))) {
-        throw new Exception("Componente '$nome_componente' não encontrado.", 70);
+        throw new Exception("Componente '$nome_componente' não encontrado.", 69);
     }
 
     return view($componente, $dados);
