@@ -37,7 +37,7 @@ final class App
     {
         $codigo_http = 500;
 
-        $retorno = ENVIROMENT === 'desenvolvimento' // se for desenvolvimento
+        $retorno = AMBIENTE === 'desenvolvimento' // se for desenvolvimento
         ? view('debug', ['erro' => $erro])          // carregue view de debug com erros
         : view($codigo_http);                       // e, se não, uma view genérica
         

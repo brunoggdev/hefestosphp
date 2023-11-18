@@ -1,14 +1,14 @@
 <?php
 /* ----------------------------------------------------------------------
-Este arquivo deve conter todas as constantes usadas no projeto, similar
-ao arquivo ".env" que você verá em projetos mais complexos.
+Este arquivo contém as constantes do projeto, similar ao 
+arquivo ".env" que você deve encontrar em projetos.
 ---------------------------------------------------------------------- */
 
-const PASTA_RAIZ = __DIR__ . '/../../';
-
-const ENVIROMENT = 'desenvolvimento'; //desenvolvimento ou producao
+const AMBIENTE = 'desenvolvimento'; //desenvolvimento ou producao
 
 const URL_BASE = 'localhost:8080';
+
+const PASTA_RAIZ = __DIR__ . '/../../';
 
 const VERSAO_APP = '0.0.0';
 

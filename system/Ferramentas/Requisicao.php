@@ -18,7 +18,7 @@ class Requisicao {
         
         curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, true);
         
-        if (ENVIROMENT == 'desenvolvimento') {
+        if (AMBIENTE == 'desenvolvimento') {
             curl_setopt($this->curl, CURLOPT_SSL_VERIFYPEER, 0);
         }
     }

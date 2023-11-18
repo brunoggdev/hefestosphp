@@ -14,7 +14,7 @@
 </head>
 <body>
     <?php
-    if (ENVIROMENT === 'producao'){
+    if (AMBIENTE === 'producao'){
         echo '<h1>Ops, tivemos um problema.</h1>';
     }else{
         if ($erro->getCode() >= 69 && $erro->getCode() <= 69) {

@@ -146,7 +146,7 @@ class CLI
     */
     public function fornalha():void
     {
-        if (ENVIROMENT !== 'desenvolvimento') {
+        if (AMBIENTE !== 'desenvolvimento') {
             die("\n\033[91m# Fornalha não disponível fora do ambiente de desenvolvimento.\033[0m\n");
         }
 
