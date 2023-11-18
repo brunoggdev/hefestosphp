@@ -44,8 +44,12 @@
         echo '<strong>TRILHA:</strong>'; ;
         echo '<br>';
         echo '<pre>';
-        foreach ($erro->getTrace() as $traco) {
-            echo htmlspecialchars(print_r($traco, true));
+        foreach ($erro->getTrace() as $i => $traco) {
+            echo '<div style="background-color: '. ($i % 2 == 0 ? '#f0f0f0' : '#d7d7d7') .'; padding: 15px; font-size: large">';
+            echo '<strong>NA LINHA:</strong> ' . $traco['line'];
+            echo '<br>';
+            echo '<strong>DO ARQUIVO:</strong> ' . $traco['file'];
+            echo '</div>';
         }
     }
     ?>
