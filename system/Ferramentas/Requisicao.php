@@ -59,7 +59,7 @@ class Requisicao {
     }
 
 
-    public function setopt(int $curl_opt, mixed $valor) {
+    public function setOpt(int $curl_opt, mixed $valor) {
         curl_setopt($this->curl, $curl_opt, $valor);
         return $this;
     }
@@ -106,8 +106,8 @@ class Requisicao {
         }
 
         $resposta = curl_exec($this->curl);
-        $this->resposta = $resposta ?: [curl_error($this->curl), curl_errno($this->curl)];
-        $this->erros = curl_error($this->curl);
+        $this->resposta = $resposta ?: curl_error($this->curl);
+        $this->erros = [curl_error($this->curl), curl_errno($this->curl)];
         $this->codigo = curl_getinfo($this->curl, CURLINFO_HTTP_CODE);
     
         curl_close($this->curl);
