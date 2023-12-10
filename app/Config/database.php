@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'driver'  => 'mysql', // mysql ou sqlite
+    'driver'  => 'sqlite', // mysql ou sqlite
     'host'    => 'localhost', // caso driver seja mysql
     'nomeDB'  => 'olimpo', // caso driver seja mysql
     'usuario' => 'root',
