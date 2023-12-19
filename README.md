@@ -12,7 +12,4 @@ Um framework PHP em português com 0 dependências onde o intuito principal é d
    - Adicionar sqlite padrão para testes
    - Adicionar mais testes (corrigir contem())
    - Adicionar mais metodos para colecoes
-   - Branch com sistemas de autenticação de usuario e roteamento padrão para páginas estáticas 
-
-   ## Notas
-   - Auxiliar de requisicao http não funciona para rotas internas por conta do servidor embutido do PHP
+   - Branch com sistemas de autenticação de usuario e roteamento padrão para páginas estáticas
