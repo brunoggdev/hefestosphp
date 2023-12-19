@@ -5,7 +5,8 @@ Um framework PHP em português com 0 dependências onde o intuito principal é d
 
 ## Forje algo incrível!
 
-#### Documentação Online: [brunoggdev.github.io/hefestosphp-docs](https://brunoggdev.github.io/hefestosphp-docs/)
+#### Documentação Online: <a href="https://brunoggdev.github.io/hefestosphp-docs/" target="_blank">brunoggdev.github.io/hefestosphp-docs/</a>
+
 
 # TO-DO (por prioridade)
    - Auxiliar de upload
