@@ -57,7 +57,7 @@ class Database
         $dbconfig = require pasta_app('Config/database.php');
 
         $dsn = match ($dbconfig['driver']) {
-            'mysql' => "mysql:host=$dbconfig[host];dbname=$dbconfig[nomeDB]",
+            'mysql' => "mysql:host=$dbconfig[host];dbname=$dbconfig[nome_db]",
             default => 'sqlite:' . PASTA_RAIZ . $dbconfig['sqlite']
         };
 
