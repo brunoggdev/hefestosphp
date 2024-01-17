@@ -16,3 +16,7 @@ Um framework PHP em português com 0 dependências onde o intuito principal é d
    - Adicionar mais testes (corrigir contem())
    - Adicionar mais metodos para colecoes
    - Branch com sistemas de autenticação de usuario e roteamento padrão para páginas estáticas
+
+
+
+##### *Obrigado aos madrigais por todo o enorme apoio e aos que carinhosamente conhecem o framework como "Fruno"
