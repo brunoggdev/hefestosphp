@@ -38,7 +38,7 @@ class Database
      * Retorna a conexão ativa do banco de dados (singleton)
      * @author Brunoggdev
     */
-    public static function singleton():self
+    public static function instancia():self
     {
         if (is_null(self::$instancia)) {
             self::$instancia = new self();

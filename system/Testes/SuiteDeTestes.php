@@ -48,7 +48,7 @@ class SuiteDeTestes
      * Retorna a suite de testes
      * @author Brunoggdev
     */
-    public static function singleton():self
+    public static function instancia():self
     {
         if (is_null(self::$instancia)) {
             self::$instancia = new self();

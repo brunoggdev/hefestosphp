@@ -161,7 +161,7 @@ class Model
     public function db():Database
     {
         if (! isset($this->db)) {
-            $this->db = Database::singleton();
+            $this->db = Database::instancia();
         }
 
         return $this->db;

@@ -235,7 +235,7 @@ class CLI
         }
         echo "\n";
         
-        $testador = new \Hefestos\Testes\Testador(SuiteDeTestes::singleton());
+        $testador = new \Hefestos\Testes\Testador(SuiteDeTestes::instancia());
         $testes_passaram = 0;
         $testes_falharam = 0;
         foreach ($testador->testes() as $i => $teste) {
