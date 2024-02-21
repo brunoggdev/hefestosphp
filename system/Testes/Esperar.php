@@ -29,7 +29,7 @@ class Esperar
                 "Falha ao conferir que ". 
                 $this->processarSaida().
                 (isset($negado) ? " não " : " ").
-                $mensagem, 70
+                $mensagem, 1
             );
         }
 
