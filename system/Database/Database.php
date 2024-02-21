@@ -26,7 +26,7 @@ class Database
     */
     private function __construct(?array $dbconfig = null, $fetch_mode_padrao = PDO::FETCH_ASSOC)
     {
-        [$dsn, $usuario, $senha] = $dbconfig ?? $this->getConexao();
+        [$dsn, $usuario, $senha] = $dbconfig ?? $this->conexao();
 
         $this->conexao = new PDO($dsn, $usuario, $senha, [
             PDO::ATTR_DEFAULT_FETCH_MODE => $fetch_mode_padrao
@@ -49,10 +49,10 @@ class Database
 
 
     /**
-     * Busca as configurações e formata o dsn de conexão com o banco
+     * Retorna um array com o dsn, usuario e senha baseados nas configurações do arquivo app/config/database.php
      * @author Brunoggdev
     */
-    private function getConexao():array
+    private function conexao():array
     {
         $dbconfig = require pasta_app('Config/database.php');
 
@@ -63,6 +63,8 @@ class Database
 
         return [$dsn, $dbconfig['usuario'], $dbconfig['senha']];
     }
+
+
 
     /**
     * Adiciona um SELECT na consulta
