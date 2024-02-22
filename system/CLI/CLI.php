@@ -284,6 +284,12 @@ class CLI
 
         $tempo_final = number_format(microtime(true) - $tempo_inicio, 2);
 
+        $sqlite = PASTA_RAIZ . 'app/Database/sqlite/testes.sqlite';
+        if (file_exists($sqlite)) {
+            db()->fechar();
+            unlink($sqlite);
+        }
+
         echo "\n\n\n";
         $this->imprimir("\033[92mPassaram:\033[0m $testes_passaram.", 0);
         $this->imprimir("\033[91mFalharam:\033[0m $testes_falharam.", 0);
