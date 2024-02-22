@@ -416,11 +416,7 @@ function coletar(array $array):Colecao
 */
 function db(?array $config = null):Database
 {
-    if (is_null($config)){
-        return Database::instancia();
-    }
-    
-    return new Database($config);
+    return Database::instancia($config);
 }
 
 
