@@ -256,9 +256,20 @@ class Esperar
      * Verifica se o item de teste é um diretório válido
      * @author Brunoggdev
     */
-    public function serDiretório()
+    public function serDiretorio()
     {
         $retorno = is_dir($this->item_de_teste);
         return $this->processarRetorno($retorno, "é um diretório válido.");
+    }
+
+
+    /**
+     * Verifica se o item de teste é um diretório válido
+     * @author Brunoggdev
+    */
+    public function serVazio()
+    {
+        $retorno = empty($this->item_de_teste);
+        return $this->processarRetorno($retorno, "está vazio.");
     }
 }
