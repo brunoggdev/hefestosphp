@@ -3,6 +3,7 @@
 namespace Hefestos\CLI;
 
 use Hefestos\Testes\SuiteDeTestes;
+use Hefestos\Testes\Testador;
 
 class CLI
 {
@@ -207,12 +208,16 @@ class CLI
     */
     public function testar(string $caminho):void
     {
+        define('RODANDO_TESTES', true);
+
         require_once PASTA_RAIZ . 'system/Testes/auxiliares_de_testes.php';
         $caminho = 'app/Testes/' . $caminho;
+
         // tomando controle dos erros nativos do php
         set_error_handler(function($errno, $errstr, $errfile, $errline){
             throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
         });
+
         // Se for um diretorio, busque todos os arquivos dentro
         if( is_dir($caminho) ){
             $arquivos = array_merge(
@@ -234,8 +239,13 @@ class CLI
             }
         }
 
+        if (extension_loaded('pdo_sqlite')) {
+            ob_start();
+            $this->migrar(zerar:'zero');
+            ob_clean();
+        }
         
-        $testador = new \Hefestos\Testes\Testador(SuiteDeTestes::instancia());
+        $testador = new Testador(SuiteDeTestes::instancia());
         $testes_passaram = 0;
         $testes_falharam = 0;
         $tempo_inicio = microtime(true);
@@ -246,16 +256,17 @@ class CLI
                 $resultado = $testador->testar($teste['funcao']->bindTo($testador));
             } catch (\Throwable $th) {
                 $resultado = false;
-                $trace = $th->getTrace()[$th->getCode()];
+                $i = is_numeric($i = $th->getCode()) ? (int)$i : (str_starts_with((string)$i, 'HY') ? 2 : 0);      
+                $trace = $th->getTrace()[$i];
 
                 $erro = 
                     " \033[91m > Erro encontrado: \033[0m" . $th->getMessage() . "\n" . 
                     " \033[91m > Na linha: \033[0m" .  $trace['line'] . "\n" . 
-                    " \033[91m > Do arquivo: \033[0m" . $trace['file'] . "\n";
+                    " \033[91m > Do arquivo: \033[0m" . $trace['file'].' on line '.$trace['line'] . "\n";
             }
 
             if($resultado === false) {
-                $status = "\033[41m FALHOU \033[0m";
+                $status = "\n\033[41m FALHOU \033[0m";
                 $testes_falharam++;
             }else{
                 $status = "\033[42m PASSOU \033[0m";
@@ -263,7 +274,7 @@ class CLI
             }
 
 
-            $this->imprimir((!$resultado?"\n":''). "$status Testa $teste[descricao]", 0, false);
+            $this->imprimir("$status Testa $teste[descricao]", 0, false);
 
             if(isset($erro)){
                 $this->imprimir($erro, 0, false);
@@ -271,9 +282,9 @@ class CLI
             }
         }
 
-        $tempo_final = number_format(microtime(true) - $tempo_inicio, 3);
+        $tempo_final = number_format(microtime(true) - $tempo_inicio, 2);
 
-        echo "\n";
+        echo "\n\n\n";
         $this->imprimir("\033[92mPassaram:\033[0m $testes_passaram.", 0);
         $this->imprimir("\033[91mFalharam:\033[0m $testes_falharam.", 0);
         $this->imprimir("\033[96mDuração:\033[0m {$tempo_final}s.");
