@@ -174,7 +174,7 @@ function json(mixed $param, int $codigo_http = 200):string
 {
     header('Content-Type: application/json');
     http_response_code($codigo_http);
-
+ 
     return json_encode($param, JSON_PRETTY_PRINT);
 }
 
