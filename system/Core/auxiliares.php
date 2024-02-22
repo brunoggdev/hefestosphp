@@ -164,11 +164,17 @@ function view(string $nome_view, ?array $dados = []):string
 
 
 /**
-* Retorna o array ou objeto informado como JSON
-* @author Brunoggdev
+ * Usada para retornar uma resposta em formato JSON;
+ * Retorna o array ou objeto informado para JSON, 
+ * o código http de status da resposta (200 padrão) e
+ * define também o cabeçalho apropriado.
+ * @author Brunoggdev
 */
-function json(mixed $param):string
+function json(mixed $param, int $codigo_http = 200):string
 {
+    header('Content-Type: application/json');
+    http_response_code($codigo_http);
+
     return json_encode($param, JSON_PRETTY_PRINT);
 }
 
