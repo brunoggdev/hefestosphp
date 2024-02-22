@@ -395,7 +395,7 @@ class CLI
         $this->imprimir('-------------------------------------------------------------------------------------------------------', 0);
         $this->imprimir('| Comandos |                 Parametros                  |                  Exemplos                  |', 0);
         $this->imprimir('-------------------------------------------------------------------------------------------------------', 0);
-        $this->imprimir('|  inciar  | porta (opcional, 8080 padrão)               | php forja iniciar (8888)                   |', 0);
+        $this->imprimir('|  inciar  |           ----------------------            | php forja iniciar                          |', 0);
         $this->imprimir('-------------------------------------------------------------------------------------------------------', 0);
         $this->imprimir('|  criar   | [controller, model, filtro, tabela] + nome  | php forja criar controller NotasController |', 0);
         $this->imprimir('-------------------------------------------------------------------------------------------------------', 0);
