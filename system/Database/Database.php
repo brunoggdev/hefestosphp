@@ -12,10 +12,10 @@ use PDO, PDOStatement;
 class Database
 {
     private static ?self $instancia = null;
-    protected PDO $conexao;
+    protected ?PDO $conexao;
+    protected ?PDOStatement $query_info;
     protected string $query = '';
     protected $params = [];
-    protected PDOStatement $query_info;
     private bool $como_array = true;
     private int $fetch_mode = PDO::FETCH_ASSOC;
 
@@ -39,20 +39,6 @@ class Database
 
 
     /**
-     * Retorna a conexão ativa do banco de dados (singleton)
-     * @author Brunoggdev
-    */
-    public static function instancia(?array $config = null):self
-    {
-        if (is_null(self::$instancia)) {
-            self::$instancia = new self($config);
-        }
-
-        return self::$instancia;
-    }
-
-
-    /**
      * Retorna um array com o dsn, usuario e senha baseados nas configurações do arquivo app/config/database.php
      * @author Brunoggdev
     */
@@ -68,6 +54,30 @@ class Database
         return [$dsn, $dbconfig['usuario'], $dbconfig['senha']];
     }
 
+
+    /**
+     * Retorna a conexão ativa do banco de dados (singleton)
+     * @author Brunoggdev
+    */
+    public static function instancia(?array $config = null):self
+    {
+        if (is_null(self::$instancia)) {
+            self::$instancia = new self($config);
+        }
+
+        return self::$instancia;
+    }
+
+
+    /**
+     * Fecha a conexão com o banco de dados.
+     * @author Brunoggdev
+    */
+    public function fechar():void
+    {
+        $this->conexao = null;
+        $this->query_info = null;
+    }
 
 
     /**
