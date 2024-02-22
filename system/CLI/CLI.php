@@ -13,7 +13,7 @@ class CLI
     public function __construct(array $comando)
     {
         match ($comando[1]??false) {
-            'iniciar', 'servir', 'serve' => $this->iniciar($comando[2] ?? '8080'),
+            'iniciar', 'servir', 'serve' => $this->iniciar(),
             'criar', 'forjar', 'fazer', 'gerar' => $this->criar($comando[2]??'', $comando[3]??'', $comando[4]??false),
             'migrar' => $this->migrar($comando[2]??'tabelas', $comando[3]??''),
             'fornalha', 'soldar', 'brincar' => $this->fornalha(),
@@ -30,11 +30,13 @@ class CLI
     * na porta desejada (padrão 8080)
     * @author Brunoggdev
     */
-    private function iniciar(string $porta):void
+    private function iniciar():void
     {
-        echo("\n\033[92m# Servidor de desenvolvimento do HefestosPHP deve ser iniciado em http://localhost:$porta.\n");
+        $url = URL_BASE;
+
+        echo("\n\033[92m# Servidor de desenvolvimento do HefestosPHP deve ser iniciado em http://$url.\n");
         echo("\033[93m# Pressione ctrl+c para interromper.\033[0m\n");
-        exec("php -S localhost:$porta -t ". PASTA_PUBLIC);
+        exec("php -S $url -t ". PASTA_PUBLIC);
     }
 
 
