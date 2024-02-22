@@ -19,7 +19,7 @@ class Testador extends SuiteDeTestes
     public function __get(mixed $propriedade) {
 
         if (!array_key_exists($propriedade, $this->suite::$propriedades)) {
-            throw new \Exception("Propriedade {$propriedade} não encontrada.", 69);
+            throw new \Exception("Propriedade {$propriedade} não encontrada.");
         }
         
         return $this->suite::$propriedades[$propriedade];

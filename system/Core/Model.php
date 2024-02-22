@@ -12,20 +12,14 @@ class Model
     /** Indica o tipo de retorno pela database ('array' ou 'objeto') */
     protected string $retorno_padrao;
 
-    /** instancia do banco de dados */
-    private Database $db;
 
     /**
      * Pode receber uma conexão alternativa com o banco para utilizar na model
      * invés da conexão padrão do sistema.
      * @author Brunoggdev
     */
-    public function __construct(Database $db = null)
+    public function __construct(private ?Database $db = null)
     {
-        if (! is_null($db)) {
-            $this->db = $db;
-        }
-
         if (isset($this->retorno_padrao) && $this->retorno_padrao == 'objeto') {
             $this->comoColecao();
         }
@@ -161,7 +155,7 @@ class Model
     public function db():Database
     {
         if (! isset($this->db)) {
-            $this->db = Database::singleton();
+            $this->db = Database::instancia();
         }
 
         return $this->db;

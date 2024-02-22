@@ -36,19 +36,20 @@ class SuiteDeTestes
     public static function usarPropriedades(array|callable $propriedades):void
     {
         if (is_callable($propriedades)) {
-            $propriedades = $propriedades();
+            $propriedades = is_array($retorno = $propriedades()) ? $retorno : [];
         }
-
+        
         foreach ($propriedades as $propriedade => $valor) {
             static::$propriedades[$propriedade] = $valor;
         }
     }
 
+    
     /**
      * Retorna a suite de testes
      * @author Brunoggdev
     */
-    public static function singleton():self
+    public static function instancia():self
     {
         if (is_null(self::$instancia)) {
             self::$instancia = new self();

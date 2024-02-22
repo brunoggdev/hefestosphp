@@ -17,14 +17,7 @@
     if (AMBIENTE === 'producao'){
         echo '<h1>Ops, tivemos um problema.</h1>';
     }else{
-        if ($erro->getCode() >= 69 && $erro->getCode() <= 69) {
-            $trace = $erro->getTrace();
-            $linha_err =  $trace[$erro->getCode()-69]['line'];
-            $arquivo_err =  $trace[$erro->getCode()-69]['file'];
-        }else{
-            $linha_err =  $erro->getLine();
-            $arquivo_err =  $erro->getFile();
-        }
+        $trace = $erro->getTrace()[$erro->getCode()];
         echo '<br>';
         echo '<h1>HefestosPHP</h1>';
         echo '<h3>Encontramos um erro.</h3>';
@@ -33,10 +26,10 @@
         echo '<strong>ERRO:</strong> ' . $erro->getMessage();
         echo '<br>';
         echo '<br>';
-        echo '<strong>NA LINHA:</strong> ' . $linha_err;
+        echo '<strong>NA LINHA:</strong> ' . $trace['line'];
         echo '<br>';
         echo '<br>';
-        echo '<strong>DO ARQUIVO:</strong> ' . $arquivo_err;
+        echo '<strong>DO ARQUIVO:</strong> ' . $trace['file'];
         echo '<br>';
         echo '<br>';
         echo '<br>';

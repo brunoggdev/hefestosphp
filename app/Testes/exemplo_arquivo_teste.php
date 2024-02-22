@@ -1,26 +1,34 @@
 <?php
 
-testar('se true é verdadeiro', function(){
-    esperar(false)->serVerdadeiro();
-});
-
-
 /* ----------------------------------------------------------------------
-Abaixo estão vários exemplos de uso comentados que podem ser explorados.
+Abaixo estão vários exemplos de uso dos testes que podem ser explorados.
 ---------------------------------------------------------------------- */
 
-// usar([
-//     'teste' => 100,
-//     'outro_teste' => null
-// ]);
+// testar('se true é verdadeiro', function(){
+//     esperar(true)->serVerdadeiro();
+// });
+
+
+// testar('se o db de testes funciona e posso até mesmo usar models', function(){
+//     $resultado = model('ExemploModel')->buscarTodos();
+
+//     esperar($resultado)
+//         ->serArray()
+//         ->serVazio();
+// });
+ 
+
+// usar(fn() => ['teste' => 100]);
 
 // usar(function() {
-//     $res = requisicaoGet('http://jsonplaceholder.typicode.com/todos/1')->resposta('array');
-
+//     $req = requisicaoGet('http://jsonplaceholder.typicode.com/todos/1');
+    
 //     return [
-//         'teste_funcao' => $res
+//         'requisicao' => $req,
+//         'resposta_req' => $req->resposta('array')
 //     ];
 // });
+
 
 // testar('se a propriedade teste é um número e é float', function(){
 
@@ -32,8 +40,17 @@ Abaixo estão vários exemplos de uso comentados que podem ser explorados.
 // });
 
 
+// testar('se posso passar funcoes em usar() para executar código e retornar um array de propriedades', function(){
+    
+//     esperar($this->resposta_req)
+//         ->nao()->serNulo()
+//         ->serArray()
+//         ->conter('title');
+// });
+
+
 // testar('se PASTA_RAIZ/public é um diretório válido', function(){
-//     return esperar(PASTA_RAIZ.'/public')->serDiretório();
+//     return esperar(PASTA_RAIZ.'/public')->serDiretorio();
 // });
 
 
@@ -42,13 +59,18 @@ Abaixo estão vários exemplos de uso comentados que podem ser explorados.
 // });
 
 
-// testar('se pode usar Exceptions normalmente (deve falhar!)', function(){
-//     throw new Exception("Devo ver esse errno no console ao testar!");
+// testar('se a rota padrão retorna status 200', function(){
+//     $req = requisicaoGet(url_base());
+
+//     try {
+//         esperar($req->status())->serIgual(200);
+//     } catch (\Throwable) {
+//         falhar($req->resposta());
+//     }
+    
 // });
 
-// testar('se posso usar funcoes para retornar o array em usar()', function(){
-//     esperar($this->teste_funcao)
-//         ->nao()->serNulo()
-//         ->serArray()
-//         ->conter('title');
+
+// testar('a função falhar() com erro customizado (deve falhar)', function(){
+//     falhar('Devo ver esse erro no console ao testar.');
 // });

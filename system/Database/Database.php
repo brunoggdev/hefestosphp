@@ -12,10 +12,10 @@ use PDO, PDOStatement;
 class Database
 {
     private static ?self $instancia = null;
-    protected PDO $conexao;
+    protected ?PDO $conexao;
+    protected ?PDOStatement $query_info;
     protected string $query = '';
     protected $params = [];
-    protected PDOStatement $query_info;
     private bool $como_array = true;
     private int $fetch_mode = PDO::FETCH_ASSOC;
 
@@ -24,35 +24,25 @@ class Database
      * Pode receber uma conexão alternativa na forma de [$dsn, $usuario, $senha].
      * @author brunoggdev
     */
-    private function __construct(?array $dbconfig = null, $fetch_mode_padrao = PDO::FETCH_ASSOC)
+    private function __construct(?array $dbconfig = null)
     {
-        [$dsn, $usuario, $senha] = $dbconfig ?? $this->getConexao();
+        [$dsn, $usuario, $senha] = $dbconfig ?? $this->conexaoPadrao();
+
+        if (defined('RODANDO_TESTES')) {
+            $dsn = 'sqlite:' . PASTA_RAIZ . 'app/Database/sqlite/testes.sqlite';
+        }
 
         $this->conexao = new PDO($dsn, $usuario, $senha, [
-            PDO::ATTR_DEFAULT_FETCH_MODE => $fetch_mode_padrao
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
         ]); 
     }
 
 
     /**
-     * Retorna a conexão ativa do banco de dados (singleton)
+     * Retorna um array com o dsn, usuario e senha baseados nas configurações do arquivo app/config/database.php
      * @author Brunoggdev
     */
-    public static function singleton():self
-    {
-        if (is_null(self::$instancia)) {
-            self::$instancia = new self();
-        }
-
-        return self::$instancia;
-    }
-
-
-    /**
-     * Busca as configurações e formata o dsn de conexão com o banco
-     * @author Brunoggdev
-    */
-    private function getConexao():array
+    private function conexaoPadrao():array
     {
         $dbconfig = require pasta_app('Config/database.php');
 
@@ -63,6 +53,32 @@ class Database
 
         return [$dsn, $dbconfig['usuario'], $dbconfig['senha']];
     }
+
+
+    /**
+     * Retorna a conexão ativa do banco de dados (singleton)
+     * @author Brunoggdev
+    */
+    public static function instancia(?array $config = null):self
+    {
+        if (is_null(self::$instancia)) {
+            self::$instancia = new self($config);
+        }
+
+        return self::$instancia;
+    }
+
+
+    /**
+     * Fecha a conexão com o banco de dados.
+     * @author Brunoggdev
+    */
+    public function fechar():void
+    {
+        $this->conexao = null;
+        $this->query_info = null;
+    }
+
 
     /**
     * Adiciona um SELECT na consulta

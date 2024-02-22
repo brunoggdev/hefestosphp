@@ -153,7 +153,7 @@ function view(string $nome_view, ?array $dados = []):string
     match (true) {
         is_file($arquivo = PASTA_RAIZ . "app/$view") => require $arquivo,
         is_file($arquivo = PASTA_RAIZ . "system/$view") => require $arquivo,
-        default => throw new Exception("View '$nome_view' não encontrada.", 69)
+        default => throw new Exception("View '$nome_view' não encontrada.")
     };
 
     // Retornando o conteúdo da view que foi guardado como string
@@ -198,7 +198,7 @@ function comp(string $nome_componente, ?array $dados = []):string
     $componente = "/componentes/$nome_componente";
 
     if (!file_exists(pasta_app("Views/$componente.php"))) {
-        throw new Exception("Componente '$nome_componente' não encontrado.", 69);
+        throw new Exception("Componente '$nome_componente' não encontrado.");
     }
 
     return view($componente, $dados);
@@ -416,11 +416,7 @@ function coletar(array $array):Colecao
 */
 function db(?array $config = null):Database
 {
-    if (is_null($config)){
-        return Database::singleton();
-    }
-    
-    return new Database($config);
+    return Database::instancia($config);
 }
 
 
@@ -436,7 +432,7 @@ function tabela(string $tabela)
     ));
 
     if (empty($tabelas)) {
-        throw new Exception("Nenhuma tabela encontrada com o nome $tabela.", 69);
+        throw new Exception("Nenhuma tabela encontrada com o nome '$tabela'.");
     }
 
     return (string) require pasta_app("Database/tabelas/$tabelas[0]");

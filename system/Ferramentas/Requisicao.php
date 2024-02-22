@@ -6,7 +6,7 @@ class Requisicao {
 
     private $curl;
     private $resposta;
-    private $codigo;
+    private $status;
     private $erros;
     
     public function __construct(private string $url_base = '') {
@@ -71,9 +71,16 @@ class Requisicao {
     }
 
 
-    public function codigo(){
-        return $this->codigo;
+
+    /**
+     * Retorna o código de status da requisição.
+     * @author Brunoggdev
+    */
+    public function status(){
+        return $this->status;
     }
+
+
 
     /**
      * Retorna a resposta da requisicao ou possíveis erros;
@@ -108,7 +115,7 @@ class Requisicao {
         $resposta = curl_exec($this->curl);
         $this->resposta = $resposta ?: curl_error($this->curl);
         $this->erros = [curl_error($this->curl), curl_errno($this->curl)];
-        $this->codigo = curl_getinfo($this->curl, CURLINFO_HTTP_CODE);
+        $this->status = curl_getinfo($this->curl, CURLINFO_HTTP_CODE);
     
         curl_close($this->curl);
     }
