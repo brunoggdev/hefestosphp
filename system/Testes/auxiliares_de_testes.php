@@ -39,3 +39,13 @@ function esperar(mixed $item):Esperar
 {
     return new Esperar($item);
 }
+
+
+/**
+ * Causa uma falha no teste e recebe uma descrição customizada para ela.
+ * @author Brunoggdev
+*/
+function falhar(string $descricao):void
+{
+    throw new Exception($descricao);
+}
