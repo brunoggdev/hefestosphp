@@ -9,6 +9,8 @@ set_error_handler(function($errno, $errstr, $errfile, $errline){
     throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
 });
 
+define('VERSAO_HEFESTOSPHP', 1.1);
+
 // Acessa as constantes do app
 require __DIR__ . '/../../app/Config/constantes.php';
 
