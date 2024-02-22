@@ -18,7 +18,7 @@ class Model
      * invés da conexão padrão do sistema.
      * @author Brunoggdev
     */
-    public function __construct(private Database $db = null)
+    public function __construct(private ?Database $db = null)
     {
         if (isset($this->retorno_padrao) && $this->retorno_padrao == 'objeto') {
             $this->comoColecao();

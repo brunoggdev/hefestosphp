@@ -24,12 +24,16 @@ class Database
      * Pode receber uma conexão alternativa na forma de [$dsn, $usuario, $senha].
      * @author brunoggdev
     */
-    private function __construct(?array $dbconfig = null, $fetch_mode_padrao = PDO::FETCH_ASSOC)
+    private function __construct(?array $dbconfig = null)
     {
-        [$dsn, $usuario, $senha] = $dbconfig ?? $this->conexao();
+        [$dsn, $usuario, $senha] = $dbconfig ?? $this->conexaoPadrao();
+
+        if (defined('RODANDO_TESTES')) {
+            $dsn = 'sqlite:' . PASTA_RAIZ . 'app/Database/sqlite/testes.sqlite';
+        }
 
         $this->conexao = new PDO($dsn, $usuario, $senha, [
-            PDO::ATTR_DEFAULT_FETCH_MODE => $fetch_mode_padrao
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
         ]); 
     }
 
@@ -38,10 +42,10 @@ class Database
      * Retorna a conexão ativa do banco de dados (singleton)
      * @author Brunoggdev
     */
-    public static function instancia():self
+    public static function instancia(?array $config = null):self
     {
         if (is_null(self::$instancia)) {
-            self::$instancia = new self();
+            self::$instancia = new self($config);
         }
 
         return self::$instancia;
@@ -52,7 +56,7 @@ class Database
      * Retorna um array com o dsn, usuario e senha baseados nas configurações do arquivo app/config/database.php
      * @author Brunoggdev
     */
-    private function conexao():array
+    private function conexaoPadrao():array
     {
         $dbconfig = require pasta_app('Config/database.php');
 
