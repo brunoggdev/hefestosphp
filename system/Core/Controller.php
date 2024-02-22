@@ -2,7 +2,7 @@
 
 namespace Hefestos\Core; 
 
-class Controller
+abstract class Controller
 {
     /**
     * Retorna parametros enviados por post já higienizados.

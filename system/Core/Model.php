@@ -4,7 +4,7 @@ namespace Hefestos\Core;
 
 use Hefestos\Database\Database;
 
-class Model 
+abstract class Model 
 {
     /** Tabela do banco de dados ao qual o model está relacionado */
     protected string $tabela;
