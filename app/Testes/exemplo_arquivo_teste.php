@@ -54,11 +54,6 @@ Abaixo estão vários exemplos de uso dos testes que podem ser explorados.
 // });
 
 
-// testar('se pode retornar sua própria condicional pros testes', function(){
-//     return 1+1 === 2;
-// });
-
-
 // testar('se a rota padrão retorna status 200', function(){
 //     $req = requisicaoGet(url_base());
 
@@ -72,5 +67,5 @@ Abaixo estão vários exemplos de uso dos testes que podem ser explorados.
 
 
 // testar('a função falhar() com erro customizado (deve falhar)', function(){
-//     falhar('Devo ver esse erro no console ao testar.');
+//     falhar('Devo ver essa mensagem no terminal ao testar.');
 // });
