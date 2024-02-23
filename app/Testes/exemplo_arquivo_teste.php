@@ -1,11 +1,28 @@
 <?php
-
 /* ----------------------------------------------------------------------
 Abaixo estão vários exemplos de uso dos testes que podem ser explorados.
 ---------------------------------------------------------------------- */
 
 // testar('se true é verdadeiro', function(){
 //     esperar(true)->serVerdadeiro();
+// });
+
+
+// // O teste irá falhar com o erro informado na função falhar(), sendo útil em condições ou try-catch's
+// testar('a função falhar() com erro customizado (deve falhar)', function() {
+//     $algo_deu_errado = true;
+
+//     if ($algo_deu_errado) {
+//         falhar('Algo deu errado! Essa mensagem de erro será mostrada no terminal.');
+//     }
+// });
+
+
+// // O teste irá falhar pois o PHP não pode acessar o índice 7 já que ele não existe.
+// testar('se posso acessar o índice 7 em um array com apenas 4 itens.', function() {
+//     $array = [0, 1, 2, 3];
+
+//     $setimo_item = $array[7];
 // });
 
 
@@ -16,56 +33,52 @@ Abaixo estão vários exemplos de uso dos testes que podem ser explorados.
 //         ->serArray()
 //         ->serVazio();
 // });
- 
 
-// usar(fn() => ['teste' => 100]);
 
 // usar(function() {
 //     $req = requisicaoGet('http://jsonplaceholder.typicode.com/todos/1');
-    
+
 //     return [
 //         'requisicao' => $req,
-//         'resposta_req' => $req->resposta('array')
 //     ];
 // });
 
 
-// testar('se a propriedade teste é um número e é float', function(){
+// testar('se a requisicao recebeu uma resposta com sucesso', function() {
+//     $status_http = $this->requisicao->status();
 
-//     esperar($this->teste)
-//         ->nao()->serNulo()
-//         ->serNumero()
-//         ->serFloat();
-
+//     esperar($status_http)->serIgual(200);
 // });
 
 
-// testar('se posso passar funcoes em usar() para executar código e retornar um array de propriedades', function(){
-    
-//     esperar($this->resposta_req)
-//         ->nao()->serNulo()
+// testar('se a resposta da requisicao contem a chave title', function() {
+//     $resposta = $this->requisicao->resposta('array');
+
+//     esperar($resposta)
 //         ->serArray()
 //         ->conter('title');
 // });
 
 
-// testar('se PASTA_RAIZ/public é um diretório válido', function(){
-//     return esperar(PASTA_RAIZ.'/public')->serDiretorio();
+// // Qualquer função pode ser informada aqui, arrow functions não são exceção.
+// usar(function() {
+//     return [
+//         'valor_teste' => 100
+//     ];
 // });
 
 
-// testar('se a rota padrão retorna status 200', function(){
-//     $req = requisicaoGet(url_base());
-
-//     try {
-//         esperar($req->status())->serIgual(200);
-//     } catch (\Throwable) {
-//         falhar($req->resposta());
-//     }
-    
+// testar("se valor_teste não é nulo, e é um número e é inteiro", function() {
+//     esperar($this->valor_teste)
+//         ->nao()->serNulo()
+//         ->serNumero()
+//         ->serInteiro();
 // });
+  
 
-
-// testar('a função falhar() com erro customizado (deve falhar)', function(){
-//     falhar('Devo ver essa mensagem no terminal ao testar.');
+// // Claro, como pode usar a função para vários valores no mesmo teste, pode também para o mesmo valor se preferir 
+// testar("se valor_teste não é nulo, e é um número e é float", function() {
+//     esperar($this->valor_teste)->nao()->serNulo();
+//     esperar($this->valor_teste)->serNumero();
+//     esperar($this->valor_teste)->serFloat();
 // });

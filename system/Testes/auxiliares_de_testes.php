@@ -19,12 +19,11 @@ function testar(string $descricao, callable $teste):void
  * Executa a função informada; Se seu retorno for um array associativo, 
  * adiciona propriedades na suite de testes a serem compartilhadas entre todos os testes 
  * subsequentes por meio do $this;
- * @param array $propiedades Um array associativo com o nome da propriedade e seu valor
  * @author Brunoggdev
 */
-function usar(callable $propriedades):void
+function usar(callable $funcao):void
 {
-    SuiteDeTestes::usarPropriedades($propriedades);
+    SuiteDeTestes::usar($funcao);
 }
 
 /**
