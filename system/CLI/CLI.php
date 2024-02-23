@@ -284,7 +284,7 @@ class CLI
             }
         }
 
-        $tempo_final = number_format(microtime(true) - $tempo_inicio, 2);
+        $tempo_final = number_format(microtime(true) - $tempo_inicio, 3);
 
         $sqlite = PASTA_RAIZ . 'app/Database/sqlite/testes.sqlite';
         if (file_exists($sqlite)) {
