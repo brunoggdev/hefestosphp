@@ -9,9 +9,6 @@ Um framework PHP em português com 0 dependências onde o intuito principal é d
 
 
 # TO-DO (por prioridade)
-   - Documentar auxiliar de testes falhar()
-   - Documentar nova aparencia dos testes no console 
-   - Documentar sqlite padrão para testes 
    - Documentar funções auxiliares
    - Documentar funções API de esperar()
    - Auxiliar de upload
