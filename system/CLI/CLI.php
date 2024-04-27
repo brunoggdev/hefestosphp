@@ -36,7 +36,7 @@ class CLI
 
         echo("\n\033[92m# Servidor de desenvolvimento do HefestosPHP deve ser iniciado em http://$url.\n");
         echo("\033[93m# Pressione ctrl+c para interromper.\033[0m\n");
-        exec("php -S $url -t ". PASTA_PUBLIC);
+        exec("php -S $url -t ". '"'. PASTA_PUBLIC . '"');
     }
 
 
