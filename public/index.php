@@ -10,6 +10,6 @@ const PASTA_PUBLIC = __DIR__;
  Configura todo o necessário para a inicialização do app como buscar as
  constantes, carregar as funções auxiliares e registrar o autoloader adequado;
 ---------------------------------------------------------------------- */
-require '../system/Core/iniciar_app.php';
+require __DIR__.'/../system/Core/iniciar_app.php';
 
 Hefestos\Core\App::processarRequisicao();
