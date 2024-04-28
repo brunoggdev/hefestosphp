@@ -326,7 +326,7 @@ class CLI
                 $sql = (string) require $tabela;
 
                 if (! str_starts_with($sql, 'CREATE TABLE')){
-                    throw new \Exception('Sql informada não é válida para esta operaçã:' . PHP_EOL . $sql);
+                    throw new \Exception('Sql informada não é válida para esta operação:' . PHP_EOL . $sql);
                 }
 
                 if($zerar === 'zero') {
