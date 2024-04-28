@@ -36,7 +36,7 @@ Abaixo estão vários exemplos de uso dos testes que podem ser explorados.
 
 
 // usar(function() {
-//     $req = requisicaoGet('http://jsonplaceholder.typicode.com/todos/1');
+//     $req = requisicao_get('http://jsonplaceholder.typicode.com/todos/1');
 
 //     return [
 //         'requisicao' => $req,

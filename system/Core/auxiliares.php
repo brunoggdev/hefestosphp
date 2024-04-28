@@ -215,7 +215,7 @@ function comp(string $nome_componente, ?array $dados = []):string
  * com o nome informado (se existir), podendo "defer".
  * @author Brunoggdev
 */
-function importarJS(string $nome_arquivo, bool $defer = false):string
+function importar_js(string $nome_arquivo, bool $defer = false):string
 {
     $arquivo = "js/$nome_arquivo.js";
 
@@ -284,7 +284,7 @@ function sessao(string|false $chave = false):mixed
 * Se precisar de mais controle instancie a classe manualmente
 * @author Brunoggdev
 */
-function requisicaoGet(string $endpoint):Requisicao
+function requisicao_get(string $endpoint):Requisicao
 {
     return (new Requisicao())->get($endpoint);
 }
@@ -296,7 +296,7 @@ function requisicaoGet(string $endpoint):Requisicao
 * Se precisar de mais controle instancie a classe manualmente
 * @author Brunoggdev
 */
-function requisicaoPost(string $endpoint, array $dados):Requisicao
+function requisicao_post(string $endpoint, array $dados):Requisicao
 {
     return (new Requisicao())->post($endpoint, $dados);
 }
@@ -369,7 +369,7 @@ function url_contem(string $parte):bool
 * Adiciona um input hidden para especificar o tipo de requisicao desejado
 * @author Brunoggdev
 */
-function metodoHttp(string $metodo_http):string
+function metodo_http(string $metodo_http):string
 {
     $metodo_http = strtoupper($metodo_http);
     return "<input type='hidden' name='_method' value=$metodo_http>";
@@ -380,7 +380,7 @@ function metodoHttp(string $metodo_http):string
 * Abre uma tag form e configura os atributos action e method
 * @author Brunoggdev
 */
-function abreForm(string $metodo_http, string $action):string
+function abre_form(string $metodo_http, string $action):string
 {
     $metodo_http = strtoupper($metodo_http);
     $action = str_starts_with($action, 'http') ? $action : url_base($action);
@@ -389,7 +389,7 @@ function abreForm(string $metodo_http, string $action):string
         $retorno = "<form action=$action method=$metodo_http>";
     }else{
         $retorno = "<form action=$action method=POST>";
-        $retorno .= "\n" . metodoHttp($metodo_http);
+        $retorno .= "\n" . metodo_http($metodo_http);
     }
 
     return $retorno;
@@ -400,7 +400,7 @@ function abreForm(string $metodo_http, string $action):string
 * Fecha a tag form
 * @author Brunoggdev
 */
-function fechaForm():string
+function fecha_form():string
 {
     return '</form>';
 }
@@ -449,7 +449,7 @@ function tabela(string $tabela)
  * (retorna null caso a chave não seja encontrada.)
  * @author Brunoggdev
 */
-function extrairItem(string $chave, array &$array):mixed
+function extrair_item(string $chave, array &$array):mixed
 {
     if(isset($array[$chave])){
         $item = $array[$chave];
