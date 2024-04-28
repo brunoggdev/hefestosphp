@@ -331,10 +331,10 @@ class CLI
 
                 if($zerar === 'zero') {
                     $nome_tabela = explode(' ', $sql)[2];
-                    $db->consultar("DROP TABLE IF EXISTS $nome_tabela;");
+                    $db->executar("DROP TABLE IF EXISTS $nome_tabela;");
                 }
 
-                $db->consultar($sql);
+                $db->executar($sql);
             }
 
             if($zerar === 'zero') {
@@ -358,10 +358,10 @@ class CLI
 
             if($zerar === 'zero') {
                 $nome_tabela = explode(' ', $sql)[2];
-                $db->consultar("DROP TABLE IF EXISTS $nome_tabela;");
+                $db->executar("DROP TABLE IF EXISTS $nome_tabela;");
             }
 
-            $db->consultar($sql);
+            $db->executar($sql);
 
             if($zerar === 'zero') {
                 echo "\n\033[92m# Tabela '$nome_tabela' criada do zero com sucesso!\033[0m";
