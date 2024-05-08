@@ -459,3 +459,30 @@ function extrair_item(string $chave, array &$array):mixed
     }
     return $item;
 }
+
+
+/**
+ * Gera um novo registro no arquivo de logs atual.
+ * O arquivo terá no nome a data que o log foi gerado e 
+ * ficará localizado na pasta logs que será automaticamente 
+ * criada na raíz do projeto se já não existir
+*/
+function gerar_log(string $mensagem) {
+
+    $caminho_logs = PASTA_RAIZ . '/logs';
+    if (!is_dir($caminho_logs)) {
+        mkdir($caminho_logs, 0755, true);
+    }
+
+
+    $caminho_gitignore = $caminho_logs . '/.gitignore';
+    if (!file_exists($caminho_gitignore)) {
+        file_put_contents($caminho_gitignore, '*');
+    }
+
+    $caminho_log = $caminho_logs . '/log_' . date('d-m-Y') . '.log';
+
+    $entrada_log = '[' . date('H:i:s') . '] - ' . $mensagem . "\n";
+
+    file_put_contents($caminho_log, $entrada_log, file_exists($caminho_log) ? FILE_APPEND : 0);
+}
