@@ -26,10 +26,10 @@
         echo '<strong>ERRO:</strong> ' . $erro->getMessage();
         echo '<br>';
         echo '<br>';
-        echo '<strong>NA LINHA:</strong> ' . $trace['line'];
+        echo '<strong>NA LINHA:</strong> ' . $trace['line'] ??= 'Não especificada';
         echo '<br>';
         echo '<br>';
-        echo '<strong>DO ARQUIVO:</strong> ' . $trace['file'];
+        echo '<strong>DO ARQUIVO:</strong> ' . $trace['file'] ??= 'Não especificado';
         echo '<br>';
         echo '<br>';
         echo '<br>';
@@ -39,9 +39,9 @@
         echo '<pre>';
         foreach ($erro->getTrace() as $i => $traco) {
             echo '<div style="background-color: '. ($i % 2 == 0 ? '#f0f0f0' : '#d7d7d7') .'; padding: 15px; font-size: large">';
-            echo '<strong>NA LINHA:</strong> ' . $traco['line'];
+            echo '<strong>NA LINHA:</strong> ' . $traco['line'] ??= 'Não especificada';
             echo '<br>';
-            echo '<strong>DO ARQUIVO:</strong> ' . $traco['file'];
+            echo '<strong>DO ARQUIVO:</strong> ' . $traco['file'] ??= 'Não especificado';
             echo '</div>';
         }
     }
