@@ -9,7 +9,6 @@ return <<<EOT
     {
         /**
         * Aplica o filtro configurado
-        * @author Brunoggdev
         */
         public function aplicar()
         {

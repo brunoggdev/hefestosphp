@@ -6,7 +6,6 @@ class ExemploFiltro
 {
     /**
     * Aplica o filtro configurado
-    * @author Brunoggdev
     */
     public function aplicar()
     {
