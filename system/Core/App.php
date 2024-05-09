@@ -57,14 +57,14 @@ final class App
             exit;
         }
 
-        if (! is_string($resposta)) {
+        if (! is_scalar($resposta)) {
             $reflection = new \ReflectionFunction($acao);
 
             $funcao = $reflection->getName();
             $arquivo = basename($reflection->getFileName());
             $linha = $reflection->getStartLine();
 
-            throw new \Exception("A resposta deve redirecionar ou retornar uma string. Tipo '"
+            throw new \Exception("O tipo de resposta retornada não pode ser exibido. Normalmente você deve retornar uma string, int ou um redirecionar(). Tipo '"
             . ucfirst(get_debug_type($resposta)) . "' recebido de '$funcao', na linha '$linha' do arquivo '$arquivo'.");
             
         }
