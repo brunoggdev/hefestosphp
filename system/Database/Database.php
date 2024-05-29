@@ -44,6 +44,8 @@ class Database
     }
 
 
+
+
     /**
      * Formata as informações de conexão com o banco, retornando o dsn, usuario e senha
      * @author Brunoggdev
@@ -58,6 +60,8 @@ class Database
     }
 
 
+
+
     /**
      * Retorna a conexão ativa do banco de dados (singleton).
      * @param array $config Array associativo com as chaves 'driver' (sqlite ou mysql),
@@ -68,7 +72,7 @@ class Database
     {
         if (!is_null(self::$instancia)) {
             self::$instancia->tabela('');
-            
+
             return self::$instancia;
         }
 
@@ -82,6 +86,8 @@ class Database
     }
 
 
+
+
     /**
      * Fecha a conexão com o banco de dados.
      * @author Brunoggdev
@@ -93,6 +99,8 @@ class Database
     }
 
 
+
+
     /**
      * Define a tabela na qual o as próximas consultas serão executadas
     */
@@ -102,6 +110,8 @@ class Database
 
         return $this;
     }
+
+
 
 
     /**
@@ -116,6 +126,7 @@ class Database
 
         return $this;
     }
+
 
 
 
@@ -140,6 +151,7 @@ class Database
     }
    
    
+
    
     /**
      * Cria uma sql para DELETE
@@ -158,6 +170,7 @@ class Database
 
 
 
+
     /**
     * Adiciona um UPDATE na consulta
     * @author brunoggdev
@@ -173,6 +186,7 @@ class Database
         
         return $this->executarQuery();
     }
+
 
 
 
@@ -225,6 +239,8 @@ class Database
     }
 
 
+
+
     /**
     * Adiciona um OR na consulta e em seguida um where novamente
     * @author Brunoggdev
@@ -236,6 +252,8 @@ class Database
         
         return $this;
     }
+
+
 
 
     /**
@@ -250,6 +268,8 @@ class Database
     }
 
 
+
+
     /**
     * Adiciona um ORDER BY na query
     * @author brunoggdev
@@ -260,6 +280,8 @@ class Database
         
         return $this;
     }
+
+
 
 
     /**
@@ -278,6 +300,8 @@ class Database
     }
 
 
+
+
     /**
      * Pega o primeiro resultado da consulta, podendo retornar uma coluna especifica
      * @author brunoggdev
@@ -292,6 +316,8 @@ class Database
 
         return $this->como_array ? $resultado : new Colecao($resultado);
     }
+
+
 
 
     /**
@@ -311,6 +337,8 @@ class Database
 
         return $this->como_array ? $resultado : new Colecao($resultado);
     }
+
+
 
 
     /**
@@ -339,6 +367,8 @@ class Database
     }
 
 
+
+
     /**
     * Retorna a string montada da consulta
     * @author brunoggdev
@@ -347,6 +377,8 @@ class Database
     {
         return $this->query;
     }
+
+
 
 
     /**
@@ -359,6 +391,8 @@ class Database
     }
 
 
+
+
     /**
      * Retorna o último id inserido pela sql mais recente
      * @author Brunoggdev
@@ -369,6 +403,8 @@ class Database
     }
 
 
+
+
     /**
     * Retorna os erros que ocorreram durante a execução da SQL
     * @author brunoggdev
@@ -377,6 +413,8 @@ class Database
     {
         return $this->query_info->errorInfo();
     }
+
+
 
 
     /**
@@ -391,6 +429,8 @@ class Database
     }
 
     
+
+
     /**
     * Define o retorno do banco de dados como um objeto do tipo colecao
     * @author Brunoggdev
@@ -401,6 +441,8 @@ class Database
 
         return $this;
     }
+
+
 
 
     /**
@@ -416,6 +458,7 @@ class Database
 
 
 
+
     /**
     * Retorna todas as linhas da tabela desejada com todas as colunas ou colunas especificas
     * @author Brunoggdev
@@ -424,6 +467,7 @@ class Database
     {
         return $this->select($colunas)->todos($coluna_unica);
     }
+
 
 
 
@@ -438,6 +482,7 @@ class Database
 
 
 
+    
     /**
      * Retorna o primeiro resultado para o 'where' informado
     */
