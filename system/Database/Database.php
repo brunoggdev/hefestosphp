@@ -180,6 +180,10 @@ class Database
             return $this;
         }
 
+        if (empty($this->query)) {
+            $this->select();
+        }
+
         if (! str_contains($this->query, 'WHERE') ) {
             $this->query .= ' WHERE ';
         }
