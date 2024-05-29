@@ -30,19 +30,28 @@ abstract class Model
     * Retorna todas as linhas do Model em questão com todas as colunas ou colunas especificas
     * @author Brunoggdev
     */
-    public function buscarTodos(?array $colunas = ['*']):mixed
+    public function buscarTodos(array $colunas = ['*'], bool $coluna_unica = false):mixed
     {
-        return $this->select($colunas)->todos();
+        return $this->db()->buscarTodos($colunas, $coluna_unica);
     }
 
 
     /**
-     * Retorna a linha com o id informado ou, opcionalmente, uma coluna especifica.
+     * Retorna toda a linha (ou coluna especifica) com o id informado.
      * @author Brunoggdev
     */
     public function buscar(int|string $id, ?string $coluna = null):mixed
     {
-        return $this->where(['id' => $id])->primeiro($coluna);
+        return $this->db()->buscar($id, $coluna);
+    }
+
+
+    /**
+     * Retorna o primeiro resultado para o 'where' informado
+    */
+    public function primeiroOnde(array|string $where):mixed
+    {
+        return $this->db()->primeiroOnde($where);
     }
 
 
@@ -50,9 +59,9 @@ abstract class Model
     * Atalho para interagir com o método select do query builder
     * @author Brunoggdev
     */
-    public function select(?array $colunas = ['*']):Database
+    public function select(array $colunas = ['*']):Database
     {
-        return $this->db()->select($this->tabela, $colunas);
+        return $this->db()->select($colunas);
     }
 
 
@@ -71,9 +80,9 @@ abstract class Model
      * Retorna o id inserido (por padrão) ou um bool para sucesso ou falha.
      * @author Brunoggdev
     */
-    public function insert(array $params, bool $retornar_id = true):string|bool
+    public function insert(array|object $params, bool $retornar_id = true):string|bool
     {
-        return $this->db()->insert($this->tabela, $params, $retornar_id);
+        return $this->db()->insert($params, $retornar_id);
     }
 
 
@@ -87,20 +96,20 @@ abstract class Model
     {
         $where = is_array($condicao) ? $condicao : ['id' => $condicao];
 
-        return $this->db()->update($this->tabela, $params, $where);
+        return $this->db()->update($params, $where);
     }
 
 
     /**
-    * Atalho para interagir com o método delete do query builder
-    * e deletar um único id
+    * Atalho para interagir com o método delete do query builder.
+    * Recebe o id da linha desejada para deletar ou uma condição diferente se desejar
     * @author Brunoggdev
     */
     public function delete(int|string|array $condicao)
     {
-        $where = is_array($condicao) ? $condicao : ['id' => $condicao];
+        $where = is_numeric($condicao) ? ['id' => $condicao] : $condicao;
 
-        return $this->db()->delete($this->tabela, $where);
+        return $this->db()->delete($where);
     }
 
 
@@ -156,6 +165,7 @@ abstract class Model
     {
         if (! isset($this->db)) {
             $this->db = Database::instancia();
+            $this->db->tabela($this->tabela);
         }
 
         return $this->db;
