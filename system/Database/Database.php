@@ -14,19 +14,22 @@ class Database
     private static ?self $instancia = null;
     protected ?PDO $conexao;
     protected ?PDOStatement $query_info;
+    protected string $tabela;
     protected string $query = '';
-    protected $params = [];
+    protected array $params = [];
+    private bool $checar_nome_tabela = true;
     private bool $como_array = true;
     private int $fetch_mode = PDO::FETCH_ASSOC;
 
     /**
      * Busca o array de conexão com o banco de dados e instancia o PDO.
-     * Pode receber uma conexão alternativa na forma de [$dsn, $usuario, $senha].
+     * Pode receber uma conexão alternativa na forma de um array 
+     * com as mesmas chaves do padrão na pasta config.
      * @author brunoggdev
     */
     private function __construct(?array $dbconfig = null)
     {
-        [$dsn, $usuario, $senha] = $dbconfig ?? $this->conexaoPadrao();
+        [$dsn, $usuario, $senha] = $this->formatarConexao($dbconfig);
 
         if (defined('RODANDO_TESTES')) {
             $dsn = 'sqlite:' . PASTA_RAIZ . 'app/Database/sqlite/testes.sqlite';
@@ -34,7 +37,7 @@ class Database
 
         $this->conexao = new PDO($dsn, $usuario, $senha, [
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-        ]); 
+        ]);  
     }
 
 
@@ -42,16 +45,15 @@ class Database
      * Retorna um array com o dsn, usuario e senha baseados nas configurações do arquivo app/config/database.php
      * @author Brunoggdev
     */
-    private function conexaoPadrao():array
+    private function formatarConexao(?array $config):array
     {
-        $dbconfig = require pasta_app('Config/database.php');
+        $config ??= require PASTA_RAIZ . 'app/Config/database.php';
 
-        $dsn = match ($dbconfig['driver']) {
-            'mysql' => "mysql:host=$dbconfig[host];dbname=$dbconfig[nome_db]",
-            default => 'sqlite:' . PASTA_RAIZ . $dbconfig['sqlite']
-        };
+        $dsn = $config['driver'] == 'mysql'
+            ? "mysql:host=$config[host];dbname=$config[nome_db]"
+            : 'sqlite:' . PASTA_RAIZ . $config['sqlite'];
 
-        return [$dsn, $dbconfig['usuario'], $dbconfig['senha']];
+        return [$dsn, $config['usuario']??null, $config['senha']??null];
     }
 
 
@@ -64,6 +66,8 @@ class Database
         if (is_null(self::$instancia)) {
             self::$instancia = new self($config);
         }
+        
+        self::$instancia->tabela('');
 
         return self::$instancia;
     }
@@ -81,14 +85,25 @@ class Database
 
 
     /**
+     * Define a tabela na qual o as próximas consultas serão executadas
+    */
+    public function tabela(string $tabela): self
+    {
+        $this->tabela = $tabela;
+
+        return $this;
+    }
+
+
+    /**
     * Adiciona um SELECT na consulta
     * @author brunoggdev
     */
-    public function select(string $tabela, array $colunas = ['*']): self
+    public function select(array $colunas = ['*']): self
     {
         $colunas = implode(', ', $colunas);
 
-        $this->query = "SELECT $colunas FROM $tabela";
+        $this->query = "SELECT $colunas FROM $this->tabela";
 
         return $this;
     }
@@ -96,17 +111,19 @@ class Database
 
 
     /**
-    * Adiciona um INSERT na consulta
-    * @author brunoggdev
+     * Adiciona um INSERT na consulta. 
+     * Se informado um objeto como parâmetro ele será convertido para array.
+     * Retorna o id inserido (por padrão) ou um bool para sucesso ou falha.
+     * @author brunoggdev
     */
-    public function insert(string $tabela, array $params, bool $retornar_id = true):string|bool
+    public function insert(array|object $params, bool $retornar_id = true):string|bool
     {
-        $this->params = $params;
+        $this->params = (array) $params;
 
-        $colunas = implode(', ', array_keys($params));
-        $valores = ':' . implode(', :', array_keys($params));
+        $colunas = implode(', ', array_keys($this->params));
+        $valores = ':' . implode(', :', array_keys($this->params));
 
-        $this->query = "INSERT INTO $tabela ($colunas) VALUES($valores)";
+        $this->query = "INSERT INTO $this->tabela ($colunas) VALUES($valores)";
 
         $resultado = $this->executarQuery();
 
@@ -120,10 +137,10 @@ class Database
      * @return bool true se sucesso, false caso contrário;
      * @author Brunoggdev
     */
-    public function delete(string $tabela, array $where = []):bool
+    public function delete(array|string $where):bool
     {
 
-        $this->query = "DELETE FROM $tabela";
+        $this->query = "DELETE FROM $this->tabela";
         $this->where($where);
 
 
@@ -136,13 +153,13 @@ class Database
     * Adiciona um UPDATE na consulta
     * @author brunoggdev
     */
-    public function update(string $tabela, array $params, array $where = []): bool
+    public function update(array|object $params, array $where = []): bool
     {
-        $this->params = $params;
+        $this->params = (array) $params;
     
         $novos_valores = implode(', ', array_map(fn($key) => "$key = :$key", array_keys($params)));
     
-        $this->query = "UPDATE $tabela SET $novos_valores";
+        $this->query = "UPDATE $this->tabela SET $novos_valores";
         $this->where($where);
         
         return $this->executarQuery();
@@ -233,24 +250,24 @@ class Database
 
 
     /**
-    * Recebe uma sql completa para consultar no banco de dados.
-    * @example $sql SELECT * FROM users WHERE id >= :id
-    * @example $params ['id' => 1]
-    * @author brunoggdev
+     * Recebe uma sql completa para consultar no banco de dados.
+     * Se informado um objeto como parâmetro ele será convertido para array.
+     * @example $sql SELECT * FROM users WHERE id >= :id
+     * @example $params ['id' => 1]
+     * @author brunoggdev
     */
-    public function executar(string $sql, array $params = [])
+    public function executar(string $sql, array|object $params = [])
     {
         $this->query = $sql;
-        $this->params = $params;
-        $this->executarQuery();
-
-        return $this;
+        $this->params = (array) $params;
+        $this->checar_nome_tabela = false;
+        return $this->executarQuery();
     }
 
 
     /**
-    * Pega o primeiro resultado da consulta, podendo retornar uma coluna especifica
-    * @author brunoggdev
+     * Pega o primeiro resultado da consulta, podendo retornar uma coluna especifica
+     * @author brunoggdev
     */
     public function primeiro(?string $coluna = null)
     {
@@ -265,12 +282,17 @@ class Database
 
 
     /**
-     * Retorna todos os resultados da consulta.
-     * @param bool $coluna_unica retorna diretamente os valores da coluna sendo buscada 
+     * Retorna todos os resultados da consulta montada até agora.
+     * @param bool $coluna_unica retorna diretamente os valores da coluna sendo buscada
+     * @example $coluna_unica $db->tabela('pets')->select('nome')->todos(true);  //retorna diretamente um array com todos os nomes
      * @author brunoggdev
     */
     public function todos(bool $coluna_unica = false)
     {
+        if (empty($this->query)) {
+            throw new \Exception('Parece que nenhuma consulta foi montada para retornar todos os resultados dela...');
+        }
+
         $fetch_mode = $coluna_unica ? PDO::FETCH_COLUMN : $this->fetch_mode;
         $resultado = $this->executarQuery(true)->fetchAll($fetch_mode);
 
@@ -285,6 +307,12 @@ class Database
     */
     protected function executarQuery(bool $retornar_query = false):bool|PDOStatement
     {
+
+        if (empty($this->tabela) && $this->checar_nome_tabela) {
+            $this->checar_nome_tabela = true;
+            throw new \Exception('Não foi definida a tabela onde deve ser realizada a consulta.');
+        }
+
         $query = $this->conexao->prepare($this->query);
         
         $this->query_info = $query;
@@ -371,5 +399,37 @@ class Database
         $this->fetch_mode = $fetch_mode;
 
         return $this;
+    }
+
+
+
+    /**
+    * Retorna todas as linhas da tabela desejada com todas as colunas ou colunas especificas
+    * @author Brunoggdev
+    */
+    public function buscarTodos(?array $colunas = ['*'], bool $coluna_unica = false):mixed
+    {
+        return $this->select($colunas)->todos($coluna_unica);
+    }
+
+
+
+    /**
+     * Retorna da tabela desejada a linha (ou coluna especifica) com o id informado.
+     * @author Brunoggdev
+    */
+    public function buscar(int|string $id, ?string $coluna = null):mixed
+    {
+        return $this->where(['id' => $id])->primeiro($coluna);
+    }
+
+
+
+    /**
+     * Retorna o primeiro resultado para o 'where' informado
+    */
+    public function primeiroOnde(array|string $where):mixed
+    {
+        return $this->where($where)->primeiro();
     }
 }
