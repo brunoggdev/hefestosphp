@@ -27,9 +27,11 @@ class Database
      * com as mesmas chaves do padrão na pasta config.
      * @author brunoggdev
     */
-    private function __construct(?array $dbconfig = null)
+    private function __construct(?array $db_config = null)
     {
-        [$dsn, $usuario, $senha] = $this->formatarConexao($dbconfig);
+        $db_config ??= require PASTA_RAIZ . 'app/Config/database.php';
+
+        [$dsn, $usuario, $senha] = $this->formatarConexao($db_config);
 
         if (defined('RODANDO_TESTES')) {
             $dsn = 'sqlite:' . PASTA_RAIZ . 'app/Database/sqlite/testes.sqlite';
@@ -45,10 +47,8 @@ class Database
      * Retorna um array com o dsn, usuario e senha baseados nas configurações do arquivo app/config/database.php
      * @author Brunoggdev
     */
-    private function formatarConexao(?array $config):array
+    private function formatarConexao(array $config):array
     {
-        $config ??= require PASTA_RAIZ . 'app/Config/database.php';
-
         $dsn = $config['driver'] == 'mysql'
             ? "mysql:host=$config[host];dbname=$config[nome_db]"
             : 'sqlite:' . PASTA_RAIZ . $config['sqlite'];
