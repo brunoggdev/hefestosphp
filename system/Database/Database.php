@@ -2,6 +2,7 @@
 
 namespace Hefestos\Database;
 
+use Exception;
 use Hefestos\Ferramentas\Colecao;
 use PDO, PDOStatement;
 
@@ -27,7 +28,7 @@ class Database
      * com as mesmas chaves do padrão na pasta config.
      * @author brunoggdev
     */
-    private function __construct(?array $db_config = null)
+    public function __construct(?array $db_config = null)
     {
         $db_config ??= require PASTA_RAIZ . 'app/Config/database.php';
 
@@ -44,7 +45,7 @@ class Database
 
 
     /**
-     * Retorna um array com o dsn, usuario e senha baseados nas configurações do arquivo app/config/database.php
+     * Formata as informações de conexão com o banco, retornando o dsn, usuario e senha
      * @author Brunoggdev
     */
     private function formatarConexao(array $config):array
@@ -58,16 +59,24 @@ class Database
 
 
     /**
-     * Retorna a conexão ativa do banco de dados (singleton)
+     * Retorna a conexão ativa do banco de dados (singleton).
+     * @param array $config Array associativo com as chaves 'driver' (sqlite ou mysql),
+     * 'usuario', 'senha', 'host' e 'nome_db' se for mysql ou, caso contrário, 'sqlite' com o caminho do arquivo.
      * @author Brunoggdev
     */
     public static function instancia(?array $config = null):self
     {
-        if (is_null(self::$instancia)) {
-            self::$instancia = new self($config);
+        if (!is_null(self::$instancia)) {
+            self::$instancia->tabela('');
+            
+            return self::$instancia;
         }
-        
-        self::$instancia->tabela('');
+
+        if (is_null($config)) {
+            throw new Exception('Configurações de conexão ao banco de dados não recebidas...');
+        }
+
+        self::$instancia = new self($config);
 
         return self::$instancia;
     }
@@ -294,7 +303,7 @@ class Database
     public function todos(bool $coluna_unica = false)
     {
         if (empty($this->query)) {
-            throw new \Exception('Parece que nenhuma consulta foi montada para retornar todos os resultados dela...');
+            throw new Exception('Parece que nenhuma consulta foi montada para retornar todos os seus resultados...');
         }
 
         $fetch_mode = $coluna_unica ? PDO::FETCH_COLUMN : $this->fetch_mode;
@@ -314,7 +323,7 @@ class Database
 
         if (empty($this->tabela) && $this->checar_nome_tabela) {
             $this->checar_nome_tabela = true;
-            throw new \Exception('Não foi definida a tabela onde deve ser realizada a consulta.');
+            throw new Exception('Não foi definida a tabela onde deve ser realizada a consulta.');
         }
 
         $query = $this->conexao->prepare($this->query);
