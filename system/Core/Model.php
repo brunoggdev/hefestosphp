@@ -9,7 +9,7 @@ abstract class Model
     /** Tabela do banco de dados ao qual o model está relacionado */
     protected string $tabela;
 
-    /** Indica o tipo de retorno pela database ('array' ou 'objeto') */
+    /** Indica o tipo de retorno pela database - 'array' ou 'nome qualificado' da classe desejada (SuaClasse::class) */
     protected string $retorno_padrao;
 
 
@@ -20,8 +20,8 @@ abstract class Model
     */
     public function __construct(private ?Database $db = null)
     {
-        if (isset($this->retorno_padrao) && $this->retorno_padrao == 'objeto') {
-            $this->comoColecao();
+        if (isset($this->retorno_padrao) && class_exists($this->retorno_padrao)) {
+            $this->comoObjeto($this->retorno_padrao);
         }
     }
 
@@ -146,12 +146,14 @@ abstract class Model
 
 
     /**
-    * Define que o retorno da Database será uma instacia de Colecao
-    * @author Brunoggdev
+     * Define o retorno do banco de dados como um objeto (ou array de objetos) da classe informada;
+     * O array de resultados será passado para o construtor da classe desejada.
+     * @param string $classe SuaClasse::class - O "nome qualificado" da classe desejada
+     * @author Brunoggdev
     */
-    public function comoColecao():self
+    public function comoObjeto(string $classe):self
     {
-        $this->db()->comoColecao();
+        $this->db()->comoObjeto($classe);
 
         return $this;
     }
