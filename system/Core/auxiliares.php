@@ -128,10 +128,10 @@ function controller(string $controller):Controller
  * Atalho conveniente para retornar uma instancia da model desejada
  * @author Brunoggdev
 */
-function model(string $model):Model
+function model(string $model, ?Database $db = null):Model
 {
     $model = "\\App\\Models\\$model";
-    return new $model;
+    return new $model($db);
 }
 
 
@@ -170,12 +170,12 @@ function view(string $nome_view, ?array $dados = []):string
  * define também o cabeçalho apropriado.
  * @author Brunoggdev
 */
-function json(mixed $param, int $codigo_http = 200):string
+function json(mixed $param, int $codigo_http = 200, $flags = JSON_PRETTY_PRINT):string
 {
     header('Content-Type: application/json');
     http_response_code($codigo_http);
  
-    return json_encode($param, JSON_PRETTY_PRINT);
+    return json_encode($param, $flags);
 }
 
 
