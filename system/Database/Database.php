@@ -331,7 +331,7 @@ class Database
     public function todos(bool $coluna_unica = false): array
     {
         if (empty($this->query)) {
-            throw new Exception('Parece que nenhuma consulta foi montada para retornar todos os seus resultados...');
+            $this->select(['*']);
         }
 
         $fetch_mode = $coluna_unica ? PDO::FETCH_COLUMN : $this->fetch_mode;
@@ -478,19 +478,6 @@ class Database
 
         return $this;
     }
-
-
-
-
-    /**
-    * Retorna todas as linhas da tabela desejada com todas as colunas ou colunas especificas
-    * @author Brunoggdev
-    */
-    public function buscarTodos(?array $colunas = ['*'], bool $coluna_unica = false):mixed
-    {
-        return $this->select($colunas)->todos($coluna_unica);
-    }
-
 
 
 
