@@ -487,17 +487,16 @@ class Database
     */
     public function buscar(int|string $id, ?string $coluna = null):mixed
     {
-        return $this->where(['id' => $id])->primeiro($coluna);
+        return $this->primeiroOnde(['id' => $id], $coluna);
     }
-
 
 
 
     /**
      * Retorna o primeiro resultado para o 'where' informado
     */
-    public function primeiroOnde(array|string $where):mixed
+    public function primeiroOnde(array|string $where, ?string $coluna = null):mixed
     {
-        return $this->where($where)->primeiro();
+        return $this->where($where)->primeiro($coluna);
     }
 }
