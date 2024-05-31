@@ -19,20 +19,16 @@ abstract class Model
      * @author Brunoggdev
     */
     public function __construct(private ?Database $db = null)
-    {
-        if (isset($this->retorno_padrao) && class_exists($this->retorno_padrao)) {
-            $this->comoObjeto($this->retorno_padrao);
-        }
-    }
+    {}
 
 
     /**
-    * Retorna todas as linhas do Model em questão com todas as colunas ou colunas especificas
+    * Retorna todas as linhas do Model em questão com todas as colunas
     * @author Brunoggdev
     */
-    public function buscarTodos(array $colunas = ['*'], bool $coluna_unica = false):mixed
+    public function todos(bool $coluna_unica = false):mixed
     {
-        return $this->db()->buscarTodos($colunas, $coluna_unica);
+        return $this->db()->todos($coluna_unica);
     }
 
 
@@ -165,9 +161,16 @@ abstract class Model
     */
     public function db():Database
     {
-        if (! isset($this->db)) {
-            $this->db = Database::instancia();
-            $this->db->tabela($this->tabela);
+        if (!is_null($this->db)) {
+            return $this->db;
+        }
+        
+        $this->db = Database::instancia();
+
+        $this->db->tabela($this->tabela);
+        
+        if (isset($this->retorno_padrao) && class_exists($this->retorno_padrao)) {
+            $this->db->comoObjeto($this->retorno_padrao);
         }
 
         return $this->db;

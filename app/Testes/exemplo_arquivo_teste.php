@@ -27,7 +27,7 @@ Abaixo estão vários exemplos de uso dos testes que podem ser explorados.
 
 
 // testar('se o db de testes funciona e posso até mesmo usar models', function(){
-//     $resultado = model('ExemploModel')->buscarTodos();
+//     $resultado = model('ExemploModel')->todos();
 
 //     esperar($resultado)
 //         ->serArray()
