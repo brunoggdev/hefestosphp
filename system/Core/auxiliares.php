@@ -104,7 +104,7 @@ function dd(mixed ...$params)
     
     foreach ($params as $param) {
         if (is_string($param)) {
-            $param = htmlspecialchars($param, ENT_QUOTES, 'UTF-8');
+            $param = htmlspecialchars($param, ENT_QUOTES, 'UTF-8'); 
         }
         var_dump($param);
         echo  $terminal ? PHP_EOL.PHP_EOL : '<br><hr><br>';
