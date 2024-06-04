@@ -279,6 +279,6 @@ class Tabela
 
     public function __toString(): string
     {
-        return  rtrim($this->sql, ", ") . ');';
+        return  rtrim($this->sql, ", ") . ') ENGINE=InnoDB;';
     }
 }
