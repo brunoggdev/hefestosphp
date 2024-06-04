@@ -270,9 +270,13 @@ class Database
     * Adiciona um ORDER BY na query
     * @author brunoggdev
     */
-    public function orderBy(string $column, string $order = 'ASC'):self
+    public function orderBy(string $coluna, string $order = 'ASC'):self
     {
-        $this->query .= "ORDER BY $column $order ";
+        if (empty($this->query)) {
+            $this->select(['*']);
+        }
+
+        $this->query .= "ORDER BY $coluna $order ";
         
         return $this;
     }
@@ -310,6 +314,10 @@ class Database
     */
     public function primeiro(?string $coluna = null): mixed
     {
+        if (empty($this->query)) {
+            $this->select(['*']);
+        }
+        
         $resultado = $this->executarQuery(true)->fetch($this->fetch_mode);
 
         if($coluna){
@@ -436,8 +444,6 @@ class Database
     }
 
 
-
-
     /**
     * Define o retorno do banco de dados como um array associativo
     * @author Brunoggdev
@@ -483,7 +489,7 @@ class Database
 
 
     /**
-     * Retorna da tabela desejada a linha (ou coluna especifica) com o id informado.
+     * Retorna da tabela desejada a linha (ou coluna especifica) com o id informado, podendo retornar uma coluna especifica
      * @author Brunoggdev
     */
     public function buscar(int|string $id, ?string $coluna = null):mixed
@@ -494,10 +500,15 @@ class Database
 
 
     /**
-     * Retorna o primeiro resultado para o 'where' informado
+     * Retorna o primeiro resultado para o 'where' informado, podendo retornar uma coluna especifica
     */
     public function primeiroOnde(array|string $where, ?string $coluna = null):mixed
     {
+
+        if ($coluna) {
+            $this->select([$coluna]);
+        }
+
         return $this->where($where)->primeiro($coluna);
     }
 }
