@@ -445,6 +445,28 @@ class Database
 
 
     /**
+    * Retorna o PDO da conexão atual.
+    * @author brunoggdev
+    */
+    public function pdo():?PDO
+    {
+        return $this->conexao;
+    }
+
+
+    /**
+    * Retorna o PDOStatement da última operação.
+    * @author brunoggdev
+    */
+    public function pdoStatement():?PDOStatement
+    {
+        return $this->query_info;
+    }
+
+
+
+
+    /**
     * Define o retorno do banco de dados como um array associativo
     * @author Brunoggdev
     */
