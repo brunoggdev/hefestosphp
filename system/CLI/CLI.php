@@ -46,7 +46,7 @@ class CLI
     * Cria um novo arquivo com as propriedades desejadas
     * @author Brunoggdev
     */
-    private function criar(string $tipo_arquivo, string $nome, string|false $controller_recurso = false):void
+    private function criar(string $tipo_arquivo, string $nome, string|false $flags = false):void
     {
         if ($tipo_arquivo == 'composer') {
             echo("\n\033[93m# Atenção: Caso já tenha um arquivo \"composer.json\" na raiz do projeto ele será reescrito.\033[0m\n");
@@ -69,9 +69,32 @@ class CLI
         if (! in_array(strtolower($tipo_arquivo), ['controller', 'model', 'filtro', 'tabela']) ) {
             echo("\n\033[93m# O tipo de arquivo informado não parece válido. Qual deseja criar? [controller, model, filtro ou tabela].\033[0m\n\n");
             $tipo_arquivo = readline('> ');
-            $this->criar($tipo_arquivo, $nome, $controller_recurso);
+            $this->criar($tipo_arquivo, $nome, $flags);
             return;
         }
+
+
+        // Processar flags
+        if ($flags) {
+            $flags_ = str_split(trim($flags, '-'));
+
+            foreach ($flags_ as $flag) {
+
+                $novo_arquivo = match (true) {
+                    $flag == 't' && $tipo_arquivo != 'tabela' => ['tabela', $nome],
+                    $flag == 'm' && $tipo_arquivo != 'model' => ['model', str_ends_with($nome = strtolower($nome), 'model') ? $nome : $nome.'Model'],
+                    $flag == 'c' && $tipo_arquivo != 'controller' => ['controller', str_ends_with($nome = strtolower($nome), 'controller') ? $nome : $nome.'Controller'],
+                    default => false
+                };
+
+                if ($novo_arquivo) {
+                    $this->criar(...$novo_arquivo);
+                }
+                
+                
+            }
+        }
+
 
         // PERGUNTA AO USUÁRIO SE DEVE SER UM CONTROLLER DE RECURSO
         // if( $tipo_arquivo == 'controller' &&  $controller_recurso != '--recurso' ){
@@ -98,11 +121,13 @@ class CLI
             'Tabela' => PASTA_RAIZ . 'app/Database/tabelas/',
             default => die("\n\033[91m# Tipo de arquivo '$tipo_arquivo' não suportado.\033[0m")
         };
-        $template = ($tipo_arquivo == 'Controller' && $controller_recurso == '--recurso') ? 'ControllerRecurso' : $tipo_arquivo;
+        $template = ($tipo_arquivo == 'Controller' && $flags == '--recurso') ? 'ControllerRecurso' : $tipo_arquivo;
 
         $template = require "templates/$template.php";
         if($tipo_arquivo == 'Model'){
+            // sem sufixo model
             $tabela = str_ends_with($tabela = strtolower($nome), 'model') ? substr($tabela, 0, -5) : $tabela;
+            // plural
             $tabela = str_ends_with($tabela, 's') ? $tabela : $tabela.'s';
             $arquivo = str_replace(['{nome}', '{tabela}'], [$nome, $tabela], $template);
         }else{
@@ -118,7 +143,7 @@ class CLI
         }
 
         if ( file_put_contents("$caminho$nome.php", $arquivo) ) {
-            $resposta = "\n\033[92m# $tipo_arquivo $nome criado com sucesso.\n\033[0m";
+            $resposta = "\n\033[92m# $tipo_arquivo $nome criado com sucesso em: \n\033[0m$caminho$nome.php.\n\n";
         } else {
             $resposta = "\n\033[91m# Algo deu errado ao gerar o $tipo_arquivo.\n\033[0m";
         }
