@@ -533,4 +533,41 @@ class Database
 
         return $this->where($where)->primeiro($coluna);
     }
+
+
+
+
+    /**
+     * Recebe e executa uma função onde podem ser realizadas operações no banco de dados
+     * dentro do contexto de uma transação ativa.
+     * 
+     * Se nenhum erro ocorrer, persiste todas as operações no banco e retorna true. 
+     * Do contrário, desfaz todas as operações no banco e retorna false.
+     * 
+     * ATENÇÃO: A engine MyISAM do MySQL não suporta transações, use InnoDB. 
+     * @see https://www.php.net/manual/en/pdo.begintransaction.php
+    */
+    public function transacao(callable $operacoes):bool
+    {
+        $this->conexao->beginTransaction();
+
+        try {
+
+            $operacoes($this);
+
+            if (!$this->conexao->commit()) {
+                $this->conexao->rollBack();
+                return false;
+            }
+
+            return true;
+
+        } catch (\Throwable) {
+
+            $this->conexao->rollBack();
+            return false;
+
+        }
+    }
+    
 }
