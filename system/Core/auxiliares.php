@@ -299,7 +299,7 @@ function requisicao_get(string $endpoint):Requisicao
 * Se precisar de mais controle instancie a classe manualmente
 * @author Brunoggdev
 */
-function requisicao_post(string $endpoint, array $dados):Requisicao
+function requisicao_post(string $endpoint, array|string $dados):Requisicao
 {
     return (new Requisicao())->post($endpoint, $dados);
 }

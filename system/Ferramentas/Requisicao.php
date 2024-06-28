@@ -109,6 +109,12 @@ class Requisicao {
         curl_setopt($this->curl, CURLOPT_URL, $url);
         
         if ($data) {
+            if (is_string($data)) {
+                curl_setopt($this->curl, CURLOPT_HTTPHEADER, [
+                    'Content-Type: application/json',
+                    'Content-Length: ' . strlen($data)
+                ]);
+            }
             curl_setopt($this->curl, CURLOPT_POSTFIELDS, $data);
         }
 
