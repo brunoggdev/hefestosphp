@@ -66,7 +66,7 @@ class CLI
             $tipo_arquivo = readline('> ');
         }
 
-        if (! in_array(strtolower($tipo_arquivo), ['controller', 'model', 'filtro', 'tabela']) ) {
+        if (! in_array(strtolower($tipo_arquivo), ['controller', 'model', 'filtro', 'tabela', 'js']) ) {
             echo("\n\033[93m# O tipo de arquivo informado não parece válido. Qual deseja criar? [controller, model, filtro ou tabela].\033[0m\n\n");
             $tipo_arquivo = readline('> ');
             $this->criar($tipo_arquivo, $nome, $flags);
@@ -118,6 +118,7 @@ class CLI
             'Controller' =>  PASTA_RAIZ . 'app/Controllers/',
             'Model' => PASTA_RAIZ . 'app/Models/',
             'Filtro' => PASTA_RAIZ . 'app/Filtros/',
+            'Js' => PASTA_PUBLIC . '/js/',
             'Tabela' => PASTA_RAIZ . 'app/Database/tabelas/',
             default => die("\n\033[91m# Tipo de arquivo '$tipo_arquivo' não suportado.\033[0m")
         };
@@ -142,8 +143,10 @@ class CLI
             mkdir($caminho);
         }
 
-        if ( file_put_contents("$caminho$nome.php", $arquivo) ) {
-            $resposta = "\n\033[92m# $tipo_arquivo $nome criado com sucesso em: \n\033[0m$caminho$nome.php.\n\n";
+        $extensao = strtolower($tipo_arquivo) == 'js' ? '.js' : '.php';
+
+        if ( file_put_contents("$caminho$nome$extensao", $arquivo) ) {
+            $resposta = "\n\033[92m# $tipo_arquivo $nome criado com sucesso em: \n\033[0m$caminho$nome$extensao.\n\n";
         } else {
             $resposta = "\n\033[91m# Algo deu errado ao gerar o $tipo_arquivo.\n\033[0m";
         }
