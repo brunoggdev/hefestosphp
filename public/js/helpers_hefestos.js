@@ -1,5 +1,5 @@
 /// <reference path="jquery.min.js" />
-'use strict'; 
+'use strict';
 /**linhas de configuração acima, evite apagar. @author Brunoggdev*/
 
 /* ----------------------------------------------------------------------
@@ -24,7 +24,7 @@ function base_url(caminho_opcional = '') {
  * Permite que o metodo formatarBRL() seja chamado em qualquer string para formata-la em reais
  * @author Brunoggdev
 */
-String.prototype.formatarBRL = function() {
+String.prototype.formatarBRL = function () {
     const formatado = this.replace(/,/g, '').replace(',', '.');
     const value = parseFloat(formatado);
 
@@ -78,7 +78,7 @@ function global(chave, valor = null) {
     if (valor === null) {
         return btoa(window.localStorage.getItem(chave))
     }
-    
+
     window.localStorage.setItem(chave, atob(valor))
 
     return valor
@@ -147,11 +147,11 @@ function modal(id_modal) {
     }
 
     const modal = new bootstrap.Modal(id_modal)
-    
-    if(! $(id_modal).hasClass('show')){
+
+    if (!$(id_modal).hasClass('show')) {
         modal.show()
     }
-    
+
     return modal
 }
 
@@ -163,13 +163,13 @@ function modal(id_modal) {
  * @param {function(object):void|false} fechar Funcao opcional quando fechar a modal
  * @author Brunoggdev
 */
-function alertar(texto, fechar = () => {}) {
+function alertar(texto, fechar = () => { }) {
     $('#alerta-hefestos-mensagem').html(texto)
-    
+
     const alerta = modal('alerta-hefestos')
     alerta.hide()
 
-    $('#alerta-hefestos').off('hidden.bs.modal').on('hidden.bs.modal', function() {
+    $('#alerta-hefestos').off('hidden.bs.modal').on('hidden.bs.modal', function () {
         fechar()
     })
 
@@ -185,17 +185,17 @@ function alertar(texto, fechar = () => {}) {
  * @param {function(object):void|false} cancelar Funcao opcional para caso cancelar
  * @author Brunoggdev
 */
-function confirmar(texto, callback, cancelar = () => {}) {
+function confirmar(texto, callback, cancelar = () => { }) {
     $('#confirmacao-hefestos-texto').html(texto)
 
     const confirmacao = modal('confirmacao-hefestos')
     confirmacao.hide()
 
-    onClick('#confirmacao-hefestos-confirmar', function() {
+    onClick('#confirmacao-hefestos-confirmar', function () {
         callback()
         confirmacao.hide()
     })
-    onClick('#confirmacao-hefestos-cancelar', function() {
+    onClick('#confirmacao-hefestos-cancelar', function () {
         cancelar()
         confirmacao.hide()
     })
@@ -209,10 +209,10 @@ function confirmar(texto, callback, cancelar = () => {}) {
  * @param {(resultado: Array)}callback funcao a ser executada com o retorno
  * @author Brunoggdev
 */
-function requisicaoGet(endpoint, callback){
+function requisicaoGet(endpoint, callback) {
     const fullEndpoint = endpoint.startsWith('https://')
-    ? endpoint
-    : BASE_URL + endpoint;
+        ? endpoint
+        : BASE_URL + endpoint;
 
     $.get(fullEndpoint, callback)
 }
@@ -226,10 +226,10 @@ function requisicaoGet(endpoint, callback){
  * @param callback funcao a ser executada com o retorno
  * @author Brunoggdev
 */
-function requisicaoPost(endpoint, dados, callback){
+function requisicaoPost(endpoint, dados, callback) {
     const fullEndpoint = endpoint.startsWith('https://')
-    ? endpoint
-    : BASE_URL + endpoint;
+        ? endpoint
+        : BASE_URL + endpoint;
 
     // tratando caso onde dados não foram informados e invés disso a callback foi informada
     if (typeof dados === 'function') {
@@ -245,7 +245,7 @@ function requisicaoPost(endpoint, dados, callback){
  * Aplica um debounce na callback informada com um timeout opcional (300ms padrão)
  * @author Brunoggdev
 */
-function debounce(callback, timeout = 300){
+function debounce(callback, timeout = 300) {
     let timer;
 
     return (...args) => {
@@ -275,21 +275,21 @@ function linhaParaObjeto(clickedElement) {
         'ó': 'o',
         'ô': 'o',
         'ú': 'u',
-      };
-      
+    };
+
     // pegando e tratando nomes das colunas
-    $(clickedElement).closest('table').find('thead th').each(function() {
+    $(clickedElement).closest('table').find('thead th').each(function () {
         const columnName = $(this).text().toLowerCase().replace(/[^\w\s]/gi, match => specialChars[match] || match).replace('.', '').replace(' ', '_');
         columnNames.push(columnName);
     });
 
     // mapeando colunas e linhas no objeto
-    $(clickedElement).closest('td').siblings('td:not(:last-child):not(:last-child)').each(function(index) {
-      const columnName = columnNames[index];
-      const columnValue = $(this).text();
-      rowData[columnName] = columnValue;
+    $(clickedElement).closest('td').siblings('td:not(:last-child):not(:last-child)').each(function (index) {
+        const columnName = columnNames[index];
+        const columnValue = $(this).text();
+        rowData[columnName] = columnValue;
     });
-    
+
     return rowData;
 }
 
@@ -302,7 +302,7 @@ function linhaParaObjeto(clickedElement) {
 */
 function paraReais(centavos) {
     return (centavos / 100).toLocaleString('pt-br',
-    { minimumFractionDigits: 2, maximumFractionDigits: 2 }); // Returns the result with 2 decimal places
+        { minimumFractionDigits: 2, maximumFractionDigits: 2 }); // Returns the result with 2 decimal places
 }
 
 
@@ -314,4 +314,33 @@ function paraReais(centavos) {
 */
 function paraCentavos(reais) {
     return (parseFloat(reais.replace(',', '.')) * 100)
+}
+
+
+/**
+ * Adiciona um novo toast com o conteúdo desejado na stack
+ * @param {string} corpo Mensagem do corpo do toast
+ * @param {string} header_principal Mensagem principal do header
+ * @param {string} header_secundario Mensagem secundária do header
+ * @author Brunoggdev
+*/
+function novo_toast(corpo, cor_bg = 'success', header_principal = 'Mensagem', header_secundario = 'agora' ) {
+    const toast_id = 'toast-' + Date.now()
+
+    const toast = `
+      <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" id="${toast_id}">
+        <div class="toast-header bg-${cor_bg}">
+            <img src="favicon.ico" class="rounded me-2">
+            <strong class="me-auto">${header_principal}</strong>
+            <small class="text-body-secondary">${header_secundario}</small>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            ${corpo}
+        </div>
+    </div>
+  `
+
+  $('#toast-container').append(toast)
+  bootstrap.Toast.getOrCreateInstance(`#${toast_id}`).show()
 }
