@@ -218,7 +218,7 @@ function comp(string $nome_componente, ?array $dados = []):string
  * com o nome informado (se existir), podendo "defer".
  * @author Brunoggdev
 */
-function importar_js(string $nome_arquivo):string
+function importar_js(string $nome_arquivo, bool $defer = false):string
 {
     $arquivo = "js/$nome_arquivo.js";
 
@@ -226,7 +226,7 @@ function importar_js(string $nome_arquivo):string
         return '';
     }
     
-    return '<script type="module" src="'.url_base("$arquivo?v=").VERSAO_APP.'"></script>';
+    return '<script '.($defer?'defer ':'').' src="'.url_base("$arquivo?v=").VERSAO_APP.'"></script>';
 }
 
 
