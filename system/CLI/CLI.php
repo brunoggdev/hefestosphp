@@ -110,7 +110,7 @@ class CLI
         }
 
         $tipo_arquivo = ucfirst($tipo_arquivo);
-        if($tipo_arquivo !== 'Tabela'){
+        if($tipo_arquivo !== 'Tabela' && $tipo_arquivo !== 'Js'){
             $nome = ucfirst($nome);
         }
 
