@@ -9,25 +9,81 @@ namespace Hefestos\Database;
 */
 class Tabela
 {
-    private string $sql = '';
+    private string $sql;
     private bool $driver_mysql;
+    private array $colunas = [];
+    private array $foreign_keys = [];
 
-    public function __construct(public string $nome_tabela)
+    public function __construct(public string $nome)
     {
         $this->driver_mysql = (require pasta_app('Config/database.php'))['driver'] == 'mysql';
-        $this->sql = "CREATE TABLE $nome_tabela (";
+        $this->sql = "CREATE TABLE $nome (";
     }
+
+
+    /**
+     * Adiciona a nova coluna na sql de criação da tabela
+    */
+    private function adicionarColuna(string $coluna, $definicao): self
+    {
+        $this->colunas[$coluna] = $definicao;
+
+        $this->sql .= $definicao . ', ';
+
+        return $this;
+    }
+ 
+ 
+    /**
+     * Adiciona a nova foreign key na sql de criação da tabela
+    */
+    private function adicionarForeignKey(string $coluna, $definicao): self
+    {
+        $this->foreign_keys[$coluna] = $definicao;
+
+        $this->sql .= $definicao . ', ';
+
+        return $this;
+    }
+
+
+
+    /**
+     * Retorna a sql de inserção de novas colunas e foreign keys se existirem
+    */
+    private function atualizarSchema(array $colunas, array $fks):string
+    {
+        $novas_colunas = array_diff(array_keys($this->colunas), $colunas);
+        $novas_fks = array_diff(array_keys($this->foreign_keys), $fks);
+        
+        $alter_sql = "ALTER TABLE $this->nome ";
+
+        foreach ($novas_colunas as $novas_coluna) {
+            $alter_sql .= 'ADD COLUMN '.$this->colunas[$novas_coluna] . ', ';
+        }
+
+        $alter_sql = rtrim($alter_sql, ", "). "; ALTER TABLE $this->nome ";
+
+        foreach ($novas_fks as $novas_fk) {
+            $alter_sql .= 'ADD '.$this->foreign_keys[$novas_fk] . ', ';
+        }
+        $alter_sql = rtrim($alter_sql, ", ").';';
+
+        return $alter_sql;
+    }
+
+
 
     /**
     * Adiciona a coluna id padrão na tabela;
     * @author Brunoggdev
     */
     public function id(string $coluna = 'id'): self {
-        $this->sql .= $this->driver_mysql == 'mysql'
-            ? "$coluna int unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY, " // primary key mysql
-            : "$coluna INTEGER PRIMARY KEY, "; // primary key sqlite
+        $definicao = $this->driver_mysql == 'mysql'
+            ? "$coluna int unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY" // primary key mysql
+            : "$coluna INTEGER PRIMARY KEY"; // primary key sqlite
 
-        return $this;
+        return $this->adicionarColuna($coluna, $definicao);
     }
 
     /**
@@ -36,22 +92,21 @@ class Tabela
     */
     public function varchar(string $coluna, int $tamanho = 255, bool $unique = false, bool $nullable = false, mixed $default = false): self
     {
-        $this->sql .= "$coluna VARCHAR($tamanho) ";
+        $definicao = "$coluna VARCHAR($tamanho) ";
         
         if($unique){
-            $this->sql .= 'UNIQUE ';
+            $definicao .= 'UNIQUE ';
         }
 
         if (!$nullable) {
-            $this->sql .= 'NOT NULL ';
+            $definicao .= 'NOT NULL ';
         }
 
         if($default || $default === null){
-            $this->sql .= $default === null ? 'DEFAULT NULL' : "DEFAULT '$default'";
+            $definicao .= $default === null ? 'DEFAULT NULL' : "DEFAULT '$default'";
         }
 
-        $this->sql .= ', ';
-        return $this;
+        return $this->adicionarColuna($coluna, $definicao);
     }
 
     /**
@@ -70,20 +125,19 @@ class Tabela
     */
     public function text(string $coluna, bool $unique = false, bool $nullable = false, mixed $default = false): self
     {
-        $this->sql .= "$coluna TEXT ";
+        $definicao = "$coluna TEXT ";
 
         if($unique){
-            $this->sql .= 'UNIQUE ';
+            $definicao .= 'UNIQUE ';
         }
         if (!$nullable) {
-            $this->sql .= 'NOT NULL ';
+            $definicao .= 'NOT NULL ';
         }
         if($default || $default === null){
-            $this->sql .= $default === null ? 'DEFAULT NULL' : "DEFAULT '$default'";
+            $definicao .= $default === null ? 'DEFAULT NULL' : "DEFAULT '$default'";
         }
         
-        $this->sql .= ', ';
-        return $this;
+        return $this->adicionarColuna($coluna, $definicao);
     }
 
     /**
@@ -92,17 +146,16 @@ class Tabela
     */
     public function boolean(string $coluna, bool $nullable = false, mixed $default = false): self
     {
-        $this->sql .= "$coluna BOOLEAN ";
+        $definicao = "$coluna BOOLEAN ";
 
         if (!$nullable) {
-            $this->sql .= 'NOT NULL ';
+            $definicao .= 'NOT NULL ';
         }
         if($default || $default === null){
-            $this->sql .= $default === null ? 'DEFAULT NULL' : "DEFAULT $default";
+            $definicao .= $default === null ? 'DEFAULT NULL' : "DEFAULT $default";
         }
         
-        $this->sql .= ', ';
-        return $this;
+        return $this->adicionarColuna($coluna, $definicao);
     }
 
     /**
@@ -111,22 +164,21 @@ class Tabela
     */
     public function timestamp(string $coluna, bool $unique = false, bool $nullable = false, mixed $default = 'CURRENT_TIMESTAMP'): self
     {
-        $this->sql .= "$coluna TIMESTAMP ";
+        $definicao = "$coluna TIMESTAMP ";
 
         if($unique){
-            $this->sql .= 'UNIQUE ';
+            $definicao .= 'UNIQUE ';
         }
         if (!$nullable) {
-            $this->sql .= 'NOT NULL ';
+            $definicao .= 'NOT NULL ';
         }
         if($default !== 'CURRENT_TIMESTAMP' || $default === null){
-            $this->sql .= $default === null ? 'DEFAULT NULL' : "DEFAULT '$default'";
+            $definicao .= $default === null ? 'DEFAULT NULL' : "DEFAULT '$default'";
         } else {
-            $this->sql .= "DEFAULT CURRENT_TIMESTAMP";
+            $definicao .= "DEFAULT CURRENT_TIMESTAMP";
         }
         
-        $this->sql .= ', ';
-        return $this;
+        return $this->adicionarColuna($coluna, $definicao);
     }
     
     /**
@@ -135,22 +187,21 @@ class Tabela
     */
     public function date(string $coluna, bool $unique = false, bool $nullable = false, string|null $default = 'CURRENT_DATE'): self
     {
-        $this->sql .= "$coluna DATE ";
+        $definicao = "$coluna DATE ";
 
         if($unique){
-            $this->sql .= 'UNIQUE ';
+            $definicao .= 'UNIQUE ';
         }
         if (!$nullable) {
-            $this->sql .= 'NOT NULL ';
+            $definicao .= 'NOT NULL ';
         }
         if($default !== 'CURRENT_DATE' || $default === null){
-            $this->sql .= $default === null ? 'DEFAULT NULL' : "DEFAULT '$default'";
+            $definicao .= $default === null ? 'DEFAULT NULL' : "DEFAULT '$default'";
         } else {
-            $this->sql .= "DEFAULT CURRENT_DATE";
+            $definicao .= "DEFAULT CURRENT_DATE";
         }
         
-        $this->sql .= ', ';
-        return $this;
+        return $this->adicionarColuna($coluna, $definicao);
     }
 
     /**
@@ -159,22 +210,21 @@ class Tabela
     */
     public function time(string $coluna, bool $unique = false, bool $nullable = false, string|null $default = 'CURRENT_TIME'): self
     {
-        $this->sql .= "$coluna TIME ";
+        $definicao = "$coluna TIME ";
         
         if($unique){
-            $this->sql .= 'UNIQUE ';
+            $definicao .= 'UNIQUE ';
         }
         if (!$nullable) {
-            $this->sql .= 'NOT NULL ';
+            $definicao .= 'NOT NULL ';
         }
         if($default !== 'CURRENT_TIME'|| $default === null){
-            $this->sql .= $default === null ? 'DEFAULT NULL' : "DEFAULT '$default'";
+            $definicao .= $default === null ? 'DEFAULT NULL' : "DEFAULT '$default'";
         } else {
-            $this->sql .= "DEFAULT CURRENT_DATE";
+            $definicao .= "DEFAULT CURRENT_DATE";
         }
         
-        $this->sql .= ', ';
-        return $this;
+        return $this->adicionarColuna($coluna, $definicao);
     }
 
     /**
@@ -183,44 +233,44 @@ class Tabela
     */
     public function datetime(string $coluna, bool $unique = false, bool $nullable = false, string|null $default = 'CURRENT_TIMESTAMP'): self
     {
-        $this->sql .= "$coluna DATETIME ";
+        $definicao = "$coluna DATETIME ";
 
         if($unique){
-            $this->sql .= 'UNIQUE ';
+            $definicao .= 'UNIQUE ';
         }
         if (!$nullable) {
-            $this->sql .= 'NOT NULL ';
+            $definicao .= 'NOT NULL ';
         }
         if($default !== 'CURRENT_TIMESTAMP' || $default === null){
-            $this->sql .= $default === null ? 'DEFAULT NULL' : "DEFAULT '$default'";
+            $definicao .= $default === null ? 'DEFAULT NULL' : "DEFAULT '$default'";
         } else {
-            $this->sql .= 'DEFAULT CURRENT_TIMESTAMP';
+            $definicao .= 'DEFAULT CURRENT_TIMESTAMP';
         }
         
-        $this->sql .= ', ';
-        return $this;
+        return $this->adicionarColuna($coluna, $definicao);
     }
 
     /**
     * Adiciona uma coluna do tipo float.
     * @author Brunoggdev
     */
-    public function int(string $column, int $tamanho = 11, bool $unique = false, bool $nullable = false, int|bool $default = false): self
+    public function int(string $coluna, bool $unique = false, bool $nullable = false, int|bool $default = false): self
     {
-        $this->sql .= "$column INT($tamanho) ";
+        $definicao = "$coluna INT UNSIGNED ";
         
-        if($unique){
-            $this->sql .= 'UNIQUE ';
+        if ($unique) {
+            $definicao .= 'UNIQUE ';
         }
+
         if (!$nullable) {
-            $this->sql .= 'NOT NULL ';
+            $definicao .= 'NOT NULL ';
         }
+
         if($default || $default === null){
-            $this->sql .= $default === null ? 'DEFAULT NULL' : "DEFAULT '$default'";
+            $definicao .= $default === null ? 'DEFAULT NULL' : "DEFAULT '$default'";
         }
         
-        $this->sql .= ', ';
-        return $this;
+        return $this->adicionarColuna($coluna, $definicao);
     }
 
 
@@ -230,20 +280,21 @@ class Tabela
     */
     public function float(string $coluna, int $total_digitos, int $decimais, bool $unique = false, bool $nullable = false, mixed $default = false): self
     {
-        $this->sql .= "$coluna FLOAT($total_digitos, $decimais) ";
+        $definicao = "$coluna FLOAT($total_digitos, $decimais) ";
                 
-        if($unique){
-            $this->sql .= 'UNIQUE ';
+        if ($unique) {
+            $definicao .= 'UNIQUE ';
         }
+
         if (!$nullable) {
-            $this->sql .= 'NOT NULL ';
+            $definicao .= 'NOT NULL ';
         }
+
         if($default || $default === null){
-            $this->sql .= $default === null ? 'DEFAULT NULL' : "DEFAULT '$default'";
+            $definicao .= $default === null ? 'DEFAULT NULL' : "DEFAULT '$default'";
         }
         
-        $this->sql .= ', ';
-        return $this;
+        return $this->adicionarColuna($coluna, $definicao);
     }
 
     /**
@@ -252,22 +303,24 @@ class Tabela
     */
     public function json(string $coluna, bool $unique = false, bool $nullable = false, mixed $default = false): self
     {
-        $this->sql .= "$coluna JSON ";
+        $definicao = "$coluna JSON ";
                 
-        if($unique){
-            $this->sql .= 'UNIQUE ';
+        if ($unique) {
+            $definicao .= 'UNIQUE ';
         }
+
         if (!$nullable) {
-            $this->sql .= 'NOT NULL ';
+            $definicao .= 'NOT NULL ';
         }
+
         if($default || $default === null){
-            $this->sql .= $default === null ? 'DEFAULT NULL' : "DEFAULT '$default'";
+            $definicao .= $default === null ? 'DEFAULT NULL' : "DEFAULT '$default'";
         }
         
-        $this->sql .= ', ';
-        return $this;
+        return $this->adicionarColuna($coluna, $definicao);
     }
 
+    
     /**
     * Adiciona uma chave estrangeira da coluna desejada para a tabela e coluna especificadas 
     * (lembre-se de usar este metodo apenas no final da sql).
@@ -275,12 +328,12 @@ class Tabela
     */
     public function foreignKey(string $coluna, string $tabela_ref, string $coluna_ref): self
     {
-        $this->sql .= "FOREIGN KEY ($coluna) REFERENCES $tabela_ref($coluna_ref)";
-        return $this;
+        $definicao = "FOREIGN KEY ($coluna) REFERENCES $tabela_ref($coluna_ref)";
+        return $this->adicionarForeignKey($coluna, $definicao);
     }
 
     public function __toString(): string
     {
-        return  rtrim($this->sql, ", ") . ')' . ($this->driver_mysql ? 'ENGINE=InnoDB;' : ';');
+        return  rtrim($this->sql, ", ") . ')' . ($this->driver_mysql ? ' ENGINE=InnoDB;' : ';');
     }
 }
