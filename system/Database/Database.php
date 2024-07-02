@@ -21,6 +21,7 @@ class Database
     protected bool $checar_nome_tabela = true;
     protected bool $como_array = true;
     protected int $fetch_mode = PDO::FETCH_ASSOC;
+    private bool $driver_mysql;
 
     /**
      * Busca o array de conexão com o banco de dados e instancia o PDO.
@@ -31,6 +32,8 @@ class Database
     public function __construct(?array $db_config = null)
     {
         $db_config ??= require PASTA_RAIZ . 'app/Config/database.php';
+
+        $this->driver_mysql = $db_config['driver'] == 'mysql';
 
         [$dsn, $usuario, $senha] = $this->formatarConexao($db_config);
 
@@ -52,7 +55,7 @@ class Database
     */
     private function formatarConexao(array $config):array
     {
-        $dsn = $config['driver'] == 'mysql'
+        $dsn = $this->driver_mysql
             ? "mysql:host=$config[host];dbname=$config[nome_db]"
             : 'sqlite:' . PASTA_RAIZ . $config['sqlite'];
 
@@ -568,6 +571,66 @@ class Database
             return false;
 
         }
+    }
+
+
+
+    /**
+     * Retorna um array com os nomes de todas as tabelas existentes no banco de dados da conexão atual
+     * @return string[]
+    */
+    public function listarTabelas():array
+    {
+        $consulta = $this->driver_mysql
+            ? 'SHOW TABLES'
+            :'SELECT name FROM sqlite_master WHERE type="table";';
+
+        return $this->executar($consulta)->fetchAll(PDO::FETCH_COLUMN);
+    }
+
+
+
+    /**
+     * Retorna um array com os nomes de todas as colunas da tabela definida
+     * @return string[]
+    */
+    public function listarColunas():array
+    {
+        if (empty($this->tabela) && $this->checar_nome_tabela) {
+            throw new Exception('Não foi definida a tabela onde deve ser realizada a consulta.');
+        }
+
+        if ($this->driver_mysql) {
+            return $this->executar("SHOW COLUMNS FROM $this->tabela")->fetchAll(PDO::FETCH_COLUMN, 0);
+        } 
+
+        return $this->executar("PRAGMA table_info($this->tabela);")->fetchAll(PDO::FETCH_COLUMN, 1);
+    }
+
+
+    /**
+     * Retorna um array com os nomes de todas as colunas que possuem uma foreign key na tabela definida
+     * @return string[]
+    */
+    public function listarForeignKeys():array
+    {
+        if (empty($this->tabela) && $this->checar_nome_tabela) {
+            throw new Exception('Não foi definida a tabela onde deve ser realizada a consulta.');
+        }
+
+        if ($this->driver_mysql) {
+            return $this->executar("
+                SELECT 
+                    COLUMN_NAME
+                FROM 
+                    INFORMATION_SCHEMA.KEY_COLUMN_USAGE 
+                WHERE 
+                    TABLE_NAME = '$this->tabela' AND 
+                    CONSTRAINT_NAME != 'PRIMARY'
+            ")->fetchAll(PDO::FETCH_COLUMN, 0);
+        } 
+
+        return $this->executar("PRAGMA foreign_key_list($this->tabela);")->fetchAll(PDO::FETCH_COLUMN, 1);
     }
     
 }
