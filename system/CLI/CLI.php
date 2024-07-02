@@ -66,7 +66,7 @@ class CLI
             $tipo_arquivo = readline('> ');
         }
 
-        if (! in_array(strtolower($tipo_arquivo), ['controller', 'model', 'filtro', 'tabela']) ) {
+        if (! in_array(strtolower($tipo_arquivo), ['controller', 'model', 'filtro', 'tabela', 'js']) ) {
             echo("\n\033[93m# O tipo de arquivo informado não parece válido. Qual deseja criar? [controller, model, filtro ou tabela].\033[0m\n\n");
             $tipo_arquivo = readline('> ');
             $this->criar($tipo_arquivo, $nome, $flags);
@@ -110,7 +110,7 @@ class CLI
         }
 
         $tipo_arquivo = ucfirst($tipo_arquivo);
-        if($tipo_arquivo !== 'Tabela'){
+        if($tipo_arquivo !== 'Tabela' && $tipo_arquivo !== 'Js'){
             $nome = ucfirst($nome);
         }
 
@@ -118,6 +118,7 @@ class CLI
             'Controller' =>  PASTA_RAIZ . 'app/Controllers/',
             'Model' => PASTA_RAIZ . 'app/Models/',
             'Filtro' => PASTA_RAIZ . 'app/Filtros/',
+            'Js' => PASTA_PUBLIC . '/js/',
             'Tabela' => PASTA_RAIZ . 'app/Database/tabelas/',
             default => die("\n\033[91m# Tipo de arquivo '$tipo_arquivo' não suportado.\033[0m")
         };
@@ -142,8 +143,10 @@ class CLI
             mkdir($caminho);
         }
 
-        if ( file_put_contents("$caminho$nome.php", $arquivo) ) {
-            $resposta = "\n\033[92m# $tipo_arquivo $nome criado com sucesso em: \n\033[0m$caminho$nome.php.\n\n";
+        $extensao = strtolower($tipo_arquivo) == 'js' ? '.js' : '.php';
+
+        if ( file_put_contents("$caminho$nome$extensao", $arquivo) ) {
+            $resposta = "\n\033[92m# $tipo_arquivo $nome criado com sucesso em: \n\033[0m$caminho$nome$extensao.\n\n";
         } else {
             $resposta = "\n\033[91m# Algo deu errado ao gerar o $tipo_arquivo.\n\033[0m";
         }
@@ -340,61 +343,68 @@ class CLI
 
         $caminho = 'app/Database/' . $caminho;
         $db = db();
+        $tabelas_no_banco = $db->listarTabelas();
 
         // Se for um diretorio, busque todos os arquivos dentro
         if( is_dir($caminho) ){
-            $tabelas = array_merge(
+            $arquivos_tabelas = array_merge(
                 glob($caminho . '*.php'),
                 glob($caminho . '**/*.php')
             );
 
             // Executa a sql retornada por cada arquivo
-            foreach ($tabelas as $tabela) {
-                $sql = (string) require $tabela;
-
-                if (! str_starts_with($sql, 'CREATE TABLE')){
-                    throw new \Exception('Sql informada não é válida para esta operação:' . PHP_EOL . $sql);
+            foreach ($arquivos_tabelas as $arquivo_tabela) {
+                /** @var \Hefestos\Database\Tabela */
+                $tabela = require $arquivo_tabela;
+                
+                if (! str_starts_with($tabela, 'CREATE TABLE')){
+                    throw new \Exception('Sql informada não é válida para esta operação:' . PHP_EOL . $tabela);
                 }
 
                 if($zerar === 'zero') {
-                    $nome_tabela = explode(' ', $sql)[2];
-                    $db->executar("DROP TABLE IF EXISTS $nome_tabela;");
+                    $db->executar("DROP TABLE IF EXISTS $tabela->nome;");
                 }
 
-                $db->executar($sql);
+                // são 3 da manhã, dá um desconto
+                // se não for pra zerar e a tabela já existir no banco
+                if ($zerar !== 'zero' && in_array($tabela->nome, $tabelas_no_banco)) {
+                    $db->tabela($tabela->nome);
+
+                    // confira se tem atualizações de forma incremental por performance e, se sim, atualize a tabela
+                    if (($colunas = $db->listarColunas()) && ($fks = $db->listarForeignKeys())) {
+                        $alter_table_sql = (fn() => $this->atualizarSchema($colunas, $fks))->call($tabela);
+                        $db->executar($alter_table_sql);
+                    }
+
+                } else {
+                    $db->executar($tabela);
+                }
+
             }
 
-            if($zerar === 'zero') {
-                echo "\n\033[92m# Tabelas criadas do zero com sucesso!\033[0m";
-            }else{
-                echo "\n\033[92m# Tabelas criadas com sucesso!\033[0m";
-            }
+            echo "\n\033[92m# Tabelas criadas/atualizadas". ($zerar === 'zero' ? ' do zero ' : ' ') ."com sucesso!\033[0m";
 
         }else{
             // se não, busque apenas o arquivo informado
             try{
-                $sql = is_file($caminho) ? (string) require $caminho : tabela(explode('/', $caminho)[2]);
-            }catch(\ErrorException){
+                /** @var \Hefestos\Database\Tabela */
+                $tabela = is_file($caminho) ? require $caminho : tabela(explode('/', $caminho)[2]);
+            } catch (\ErrorException){
                 $this->imprimir('Arquivo não encontrado.');
                 exit;
             }
 
-            if (stripos($sql, 'CREATE TABLE') !== 0){
-                throw new \Exception('Sql informada não é válida para esta operaçã:' . PHP_EOL . $sql);
+            if (! str_starts_with($tabela, 'CREATE TABLE')) {
+                throw new \Exception('Sql informada não é válida para esta operaçã:' . PHP_EOL . $tabela);
             }
 
             if($zerar === 'zero') {
-                $nome_tabela = explode(' ', $sql)[2];
-                $db->executar("DROP TABLE IF EXISTS $nome_tabela;");
+                $db->executar("DROP TABLE IF EXISTS $tabela->nome;");
             }
 
-            $db->executar($sql);
+            $db->executar($tabela);
 
-            if($zerar === 'zero') {
-                echo "\n\033[92m# Tabela '$nome_tabela' criada do zero com sucesso!\033[0m";
-            }else{
-                echo "\n\033[92m# Tabela '$nome_tabela' criada com sucesso!\033[0m";
-            }
+            echo "\n\033[92m# Tabela '$tabela->nome' criada/atualizada". ($zerar === 'zero' ? ' do zero ' : ' ') ."com sucesso!\033[0m";
 
         }
     }
