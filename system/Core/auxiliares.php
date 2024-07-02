@@ -3,6 +3,7 @@
 use Hefestos\Core\Controller;
 use Hefestos\Core\Model;
 use Hefestos\Database\Database;
+use Hefestos\Database\Tabela;
 use Hefestos\Rotas\Redirecionar;
 use Hefestos\Ferramentas\Colecao;
 use Hefestos\Ferramentas\Requisicao;
@@ -433,7 +434,7 @@ function db(?array $config = null):Database
  * Retorna a SQL da tabela com o nome desejado (sem a data de criação)
  * @author Brunoggdev
 */
-function tabela(string $tabela)
+function tabela(string $tabela): Tabela
 {
     $tabelas = array_values(array_filter(
         scandir(pasta_app('Database/tabelas')),
@@ -444,7 +445,7 @@ function tabela(string $tabela)
         throw new Exception("Nenhuma tabela encontrada com o nome '$tabela'.");
     }
 
-    return (string) require pasta_app("Database/tabelas/$tabelas[0]");
+    return require pasta_app("Database/tabelas/$tabelas[0]");
 }
 
 /**
