@@ -10,9 +10,11 @@ namespace Hefestos\Database;
 class Tabela
 {
     private string $sql = '';
+    private bool $driver_mysql;
 
     public function __construct(public string $nome_tabela)
     {
+        $this->driver_mysql = (require pasta_app('Config/database.php'))['driver'] == 'mysql';
         $this->sql = "CREATE TABLE $nome_tabela (";
     }
 
@@ -21,13 +23,10 @@ class Tabela
     * @author Brunoggdev
     */
     public function id(string $coluna = 'id'): self {
-        if((require pasta_app('Config/database.php'))['driver'] == 'mysql'){
-            $primary_key = "$coluna int unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY, ";
-        }else{
-            $primary_key = "$coluna INTEGER PRIMARY KEY, ";
-        }
-        
-        $this->sql .= $primary_key;
+        $this->sql .= $this->driver_mysql == 'mysql'
+            ? "$coluna int unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY, " // primary key mysql
+            : "$coluna INTEGER PRIMARY KEY, "; // primary key sqlite
+
         return $this;
     }
 
@@ -38,12 +37,15 @@ class Tabela
     public function varchar(string $coluna, int $tamanho = 255, bool $unique = false, bool $nullable = false, mixed $default = false): self
     {
         $this->sql .= "$coluna VARCHAR($tamanho) ";
+        
         if($unique){
             $this->sql .= 'UNIQUE ';
         }
+
         if (!$nullable) {
             $this->sql .= 'NOT NULL ';
         }
+
         if($default || $default === null){
             $this->sql .= $default === null ? 'DEFAULT NULL' : "DEFAULT '$default'";
         }
@@ -279,6 +281,6 @@ class Tabela
 
     public function __toString(): string
     {
-        return  rtrim($this->sql, ", ") . ') ENGINE=InnoDB;';
+        return  rtrim($this->sql, ", ") . ')' . ($this->driver_mysql ? 'ENGINE=InnoDB;' : ';');
     }
 }
