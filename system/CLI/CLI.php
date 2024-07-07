@@ -190,7 +190,7 @@ class CLI
         session_start();
 
         echo "\n\033[92m# Fornalha iniciada - Ambiente interativo do HefestosPHP.\033[0m";
-        echo "\n\033[93m# Pressione ctrl+c para sair.\033[0m";
+        echo "\n\033[93m# Digite 'sair' ou pressione ctrl+c para sair.\033[0m";
 
         if (extension_loaded('readline')) {
             readline_completion_function('readline');
@@ -203,24 +203,39 @@ class CLI
 
             try {
                 echo "\033[91mFornalha > \033[0m\033[K";
-                $entrada = readline("");
+                $_fornalha_entrada = readline("");
+
+                if (in_array($_fornalha_entrada, ['sair', 'exit'])) {
+                    break;
+                }
+
+                if (in_array($_fornalha_entrada, ['cls', 'clear'])) {
+                    // Comando para limpar a tela no terminal
+                    if (PHP_OS_FAMILY === 'Windows') {
+                        pclose(popen("cls", "w"));
+                    } else {
+                        pclose(popen("clear", "w"));
+                    }
+                    continue;
+                }
+
                 echo PHP_EOL;
 
                 if (extension_loaded('readline')) {
-                    readline_add_history($entrada);
+                    readline_add_history($_fornalha_entrada);
                 }
                 
-                if (preg_match('/(echo|return|var_dump|print_r)/', $entrada) !== 1) {
-                    $entrada = 'return ' . $entrada;
+                if (preg_match('/(echo|return|var_dump|print_r)/', $_fornalha_entrada) !== 1) {
+                    $_fornalha_entrada = 'return ' . $_fornalha_entrada;
                 }
 
                 // SCRIPT PARA ADICIONAR ; SE NECESSÁRIO
-                // if (!str_ends_with($entrada, '}') && !str_ends_with($entrada, ';')) {
-                //     $entrada = $entrada.';';
+                // if (!str_ends_with($_fornalha_entrada, '}') && !str_ends_with($_fornalha_entrada, ';')) {
+                //     $_fornalha_entrada = $_fornalha_entrada.';';
                 // }
 
-                $saida = eval($entrada);
-                isset($saida) && var_export($saida);
+                $_fornalha_saida = eval($_fornalha_entrada);
+                isset($_fornalha_saida) && var_export($_fornalha_saida);
             } catch (\Throwable $th) {
                 echo 
                 "\033[91m -> Erro encontrado: \033[0m" . $th->getMessage() . "\n" . 
@@ -372,6 +387,7 @@ class CLI
 
                     // confira se tem atualizações de forma incremental por performance e, se sim, atualize a tabela
                     if (($colunas = $db->listarColunas()) && ($fks = $db->listarForeignKeys())) {
+                        /** @disregard P1013 intelephense error*/
                         $alter_table_sql = (fn() => $this->atualizarSchema($colunas, $fks))->call($tabela);
                         $db->executar($alter_table_sql);
                     }
