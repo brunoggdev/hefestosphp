@@ -31,7 +31,7 @@ class Database
     */
     public function __construct(?array $db_config = null)
     {
-        $db_config ??= require PASTA_RAIZ . 'app/Config/database.php';
+        $db_config ??= config('database');
 
         $this->driver_mysql = $db_config['driver'] == 'mysql';
 
