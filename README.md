@@ -1,3 +1,8 @@
+# Baterias Inclusas
+O HefestosPHP normalmente não opina em como você deve organizar o seu front-end. Dito isso, esta é uma versão do framework que acompanha algumas funcionalidades para facilitar também o seu front-end no caso de uma aplicação full-stack. 
+
+As "Baterias Inclusas" nesse caso são o [jQuery](https://jquery.com/) e o [Bootstrap 5](https://getbootstrap.com/), além de uma série de novas funções auxiliares para integra-los facilmente no seu app de forma bem organizada e estruturada.
+
 # HefestosPHP
 Um framework PHP em português com 0 dependências onde o intuito principal é diminuir a curva de aprendizado dos grandes frameworks do mercado. Para tal, este pretende ser simples e prático para familiarizar iniciantes aos conceitos básicos da arquitetura MVC na linguagem, sem maiores complicações como o idioma e sobrecarga de informações dos frameworks mais complexos. Desse modo, quando passarem a utilizar algo como Laravel, CodeIgniter ou Symphony, eles já estarão habituados no essencial de seu funcionamento.
 
