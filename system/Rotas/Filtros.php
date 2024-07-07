@@ -9,7 +9,7 @@ class Filtros
 
     public function __construct()
     {
-        $this->filtros = require_once pasta_app('Config/filtros.php');
+        $this->filtros = config('filtros');
     }
 
     

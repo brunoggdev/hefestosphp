@@ -490,3 +490,21 @@ function gerar_log(string $mensagem) {
 
     file_put_contents($caminho_log, $entrada_log, file_exists($caminho_log) ? FILE_APPEND : 0);
 }
+
+
+
+/**
+ * Acessa o arquivo de configuração desejado e devolve o que quer que seja retornado nele 
+ * (geralmente um array, mas não limitado a isso).
+ * @return array|mixed
+*/
+function config(string $arquivo_config):mixed
+{
+    $arquivo = pasta_app("/Config/$arquivo_config.php");
+
+    if (!is_file($arquivo)) {
+        throw new Exception("O arquivo de configuração desejado não foi encontrado em '$arquivo'.");
+    }
+
+    return require $arquivo;
+}
