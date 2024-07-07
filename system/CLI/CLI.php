@@ -209,7 +209,7 @@ class CLI
                     break;
                 }
 
-                if (in_array($_fornalha_entrada, ['cls', 'clear'])) {
+                if (in_array($_fornalha_entrada, ['cls', 'clear', 'limpar'])) {
                     // Comando para limpar a tela no terminal
                     if (PHP_OS_FAMILY === 'Windows') {
                         pclose(popen("cls", "w"));
