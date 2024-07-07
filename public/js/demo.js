@@ -29,5 +29,5 @@ onClick('#ajax', function() {
 
 onClick('#toast', function() {
     const datetime = new Date()
-    novo_toast(`são ${datetime.getHours()}:${datetime.getMinutes()}:${datetime.getSeconds()}`)
+    toast(`são ${datetime.getHours()}:${datetime.getMinutes()}:${datetime.getSeconds()}`)
 })

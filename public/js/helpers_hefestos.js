@@ -324,7 +324,7 @@ function paraCentavos(reais) {
  * @param {string} header_secundario Mensagem secundária do header
  * @author Brunoggdev
 */
-function novo_toast(corpo, cor_bg = 'success', header_principal = 'Mensagem', header_secundario = 'agora' ) {
+function toast(corpo, cor_bg = 'success', header_principal = 'Mensagem', header_secundario = 'agora' ) {
     const toast_id = 'toast-' + Date.now()
 
     const toast = `
