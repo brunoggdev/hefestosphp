@@ -1,5 +1,7 @@
 <?php
 
+define('VERSAO_HEFESTOSPHP', '1.2.4');
+
 if( PHP_VERSION < '8.0.0'){
     die('HefestosPHP precisa do PHP na versão 8.0.0 ou mais alta.');
 }
@@ -9,10 +11,11 @@ set_error_handler(function($errno, $errstr, $errfile, $errline){
     throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
 });
 
-define('VERSAO_HEFESTOSPHP', 1.1);
 
 // Acessa as constantes do app
 require __DIR__ . '/../../app/Config/constantes.php';
+
+date_default_timezone_set(TIMEZONE);
 
 // Carregando autoload do composer caso exista ou do Hefestos caso contrário
 if (file_exists($composer_autoload = PASTA_RAIZ . '/vendor/autoload.php')) {
