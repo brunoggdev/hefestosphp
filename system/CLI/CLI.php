@@ -110,9 +110,6 @@ class CLI
         }
 
         $tipo_arquivo = ucfirst($tipo_arquivo);
-        if($tipo_arquivo !== 'Tabela' && $tipo_arquivo !== 'Js'){
-            $nome = ucfirst($nome);
-        }
 
         $caminho = match ($tipo_arquivo) {
             'Controller' =>  PASTA_RAIZ . 'app/Controllers/',
@@ -125,6 +122,16 @@ class CLI
         $template = ($tipo_arquivo == 'Controller' && $flags == '--recurso') ? 'ControllerRecurso' : $tipo_arquivo;
 
         $template = require "templates/$template.php";
+
+        if (str_contains($nome, '/')) {
+            $caminho = dirname($caminho.$nome).'/';
+            $nome = basename($caminho.$nome);
+        }
+
+        if($tipo_arquivo !== 'Tabela' && $tipo_arquivo !== 'Js'){
+            $nome = ucfirst($nome);
+        }
+
         if($tipo_arquivo == 'Model'){
             // sem sufixo model
             $tabela = str_ends_with($tabela = strtolower($nome), 'model') ? substr($tabela, 0, -5) : $tabela;
@@ -140,12 +147,12 @@ class CLI
         }
 
         if(!is_dir($caminho)){
-            mkdir($caminho);
+            mkdir($caminho, recursive: true);
         }
 
         $extensao = strtolower($tipo_arquivo) == 'js' ? '.js' : '.php';
 
-        if ( file_put_contents("$caminho$nome$extensao", $arquivo) ) {
+        if ( file_put_contents($caminho.$nome.$extensao, $arquivo) ) {
             $resposta = "\n\033[92m# $tipo_arquivo $nome criado com sucesso em: \n\033[0m$caminho$nome$extensao.\n\n";
         } else {
             $resposta = "\n\033[91m# Algo deu errado ao gerar o $tipo_arquivo.\n\033[0m";
