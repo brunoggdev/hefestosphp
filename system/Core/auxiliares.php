@@ -386,6 +386,24 @@ function query_string(?string $chave = null):?string
 
 
 /**
+ * Verifica se a requisição atual foi feita com AJAX 
+ * (baseado nos cabeçalhso X-Requested-With e Sec-Fetch-Mode)
+ * 
+ * ** ATENÇÃO: CABEÇALHOS NEM SEMPRE PODEM SER CONFIADOS E, PORTANTO, O MESMO VALE PARA ESSA FUNÇÃO **
+ * @author Brunoggdev
+*/
+function ajax() {
+
+    $requested_with_XMLHttpRequest = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest';
+    $sec_fetch_mode = isset($_SERVER['HTTP_SEC_FETCH_MODE']) ? $_SERVER['HTTP_SEC_FETCH_MODE'] : '';
+
+    return $requested_with_XMLHttpRequest || $sec_fetch_mode !== 'navigate';
+}
+
+
+
+
+/**
 * Adiciona um input hidden para especificar o tipo de requisicao desejado
 * @author Brunoggdev
 */
