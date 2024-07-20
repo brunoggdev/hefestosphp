@@ -31,6 +31,20 @@ function base_url(caminho_opcional = '') {
 
 
 /**
+ * Função de callback usada para tratar o envio de um formulário.
+ * 
+ * @callback FormCallback
+ * @param {Object} form - O objeto que representa o formulário.
+ * @param {string} form.action - A URL para a qual o formulário será enviado.
+ * @param {string} form.method - O método HTTP a ser usado para o envio do formulário (por exemplo, 'GET', 'POST').
+ * @param {object} form.data - Os dados do formulário a serem enviados.
+ */
+
+
+
+
+
+/**
  * Atalho para uma requisição AJAX com jQuery. A URL_BASE será adicionada automaticamente se o endpoint informado não começar com http ou https.
  * @param {string} metodo - Método HTTP da requisição (por exemplo, 'GET', 'POST', etc.).
  * @param {string} endpoint - URL da requisição.
@@ -53,7 +67,7 @@ function requisicaoAjax(metodo, endpoint, dados, callback) {
         data: dados,
         success: (resposta, texto, jqXHR) => callback(resposta, jqXHR.status, jqXHR.statusText),
         // Note que pode definir uma função para tratar todos os erros http da requisição como códigos 4xx ou 5xx
-        error: (jqXHR) =>  {
+        error: (jqXHR) => {
             if (typeof tratar_erros_http_jquery === 'function') {
                 return tratar_erros_http_jquery(jqXHR.responseJSON || {}, jqXHR.status, jqXHR.statusText)
             }
@@ -424,7 +438,7 @@ function paraCentavos(reais) {
  * @param {string} header_secundario Mensagem secundária do header
  * @author Brunoggdev
 */
-function toast(corpo, cor_bg = 'success', header_principal = 'Mensagem', header_secundario = 'agora' ) {
+function toast(corpo, cor_bg = 'success', header_principal = 'Mensagem', header_secundario = 'agora') {
     const toast_id = 'toast-' + Date.now()
 
     const toast = `
@@ -441,6 +455,39 @@ function toast(corpo, cor_bg = 'success', header_principal = 'Mensagem', header_
     </div>
   `
 
-  $('#toast-container').append(toast)
-  bootstrap.Toast.getOrCreateInstance(`#${toast_id}`).show()
+    $('#toast-container').append(toast)
+    bootstrap.Toast.getOrCreateInstance(`#${toast_id}`).show()
+}
+
+
+
+/**
+ * Impede a submissão do formulário informado e executa uma callback em seu lugar, 
+ * esta que receberá um objeto com as informações do formulário em questão (data, action e method).
+ * @param {string} seletor_jquery seletor de elemento tal qual jquery
+ * @param {FormCallback} callback
+ * @author Brunoggdev
+*/
+function form(seletor_jquery, callback) {
+    $(seletor_jquery).off('submit').on('submit', function (e) {
+        e.preventDefault()
+
+        let form = {
+            action: $(this).attr('action') || '',
+            method: $(this).attr('method') || 'get',
+            data: $(this).serializeArray().reduce((obj, item) => {
+                if (obj[item.name]) {
+                    if (!Array.isArray(obj[item.name])) {
+                        obj[item.name] = [obj[item.name]];
+                    }
+                    obj[item.name].push(item.value);
+                } else {
+                    obj[item.name] = item.value;
+                }
+                return obj;
+            }, {})
+        }
+
+        callback(form)
+    })
 }
