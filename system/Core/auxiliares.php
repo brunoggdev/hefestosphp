@@ -370,10 +370,44 @@ function url_contem(string $parte):bool
 
 
 /**
+ * Acessa a query string da URL e retorna a chave desejada 
+ * ou inteira se uma não for informada (ou null caso não existam);
+ * @author Brunoggdev
+*/
+function query_string(?string $chave = null):?string
+{
+    if ($chave) {
+        return $_GET[$chave] ?? null;
+    }
+
+    return $_SERVER['QUERY_STRING'] ?? null;
+}
+
+
+
+/**
+ * Verifica se a requisição atual foi feita com AJAX 
+ * (baseado nos cabeçalhso X-Requested-With e Sec-Fetch-Mode)
+ * 
+ * ** ATENÇÃO: CABEÇALHOS NEM SEMPRE PODEM SER CONFIADOS E, PORTANTO, O MESMO VALE PARA ESSA FUNÇÃO **
+ * @author Brunoggdev
+*/
+function ajax() {
+
+    $requested_with_XMLHttpRequest = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest';
+    $sec_fetch_mode = isset($_SERVER['HTTP_SEC_FETCH_MODE']) ? $_SERVER['HTTP_SEC_FETCH_MODE'] : '';
+
+    return $requested_with_XMLHttpRequest || $sec_fetch_mode !== 'navigate';
+}
+
+
+
+
+/**
 * Adiciona um input hidden para especificar o tipo de requisicao desejado
 * @author Brunoggdev
 */
-function metodo_http(string $metodo_http):string
+function form_metodo_http(string $metodo_http):string
 {
     $metodo_http = strtoupper($metodo_http);
     return "<input type='hidden' name='_method' value=$metodo_http>";
@@ -393,7 +427,7 @@ function abre_form(string $metodo_http, string $action):string
         $retorno = "<form action=$action method=$metodo_http>";
     }else{
         $retorno = "<form action=$action method=POST>";
-        $retorno .= "\n" . metodo_http($metodo_http);
+        $retorno .= "\n" . form_metodo_http($metodo_http);
     }
 
     return $retorno;
