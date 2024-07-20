@@ -26,10 +26,10 @@ function base_url(caminho_opcional = '') {
  * @param {string} metodo - Método HTTP da requisição (por exemplo, 'GET', 'POST', etc.).
  * @param {string} endpoint - URL da requisição.
  * @param {object} dados - Dados a serem enviados no corpo da requisição. Pode ser um objeto ou `null` para requisições GET.
- * @param {function(object, number, string):void} callback - Função a ser executada com a resposta da requisição. Recebe três argumentos:
+ * @param {RespostaJquery} callback - Função a ser executada com a resposta da requisição. Recebe três argumentos:
  *   - `resposta` (object): O corpo da resposta da requisição.
  *   - `status` (number): O código de status HTTP da resposta.
- *   - `statusText` (string): A frase razão do status HTTP.
+ *   - `frase_razao` (string): A frase razão do status HTTP.
  * @returns O objeto jQuery da requisição.
  * @author Brunoggdev
  */
@@ -37,26 +37,38 @@ function requisicaoAjax(metodo, endpoint, dados, callback) {
     endpoint = endpoint.startsWith('http://') || endpoint.startsWith('https://')
         ? endpoint
         : BASE_URL + endpoint;
-    console.log(callback)
+
     return $.ajax({
         url: endpoint,
         type: metodo,
         data: dados,
         success: (resposta, texto, jqXHR) => callback(resposta, jqXHR.status, jqXHR.statusText),
-        // sinta-se a vontade para alterar como quer lidar com os erros
-        error: (jqXHR) =>  callback(jqXHR.responseJSON || {}, jqXHR.status, jqXHR.statusText)
+        error: (jqXHR) =>  {
+            if (typeof tratar_erros_http_jquery === 'function') {
+                return tratar_erros_http_jquery(jqXHR.responseJSON || {}, jqXHR.status, jqXHR.statusText)
+            }
+
+            callback(jqXHR.responseJSON || {}, jqXHR.status, jqXHR.statusText)
+        }
     });
 }
 
-
+/**
+ * Função de callback usada para tratar a resposta da requisição.
+ * 
+ * @callback RespostaJquery
+ * @param {Object} resposta - O objeto de resposta.
+ * @param {number} status - O código de status HTTP.
+ * @param {string} frase_razao - O texto padrão do status HTTP.
+ */
 
 /**
  * Atalho para uma requisição GET com jQuery. A URL_BASE será adicionada automaticamente se o endpoint informado não começar com http ou https.
  * @param {string} endpoint - URL da requisição.
- * @param {function(object, number, string):void} callback - Função a ser executada com o retorno. Recebe três argumentos:
+ * @param {RespostaJquery} callback - Função a ser executada com o retorno. Recebe três argumentos:
  *   - `resposta` (object): O corpo da resposta da requisição.
  *   - `status` (number): O código de status HTTP da resposta.
- *   - `statusText` (string): A frase razão do status HTTP.
+ *   - `frase_razao` (string): A frase razão do status HTTP.
  * @returns O objeto jQuery da requisição.
  * @author Brunoggdev
  */
@@ -68,10 +80,10 @@ function requisicaoGet(endpoint, callback) {
  * Atalho para uma requisição POST com jQuery. A URL_BASE será adicionada automaticamente se o endpoint informado não começar com http ou https.
  * @param {string} endpoint - URL da requisição.
  * @param {object} dados - Dados a serem enviados no corpo da requisição.
- * @param {function(object, number, string):void} callback - Função a ser executada com o retorno. Recebe três argumentos:
+ * @param {RespostaJquery} callback - Função a ser executada com o retorno. Recebe três argumentos:
  *   - `resposta` (object): O corpo da resposta da requisição.
  *   - `status` (number): O código de status HTTP da resposta.
- *   - `statusText` (string): A frase razão do status HTTP.
+ *   - `frase_razao` (string): A frase razão do status HTTP.
  * @returns O objeto jQuery da requisição.
  * @author Brunoggdev
  */
@@ -83,10 +95,10 @@ function requisicaoPost(endpoint, dados, callback) {
  * Atalho para uma requisição PUT com jQuery. A URL_BASE será adicionada automaticamente se o endpoint informado não começar com http ou https.
  * @param {string} endpoint - URL da requisição.
  * @param {object} dados - Dados a serem enviados no corpo da requisição.
- * @param {function(object, number, string):void} callback - Função a ser executada com o retorno. Recebe três argumentos:
+ * @param {RespostaJquery} callback - Função a ser executada com o retorno. Recebe três argumentos:
  *   - `resposta` (object): O corpo da resposta da requisição.
  *   - `status` (number): O código de status HTTP da resposta.
- *   - `statusText` (string): A frase razão do status HTTP.
+ *   - `frase_razao` (string): A frase razão do status HTTP.
  * @returns O objeto jQuery da requisição.
  * @author Brunoggdev
  */
@@ -98,10 +110,10 @@ function requisicaoPut(endpoint, dados, callback) {
  * Atalho para uma requisição PATCH com jQuery. A URL_BASE será adicionada automaticamente se o endpoint informado não começar com http ou https.
  * @param {string} endpoint - URL da requisição.
  * @param {object} dados - Dados a serem enviados no corpo da requisição.
- * @param {function(object, number, string):void} callback - Função a ser executada com o retorno. Recebe três argumentos:
+ * @param {RespostaJquery} callback - Função a ser executada com o retorno. Recebe três argumentos:
  *   - `resposta` (object): O corpo da resposta da requisição.
  *   - `status` (number): O código de status HTTP da resposta.
- *   - `statusText` (string): A frase razão do status HTTP.
+ *   - `frase_razao` (string): A frase razão do status HTTP.
  * @returns O objeto jQuery da requisição.
  * @author Brunoggdev
  */
@@ -113,10 +125,10 @@ function requisicaoPatch(endpoint, dados, callback) {
  * Atalho para uma requisição DELETE com jQuery. A URL_BASE será adicionada automaticamente se o endpoint informado não começar com http ou https.
  * @param {string} endpoint - URL da requisição.
  * @param {object} dados - Dados a serem enviados no corpo da requisição.
- * @param {function(object, number, string):void} callback - Função a ser executada com o retorno. Recebe três argumentos:
+ * @param {RespostaJquery} callback - Função a ser executada com o retorno. Recebe três argumentos:
  *   - `resposta` (object): O corpo da resposta da requisição.
  *   - `status` (number): O código de status HTTP da resposta.
- *   - `statusText` (string): A frase razão do status HTTP.
+ *   - `frase_razao` (string): A frase razão do status HTTP.
  * @returns O objeto jQuery da requisição.
  * @author Brunoggdev
  */
