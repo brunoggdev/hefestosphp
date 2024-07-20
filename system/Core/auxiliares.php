@@ -370,10 +370,26 @@ function url_contem(string $parte):bool
 
 
 /**
+ * Acessa a query string da URL e retorna a chave desejada 
+ * ou inteira se uma não for informada (ou null caso não existam);
+ * @author Brunoggdev
+*/
+function query_string(?string $chave = null):?string
+{
+    if ($chave) {
+        return $_GET[$chave] ?? null;
+    }
+
+    return $_SERVER['QUERY_STRING'] ?? null;
+}
+
+
+
+/**
 * Adiciona um input hidden para especificar o tipo de requisicao desejado
 * @author Brunoggdev
 */
-function metodo_http(string $metodo_http):string
+function form_metodo_http(string $metodo_http):string
 {
     $metodo_http = strtoupper($metodo_http);
     return "<input type='hidden' name='_method' value=$metodo_http>";
@@ -393,7 +409,7 @@ function abre_form(string $metodo_http, string $action):string
         $retorno = "<form action=$action method=$metodo_http>";
     }else{
         $retorno = "<form action=$action method=POST>";
-        $retorno .= "\n" . metodo_http($metodo_http);
+        $retorno .= "\n" . form_metodo_http($metodo_http);
     }
 
     return $retorno;
