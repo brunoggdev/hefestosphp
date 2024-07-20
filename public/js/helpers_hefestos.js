@@ -20,6 +20,15 @@ function base_url(caminho_opcional = '') {
 
 
 
+/**
+ * Função de callback usada para tratar a resposta da requisição.
+ * 
+ * @callback RespostaJquery
+ * @param {Object} resposta - O objeto de resposta.
+ * @param {number} status - O código de status HTTP.
+ * @param {string} frase_razao - O texto padrão do status HTTP.
+ */
+
 
 /**
  * Atalho para uma requisição AJAX com jQuery. A URL_BASE será adicionada automaticamente se o endpoint informado não começar com http ou https.
@@ -43,6 +52,7 @@ function requisicaoAjax(metodo, endpoint, dados, callback) {
         type: metodo,
         data: dados,
         success: (resposta, texto, jqXHR) => callback(resposta, jqXHR.status, jqXHR.statusText),
+        // Note que pode definir uma função para tratar todos os erros http da requisição como códigos 4xx ou 5xx
         error: (jqXHR) =>  {
             if (typeof tratar_erros_http_jquery === 'function') {
                 return tratar_erros_http_jquery(jqXHR.responseJSON || {}, jqXHR.status, jqXHR.statusText)
@@ -53,14 +63,8 @@ function requisicaoAjax(metodo, endpoint, dados, callback) {
     });
 }
 
-/**
- * Função de callback usada para tratar a resposta da requisição.
- * 
- * @callback RespostaJquery
- * @param {Object} resposta - O objeto de resposta.
- * @param {number} status - O código de status HTTP.
- * @param {string} frase_razao - O texto padrão do status HTTP.
- */
+
+
 
 /**
  * Atalho para uma requisição GET com jQuery. A URL_BASE será adicionada automaticamente se o endpoint informado não começar com http ou https.
@@ -75,6 +79,9 @@ function requisicaoAjax(metodo, endpoint, dados, callback) {
 function requisicaoGet(endpoint, callback) {
     return requisicaoAjax('GET', endpoint, {}, callback);
 }
+
+
+
 
 /**
  * Atalho para uma requisição POST com jQuery. A URL_BASE será adicionada automaticamente se o endpoint informado não começar com http ou https.
@@ -91,6 +98,9 @@ function requisicaoPost(endpoint, dados, callback) {
     return requisicaoAjax('POST', endpoint, dados, callback);
 }
 
+
+
+
 /**
  * Atalho para uma requisição PUT com jQuery. A URL_BASE será adicionada automaticamente se o endpoint informado não começar com http ou https.
  * @param {string} endpoint - URL da requisição.
@@ -105,6 +115,10 @@ function requisicaoPost(endpoint, dados, callback) {
 function requisicaoPut(endpoint, dados, callback) {
     return requisicaoAjax('PUT', endpoint, dados, callback);
 }
+
+
+
+
 
 /**
  * Atalho para uma requisição PATCH com jQuery. A URL_BASE será adicionada automaticamente se o endpoint informado não começar com http ou https.
@@ -121,6 +135,10 @@ function requisicaoPatch(endpoint, dados, callback) {
     return requisicaoAjax('PATCH', endpoint, dados, callback);
 }
 
+
+
+
+
 /**
  * Atalho para uma requisição DELETE com jQuery. A URL_BASE será adicionada automaticamente se o endpoint informado não começar com http ou https.
  * @param {string} endpoint - URL da requisição.
@@ -135,6 +153,8 @@ function requisicaoPatch(endpoint, dados, callback) {
 function requisicaoDelete(endpoint, dados, callback) {
     return requisicaoAjax('DELETE', endpoint, dados, callback);
 }
+
+
 
 
 /**
