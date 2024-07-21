@@ -37,7 +37,8 @@ function base_url(caminho_opcional = '') {
  * @param {Object} form - O objeto que representa o formulário.
  * @param {string} form.action - A URL para a qual o formulário será enviado.
  * @param {string} form.method - O método HTTP a ser usado para o envio do formulário (por exemplo, 'GET', 'POST').
- * @param {object} form.data - Os dados do formulário a serem enviados.
+ * @param {object} form.dados - Os dados do formulário a serem enviados.
+ * @param {funcion} form.resetar - Dispara o evento de "reset" do formulário.
  */
 
 
@@ -308,6 +309,38 @@ function modal(id_modal) {
 
 
 
+
+
+/**
+ * Adiciona um novo toast com o conteúdo desejado na stack
+ * @param {string} corpo Mensagem do corpo do toast
+ * @param {string} header_principal Mensagem principal do header
+ * @param {string} header_secundario Mensagem secundária do header
+ * @author Brunoggdev
+*/
+function toast(corpo, cor_bg = 'success', header_principal = 'Mensagem', header_secundario = 'agora') {
+    const toast_id = 'toast-' + Date.now()
+
+    const toast = `
+      <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" id="${toast_id}">
+        <div class="toast-header bg-${cor_bg}">
+            <img src="favicon.ico" class="rounded me-2">
+            <strong class="me-auto">${header_principal}</strong>
+            <small class="text-body-secondary">${header_secundario}</small>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            ${corpo}
+        </div>
+    </div>
+  `
+
+    $('#toast-container').append(toast)
+    bootstrap.Toast.getOrCreateInstance(`#${toast_id}`).show()
+}
+
+
+
 /**
  * Atalho para abrir a modal de alerta
  * @param {string} texto mensagem do corpo da modal (pode ser em formato html)
@@ -431,35 +464,6 @@ function paraCentavos(reais) {
 }
 
 
-/**
- * Adiciona um novo toast com o conteúdo desejado na stack
- * @param {string} corpo Mensagem do corpo do toast
- * @param {string} header_principal Mensagem principal do header
- * @param {string} header_secundario Mensagem secundária do header
- * @author Brunoggdev
-*/
-function toast(corpo, cor_bg = 'success', header_principal = 'Mensagem', header_secundario = 'agora') {
-    const toast_id = 'toast-' + Date.now()
-
-    const toast = `
-      <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" id="${toast_id}">
-        <div class="toast-header bg-${cor_bg}">
-            <img src="favicon.ico" class="rounded me-2">
-            <strong class="me-auto">${header_principal}</strong>
-            <small class="text-body-secondary">${header_secundario}</small>
-            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        <div class="toast-body">
-            ${corpo}
-        </div>
-    </div>
-  `
-
-    $('#toast-container').append(toast)
-    bootstrap.Toast.getOrCreateInstance(`#${toast_id}`).show()
-}
-
-
 
 /**
  * Impede a submissão do formulário informado e executa uma callback em seu lugar, 
@@ -472,10 +476,12 @@ function form(seletor_jquery, callback) {
     $(seletor_jquery).off('submit').on('submit', function (e) {
         e.preventDefault()
 
+        const el = $(this)
+
         let form = {
-            action: $(this).attr('action') || '',
-            method: $(this).attr('method') || 'get',
-            data: $(this).serializeArray().reduce((obj, item) => {
+            action: el.attr('action') || '',
+            method: el.attr('method') || 'get',
+            dados: el.serializeArray().reduce((obj, item) => {
                 if (obj[item.name]) {
                     if (!Array.isArray(obj[item.name])) {
                         obj[item.name] = [obj[item.name]];
@@ -485,9 +491,10 @@ function form(seletor_jquery, callback) {
                     obj[item.name] = item.value;
                 }
                 return obj;
-            }, {})
+            }, {}),
+            resetar: () => el.get(0).reset()
         }
 
-        callback(form)
+        callback.call(this, form)
     })
 }
