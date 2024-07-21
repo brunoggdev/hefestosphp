@@ -1,27 +1,15 @@
 <?php
 
-namespace Hefestos\Core; 
+namespace Hefestos\Core;
+
+use Hefestos\Rotas\Requisicao;
 
 abstract class Controller
 {
-    /**
-    * Retorna parametros enviados por post já higienizados.
-    * @param array|string|null $index Index para resgatar do $_POST.
-    * @author Brunoggdev
-    */
-    public function dadosPost(null|string|array $index = null, $higienizar = true):mixed
-    {
-       $retorno = match ( gettype($index) ) {
-           'string' => $_POST[$index]??null,
-           'array' => array_intersect_key($_POST, array_flip($index)),
-           default => $_POST
-       };
+    protected Requisicao $requisicao;
 
-        if(isset($retorno['_method'])){
-            unset($retorno['_method']);
-        }
-       
-       return $higienizar ? higienizar($retorno) : $retorno;
+    public function __construct(?Requisicao $requisicao = null) {
+        $this->requisicao = $requisicao ?? Requisicao::instancia();
     }
 
 
@@ -31,16 +19,17 @@ abstract class Controller
     */
     public function dadosGet(null|string|array $index = null, $higienizar = true):mixed
     {
-        $retorno = match ( gettype($index) ) {
-            'string' => $_GET[$index]??null,
-            'array' => array_intersect_key($_GET, array_flip($index)),
-            default => $_GET
-        };
-        
-        if(isset($retorno['_method'])){
-            unset($retorno['_method']);
-        }
-        
-        return $higienizar ? higienizar($retorno) : $retorno;
+        return $this->requisicao->dadosGet($index, $higienizar);
+    }
+
+
+    /**
+    * Retorna parametros enviados por post já higienizados.
+    * @param array|string|null $index Index para resgatar do $_POST.
+    * @author Brunoggdev
+    */
+    public function dadosPost(null|string|array $index = null, $higienizar = true):mixed
+    {
+       return $this->requisicao->dadosPost($index, $higienizar);
     }
 }
