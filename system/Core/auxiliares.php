@@ -4,9 +4,9 @@ use Hefestos\Core\Controller;
 use Hefestos\Core\Model;
 use Hefestos\Database\Database;
 use Hefestos\Database\Tabela;
+use Hefestos\Ferramentas\ClienteHttp;
 use Hefestos\Rotas\Redirecionar;
 use Hefestos\Ferramentas\Colecao;
-use Hefestos\Ferramentas\Requisicao;
 use Hefestos\Ferramentas\Sessao;
 
 /* ----------------------------------------------------------------------
@@ -283,28 +283,27 @@ function sessao(string|false $chave = false):mixed
 
 
 /**
-* Atalho para interagir com a classe de Requisicao para 
+* Atalho para interagir com a classe de ClienteHttp para 
 * realizar uma requisicao get simples; 
-* Se precisar de mais controle instancie a classe manualmente
+* `Se precisar de mais controle instancie a classe manualmente`.
 * @author Brunoggdev
 */
-function requisicao_get(string $endpoint):Requisicao
+function requisicao_get(string $endpoint):ClienteHttp
 {
-    return (new Requisicao())->get($endpoint);
+    return (new ClienteHttp())->get($endpoint);
 }
 
 
 /**
-* Atalho para interagir com a classe de Requisicao para 
+* Atalho para interagir com a classe de ClienteHttp para 
 * realizar uma requisicao post simples; 
-* Se precisar de mais controle instancie a classe manualmente
+* `Se precisar de mais controle instancie a classe manualmente.`
 * @author Brunoggdev
 */
-function requisicao_post(string $endpoint, array|string $dados):Requisicao
+function requisicao_post(string $endpoint, array|string $dados):ClienteHttp
 {
-    return (new Requisicao())->post($endpoint, $dados);
+    return (new ClienteHttp())->post($endpoint, $dados);
 }
-
 
 /**
 * Higieniza o parametro informado.
