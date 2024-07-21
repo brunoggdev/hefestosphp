@@ -4,10 +4,11 @@ use Hefestos\Core\Controller;
 use Hefestos\Core\Model;
 use Hefestos\Database\Database;
 use Hefestos\Database\Tabela;
+use Hefestos\Ferramentas\ClienteHttp;
 use Hefestos\Rotas\Redirecionar;
 use Hefestos\Ferramentas\Colecao;
-use Hefestos\Ferramentas\Requisicao;
 use Hefestos\Ferramentas\Sessao;
+use Hefestos\Rotas\Requisicao;
 
 /* ----------------------------------------------------------------------
 Arquivo de funções auxiliares padrões do HefestosPHP.
@@ -18,13 +19,13 @@ utilize o arquivo auxiliares.php encontrado na pasta app.
 
 
 /**
-* Retorna o caminho da pasta app concatenado ou não 
-* com um parametero opcional de caminho adicional
-* @author Brunoggdev
-*/
-function pasta_raiz(string $caminho_extra = ''):string
+ * Retorna o caminho da pasta app concatenado ou não 
+ * com um parametero opcional de caminho adicional
+ * @author Brunoggdev
+ */
+function pasta_raiz(string $caminho_extra = ''): string
 {
-    if(!str_starts_with($caminho_extra, '/')){
+    if (!str_starts_with($caminho_extra, '/')) {
         $caminho_extra = '/' . $caminho_extra;
     }
 
@@ -34,13 +35,13 @@ function pasta_raiz(string $caminho_extra = ''):string
 
 
 /**
-* Retorna o caminho da pasta app concatenado ou não 
-* com um parametero opcional de caminho adicional
-* @author Brunoggdev
-*/
-function pasta_app(string $caminho_extra = ''):string
+ * Retorna o caminho da pasta app concatenado ou não 
+ * com um parametero opcional de caminho adicional
+ * @author Brunoggdev
+ */
+function pasta_app(string $caminho_extra = ''): string
 {
-    if(!str_starts_with($caminho_extra, '/')){
+    if (!str_starts_with($caminho_extra, '/')) {
         $caminho_extra = '/' . $caminho_extra;
     }
 
@@ -50,13 +51,13 @@ function pasta_app(string $caminho_extra = ''):string
 
 
 /**
-* Retorna o caminho da pasta public concatenado ou não 
-* com um parametero opcional de caminho adicional
-* @author Brunoggdev
-*/
-function pasta_public(string $caminho_extra = ''):string
+ * Retorna o caminho da pasta public concatenado ou não 
+ * com um parametero opcional de caminho adicional
+ * @author Brunoggdev
+ */
+function pasta_public(string $caminho_extra = ''): string
 {
-    if(!str_starts_with($caminho_extra, '/')){
+    if (!str_starts_with($caminho_extra, '/')) {
         $caminho_extra = '/' . $caminho_extra;
     }
 
@@ -66,11 +67,11 @@ function pasta_public(string $caminho_extra = ''):string
 
 
 /**
-* Retorna a url base do app concatenada ou não 
-* com um parametero opcional de caminho adicional
-* @author Brunoggdev
-*/
-function url_base(string $caminho_extra = ''):string
+ * Retorna a url base do app concatenada ou não 
+ * com um parametero opcional de caminho adicional
+ * @author Brunoggdev
+ */
+function url_base(string $caminho_extra = ''): string
 {
     $url_completa = rtrim(URL_BASE, '/') . '/' . ltrim($caminho_extra, '/');
 
@@ -87,28 +88,28 @@ function url_base(string $caminho_extra = ''):string
 
 
 /**
-* "Die and Dump"
-*
-* Interrompe a execução do app onde quer que for chamada e
-* imprime o que for passado como parametro opcional para debug.
-* @author Brunoggdev
-*/
+ * "Die and Dump"
+ *
+ * Interrompe a execução do app onde quer que for chamada e
+ * imprime o que for passado como parametro opcional para debug.
+ * @author Brunoggdev
+ */
 function dd(mixed ...$params)
 {
     $terminal =  http_response_code() === false;
 
-    if(!$terminal){
+    if (!$terminal) {
         echo '<pre>';
     }
 
     echo  $terminal ? PHP_EOL : '<br>';
-    
+
     foreach ($params as $param) {
         if (is_string($param)) {
-            $param = htmlspecialchars($param, ENT_QUOTES, 'UTF-8'); 
+            $param = htmlspecialchars($param, ENT_QUOTES, 'UTF-8');
         }
         var_dump($param);
-        echo  $terminal ? PHP_EOL.PHP_EOL : '<br><hr><br>';
+        echo  $terminal ? PHP_EOL . PHP_EOL : '<br><hr><br>';
     }
 
     exit;
@@ -119,8 +120,8 @@ function dd(mixed ...$params)
 /**
  * Atalho conveniente para retornar uma instancia do controller desejada
  * @author Brunoggdev
-*/
-function controller(string $controller):Controller
+ */
+function controller(string $controller): Controller
 {
     $controller = "\\App\\Controllers\\$controller";
     return new $controller;
@@ -131,8 +132,8 @@ function controller(string $controller):Controller
 /**
  * Atalho conveniente para retornar uma instancia da model desejada
  * @author Brunoggdev
-*/
-function model(string $model, ?Database $db = null):Model
+ */
+function model(string $model, ?Database $db = null): Model
 {
     $model = "\\App\\Models\\$model";
     return new $model($db);
@@ -141,10 +142,10 @@ function model(string $model, ?Database $db = null):Model
 
 
 /**
-* Retorna o conteúdo da view especificada, podendo receber um array de dados a serem utilizados nela
-* @author Brunoggdev
-*/
-function view(string $nome_view, ?array $dados = []):string
+ * Retorna o conteúdo da view especificada, podendo receber um array de dados a serem utilizados nela
+ * @author Brunoggdev
+ */
+function view(string $nome_view, ?array $dados = []): string
 {
     // toraando o array de dados em variaveis disponíveis na view;
     extract($dados);
@@ -173,12 +174,12 @@ function view(string $nome_view, ?array $dados = []):string
  * o código http de status da resposta (200 padrão) e
  * define também o cabeçalho apropriado.
  * @author Brunoggdev
-*/
-function json(mixed $param, int $codigo_http = 200, $flags = JSON_PRETTY_PRINT):string
+ */
+function json(mixed $param, int $codigo_http = 200, $flags = JSON_PRETTY_PRINT): string
 {
     header('Content-Type: application/json');
     http_response_code($codigo_http);
- 
+
     return json_encode($param, $flags);
 }
 
@@ -188,8 +189,8 @@ function json(mixed $param, int $codigo_http = 200, $flags = JSON_PRETTY_PRINT):
  * Retorna uma string com o conteúdo de um componente especificado se existir ou vazia caso contrário.
  * Também receber um array associativo de dados a serem utilizados.
  * @author Brunoggdev
-*/
-function componente(string $nome_componente, ?array $dados = []):string
+ */
+function componente(string $nome_componente, ?array $dados = []): string
 {
     $componente = "/componentes/$nome_componente";
     $componente_existe = file_exists(pasta_app("Views/$componente.php"));
@@ -202,8 +203,8 @@ function componente(string $nome_componente, ?array $dados = []):string
  * Retorna uma string com o conteúdo de um componente especificado ou exceção se não existir.
  * Também receber um array associativo de dados a serem utilizados. 
  * @author Brunoggdev
-*/
-function comp(string $nome_componente, ?array $dados = []):string
+ */
+function comp(string $nome_componente, ?array $dados = []): string
 {
     $componente = "/componentes/$nome_componente";
 
@@ -218,16 +219,16 @@ function comp(string $nome_componente, ?array $dados = []):string
  * Retorna a string para importação do arquivo JavaScript na pasta publica 'js/' 
  * com o nome informado (se existir), podendo "defer".
  * @author Brunoggdev
-*/
-function importar_js(string $nome_arquivo, bool $defer = false):string
+ */
+function importar_js(string $nome_arquivo, bool $defer = false): string
 {
     $arquivo = "js/$nome_arquivo.js";
 
     if (!file_exists(pasta_public($arquivo))) {
         return '';
     }
-    
-    return '<script '.($defer?'defer ':'').' src="'.url_base("$arquivo?v=").VERSAO_APP.'"></script>';
+
+    return '<script ' . ($defer ? 'defer ' : '') . ' src="' . url_base("$arquivo?v=") . VERSAO_APP . '"></script>';
 }
 
 
@@ -235,8 +236,8 @@ function importar_js(string $nome_arquivo, bool $defer = false):string
  * Define o código http desejado e para a execução; Opcionalmente
  * envia também uma string de resposta (pode ser uma view);
  * @author Brunoggdev
-*/
-function abortar(int $codigo_http, string $retorno = ''):void
+ */
+function abortar(int $codigo_http, string $retorno = ''): void
 {
     // limpa o buffer de saída se estiver ativo
     if (ob_get_status()) {
@@ -250,15 +251,15 @@ function abortar(int $codigo_http, string $retorno = ''):void
 
 
 /**
-* Redireciona o usuario para a rota informada, 
-* além de atualizar o código http (302 por padrão).
-* @author Brunoggdev
-*/
-function redirecionar(string $url = '', int $codigo = 302):Redirecionar
+ * Redireciona o usuario para a rota informada, 
+ * além de atualizar o código http (302 por padrão).
+ * @author Brunoggdev
+ */
+function redirecionar(string $url = '', int $codigo = 302): Redirecionar
 {
     $redirecionar = new Redirecionar();
 
-    if(! empty($url) ){
+    if (!empty($url)) {
         $redirecionar->para($url, $codigo);
     }
 
@@ -267,13 +268,13 @@ function redirecionar(string $url = '', int $codigo = 302):Redirecionar
 
 
 /**
-* Retorna uma instancia da Sessao ou pega um 
-* elemento da sessão caso alguma chave seja passada
-* (retorna null se não houver para a chave indormada).
-* @return Sessao 
-* @author Brunoggdev
-*/
-function sessao(string|false $chave = false):mixed
+ * Retorna uma instancia da Sessao ou pega um 
+ * elemento da sessão caso alguma chave seja passada
+ * (retorna null se não houver para a chave indormada).
+ * @return Sessao 
+ * @author Brunoggdev
+ */
+function sessao(string|false $chave = false): mixed
 {
     $sessao = new Sessao();
 
@@ -283,43 +284,43 @@ function sessao(string|false $chave = false):mixed
 
 
 /**
-* Atalho para interagir com a classe de Requisicao para 
-* realizar uma requisicao get simples; 
-* Se precisar de mais controle instancie a classe manualmente
-* @author Brunoggdev
-*/
-function requisicao_get(string $endpoint):Requisicao
+ * Atalho para interagir com a classe de ClienteHttp para 
+ * realizar uma requisicao get simples; 
+ * `Se precisar de mais controle instancie a classe manualmente`.
+ * @author Brunoggdev
+ */
+function requisicao_get(string $endpoint): ClienteHttp
 {
-    return (new Requisicao())->get($endpoint);
+    return (new ClienteHttp())->get($endpoint);
 }
 
 
 /**
-* Atalho para interagir com a classe de Requisicao para 
-* realizar uma requisicao post simples; 
-* Se precisar de mais controle instancie a classe manualmente
-* @author Brunoggdev
-*/
-function requisicao_post(string $endpoint, array|string $dados):Requisicao
+ * Atalho para interagir com a classe de ClienteHttp para 
+ * realizar uma requisicao post simples; 
+ * `Se precisar de mais controle instancie a classe manualmente.`
+ * @author Brunoggdev
+ */
+function requisicao_post(string $endpoint, array|string $dados): ClienteHttp
 {
-    return (new Requisicao())->post($endpoint, $dados);
+    return (new ClienteHttp())->post($endpoint, $dados);
 }
 
-
 /**
-* Higieniza o parametro informado.
-* Se for um array, todos os campos serão higienizados de forma recursiva.
-* @author Brunoggdev
-*/
-function higienizar(null|string|array $param):null|string|array
+ * Higieniza o parametro informado (com strip_tags).
+ * Se for um array, todos os campos serão higienizados de forma recursiva.
+ * @link https://www.php.net/manual/en/function.strip-tags.php Mais informações sobre strip_tags.
+ * @author Brunoggdev
+ */
+function higienizar(null|string|array $param): null|string|array
 {
 
-    if( is_null($param) ){
+    if (is_null($param)) {
         return null;
     }
 
-    
-    if( is_string($param) ){
+
+    if (is_string($param)) {
         return strip_tags($param);
     }
 
@@ -327,9 +328,9 @@ function higienizar(null|string|array $param):null|string|array
     // item em si e não apenas uma cópia dele;
     foreach ($param as &$item) {
         if (is_array($item)) {
-          $item = higienizar($item);
+            $item = higienizar($item);
         } else {
-          $item = strip_tags($item);
+            $item = strip_tags($item);
         }
     }
 
@@ -339,10 +340,10 @@ function higienizar(null|string|array $param):null|string|array
 
 
 /**
-* Retorna a criptografia da senha informada no padrão adotado pelo PHP
-* @author Brunoggdev
-*/
-function encriptar(string $senha):string
+ * Retorna a criptografia da senha informada no padrão adotado pelo PHP
+ * @author Brunoggdev
+ */
+function encriptar(string $senha): string
 {
     return password_hash($senha, PASSWORD_DEFAULT);
 }
@@ -350,64 +351,54 @@ function encriptar(string $senha):string
 
 
 /**
-* Checa se a url atual corresponde à informada
-* @author Brunoggdev
-*/
-function url_igual(string $url):bool
+ * Checa se a url atual corresponde à informada
+ * @author Brunoggdev
+ */
+function url_igual(string $url): bool
 {
     return $_SERVER['REQUEST_URI'] === $url;
 }
 
 
 /**
-* Checa se a url atual contém a parte informada
-* @author Brunoggdev
-*/
-function url_contem(string $parte):bool
+ * Checa se a url atual contém a parte informada
+ * @author Brunoggdev
+ */
+function url_contem(string $parte): bool
 {
     return str_contains($_SERVER['REQUEST_URI'], $parte);
 }
+
+
+
+/**
+ * Atalho para acessar informações sobre a requisição atual
+ */
+function requisicao(): Requisicao
+{
+    return Requisicao::instancia();
+}
+
 
 
 /**
  * Acessa a query string da URL e retorna a chave desejada 
  * ou inteira se uma não for informada (ou null caso não existam);
  * @author Brunoggdev
-*/
-function query_string(?string $chave = null):?string
+ */
+function query_string(?string $chave = null, $higienizar = false): ?string
 {
-    if ($chave) {
-        return $_GET[$chave] ?? null;
-    }
-
-    return $_SERVER['QUERY_STRING'] ?? null;
+    return Requisicao::query_string($chave, $higienizar);
 }
 
 
 
+
 /**
- * Verifica se a requisição atual foi feita com AJAX 
- * (baseado nos cabeçalhso X-Requested-With e Sec-Fetch-Mode)
- * 
- * ** ATENÇÃO: CABEÇALHOS NEM SEMPRE PODEM SER CONFIADOS E, PORTANTO, O MESMO VALE PARA ESSA FUNÇÃO **
+ * Adiciona um input hidden para especificar o tipo de requisicao desejado
  * @author Brunoggdev
-*/
-function ajax() {
-
-    $requested_with_XMLHttpRequest = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest';
-    $sec_fetch_mode = isset($_SERVER['HTTP_SEC_FETCH_MODE']) ? $_SERVER['HTTP_SEC_FETCH_MODE'] : '';
-
-    return $requested_with_XMLHttpRequest || $sec_fetch_mode !== 'navigate';
-}
-
-
-
-
-/**
-* Adiciona um input hidden para especificar o tipo de requisicao desejado
-* @author Brunoggdev
-*/
-function form_metodo_http(string $metodo_http):string
+ */
+function form_metodo_http(string $metodo_http): string
 {
     $metodo_http = strtoupper($metodo_http);
     return "<input type='hidden' name='_method' value=$metodo_http>";
@@ -415,17 +406,17 @@ function form_metodo_http(string $metodo_http):string
 
 
 /**
-* Abre uma tag form e configura os atributos action e method
-* @author Brunoggdev
-*/
-function abre_form(string $metodo_http, string $action):string
+ * Abre uma tag form e configura os atributos action e method
+ * @author Brunoggdev
+ */
+function abre_form(string $metodo_http, string $action): string
 {
     $metodo_http = strtoupper($metodo_http);
     $action = str_starts_with($action, 'http') ? $action : url_base($action);
-    
-    if($metodo_http === 'GET' || $metodo_http === 'POST'){
+
+    if ($metodo_http === 'GET' || $metodo_http === 'POST') {
         $retorno = "<form action=$action method=$metodo_http>";
-    }else{
+    } else {
         $retorno = "<form action=$action method=POST>";
         $retorno .= "\n" . form_metodo_http($metodo_http);
     }
@@ -435,20 +426,20 @@ function abre_form(string $metodo_http, string $action):string
 
 
 /**
-* Fecha a tag form
-* @author Brunoggdev
-*/
-function fecha_form():string
+ * Fecha a tag form
+ * @author Brunoggdev
+ */
+function fecha_form(): string
 {
     return '</form>';
 }
 
 
 /**
-* Atalho para interagir com a classe Colecao
-* @author Brunoggdev
-*/
-function coletar(array $array):Colecao
+ * Atalho para interagir com a classe Colecao
+ * @author Brunoggdev
+ */
+function coletar(array $array): Colecao
 {
     return new Colecao($array);
 }
@@ -457,8 +448,8 @@ function coletar(array $array):Colecao
  * Atalho conveniente para retornar uma instancia da Database;
  * Pode receber um array de configuração customizado.
  * @author Brunoggdev
-*/
-function db(?array $config = null):Database
+ */
+function db(?array $config = null): Database
 {
     return Database::instancia($config);
 }
@@ -467,12 +458,12 @@ function db(?array $config = null):Database
 /**
  * Retorna a SQL da tabela com o nome desejado (sem a data de criação)
  * @author Brunoggdev
-*/
+ */
 function tabela(string $tabela): Tabela
 {
     $tabelas = array_values(array_filter(
         scandir(pasta_app('Database/tabelas')),
-        fn($item) =>  str_ends_with($item, "$tabela.php")
+        fn ($item) =>  str_ends_with($item, "$tabela.php")
     ));
 
     if (empty($tabelas)) {
@@ -486,13 +477,13 @@ function tabela(string $tabela): Tabela
  * Extrai e retorna um item de um array associativo, modificando o array original 
  * (retorna null caso a chave não seja encontrada.)
  * @author Brunoggdev
-*/
-function extrair_item(string $chave, array &$array):mixed
+ */
+function extrair_item(string $chave, array &$array): mixed
 {
-    if(isset($array[$chave])){
+    if (isset($array[$chave])) {
         $item = $array[$chave];
         unset($array[$chave]);
-    }else{
+    } else {
         $item = null;
     }
     return $item;
@@ -504,8 +495,9 @@ function extrair_item(string $chave, array &$array):mixed
  * O arquivo terá no nome a data que o log foi gerado e 
  * ficará localizado na pasta logs que será automaticamente 
  * criada na raíz do projeto se já não existir
-*/
-function gerar_log(string $mensagem) {
+ */
+function gerar_log(string $mensagem)
+{
 
     $caminho_logs = PASTA_RAIZ . '/logs';
     if (!is_dir($caminho_logs)) {
@@ -531,8 +523,8 @@ function gerar_log(string $mensagem) {
  * Acessa o arquivo de configuração desejado e devolve o que quer que seja retornado nele 
  * (geralmente um array, mas não limitado a isso).
  * @return array|mixed
-*/
-function config(string $arquivo_config):mixed
+ */
+function config(string $arquivo_config): mixed
 {
     $arquivo = pasta_app("/Config/$arquivo_config.php");
 
