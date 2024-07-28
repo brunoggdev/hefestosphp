@@ -86,6 +86,10 @@ final class App
         $url = parse_url($_SERVER['REQUEST_URI'])['path'];
         $metodo_http = strip_tags($_POST['_method'] ?? $_SERVER['REQUEST_METHOD']);
 
+        if (isset($_POST['_method'])) {
+            unset($_POST['_method']);
+        }
+        
         return [$url, $metodo_http];
     }
 
