@@ -27,5 +27,8 @@ if (file_exists($composer_autoload = PASTA_RAIZ . '/vendor/autoload.php')) {
 // funções auxiliares nativas do HefestosPHP
 require 'auxiliares.php';
 
-// funções auxiliares do usuário do HefestosPHP
+// funções auxiliares do usuário
 require PASTA_RAIZ . 'app/auxiliares.php';
+
+// carregar roteador
+require PASTA_RAIZ . '/app/Config/rotas.php';

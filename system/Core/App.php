@@ -3,6 +3,7 @@
 namespace Hefestos\Core;
 
 use Hefestos\Rotas\Redirecionar;
+use Hefestos\Rotas\Roteador;
 
 final class App
 {
@@ -18,11 +19,9 @@ final class App
             if (MANUTENCAO) {
                 $app->encerrar( view('manutencao') );
             }
-
-            require PASTA_RAIZ . '/app/Config/rotas.php';
             
             $requisicao = $app->analisarRequisicao();
-            $acao = $rotas->mapear(...$requisicao);
+            $acao = Roteador::instancia()->mapear(...$requisicao);
             $resposta = $app->processarResposta(...$acao);
 
             $app->encerrar($resposta);
@@ -58,14 +57,19 @@ final class App
         }
 
         if (! is_scalar($resposta)) {
-            $reflection = new \ReflectionFunction($acao);
+            
+            throw new \Exception("O tipo de resposta retornada não pode ser enviado. Tipo '"
+            . ucfirst(get_debug_type($resposta)) . "' retornado. Normalmente você deve retornar uma string, int ou um Redirecionar.");
 
-            $funcao = $reflection->getName();
-            $arquivo = basename($reflection->getFileName());
-            $linha = $reflection->getStartLine();
 
-            throw new \Exception("O tipo de resposta retornada não pode ser exibido. Normalmente você deve retornar uma string, int ou um redirecionar(). Tipo '"
-            . ucfirst(get_debug_type($resposta)) . "' recebido de '$funcao', na linha '$linha' do arquivo '$arquivo'.");
+            // $reflection = new \ReflectionFunction($acao);
+
+            // $funcao = $reflection->getName();
+            // $arquivo = basename($reflection->getFileName());
+            // $linha = $reflection->getStartLine();
+
+            // throw new \Exception("O tipo de resposta retornada não pode ser exibido. Normalmente você deve retornar uma string, int ou um redirecionar(). Tipo '"
+            // . ucfirst(get_debug_type($resposta)) . "' recebido de '$funcao', na linha '$linha' do arquivo '$arquivo'.");
             
         }
 
