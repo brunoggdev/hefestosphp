@@ -1,8 +1,6 @@
 <?php
 return <<<EOT
     <?php
-    
-    namespace App\Database;
 
     use Hefestos\Database\Tabela;
 

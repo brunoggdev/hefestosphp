@@ -3,7 +3,7 @@
 return <<<EOT
     <?php
 
-    namespace App\Controllers;
+    namespace App\Controllers{namespace};
 
     use Hefestos\Core\Controller;
 
