@@ -2,7 +2,7 @@
 return <<<EOT
     <?php
 
-    namespace App\Models;
+    namespace App\Models{namespace};
 
     use Hefestos\Core\Model;
     

@@ -3,7 +3,7 @@
 return <<<EOT
     <?php
 
-    namespace App\Filtros;
+    namespace App\Filtros{namespace};
 
     class {nome}
     {

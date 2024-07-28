@@ -124,8 +124,12 @@ class CLI
         $template = require "templates/$template.php";
 
         if (str_contains($nome, '/')) {
-            $caminho = dirname($caminho.$nome).'/';
+            $caminho_full = dirname($caminho.$nome);
             $nome = basename($caminho.$nome);
+            $namespace = '\\' . str_replace('/', '\\', ucwords(substr($caminho_full, strlen($caminho)), '/'));
+            $caminho = $caminho_full . '/';
+        }else{
+            $namespace = '';
         }
 
         if($tipo_arquivo !== 'Tabela' && $tipo_arquivo !== 'Js'){
@@ -137,9 +141,9 @@ class CLI
             $tabela = str_ends_with($tabela = strtolower($nome), 'model') ? substr($tabela, 0, -5) : $tabela;
             // plural
             $tabela = str_ends_with($tabela, 's') ? $tabela : $tabela.'s';
-            $arquivo = str_replace(['{nome}', '{tabela}'], [$nome, $tabela], $template);
+            $arquivo = str_replace(['{nome}', '{namespace}', '{tabela}'], [$nome, $namespace, $tabela], $template);
         }else{
-            $arquivo = str_replace('{nome}', $nome, $template);
+            $arquivo = str_replace(['{nome}', '{namespace}'], [$nome, $namespace], $template);
         }
 
         if($tipo_arquivo === 'Tabela'){
