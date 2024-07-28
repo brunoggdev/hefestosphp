@@ -19,10 +19,6 @@ class Requisicao
             default => $_GET
         };
 
-        if (isset($retorno['_method'])) {
-            unset($retorno['_method']);
-        }
-
         return $higienizar ? higienizar($retorno) : $retorno;
     }
 
@@ -40,10 +36,6 @@ class Requisicao
             'array' => array_intersect_key($_POST, array_flip($index)),
             default => $_POST
         };
-
-        if (isset($retorno['_method'])) {
-            unset($retorno['_method']);
-        }
 
         return $higienizar ? higienizar($retorno) : $retorno;
     }
@@ -67,17 +59,30 @@ class Requisicao
 
 
     /**
-     * Acessa a query string da URL e retorna a chave desejada 
-     * ou inteira se uma não for informada (ou null caso não existam);
+     * Retorna a query string da URL ou null caso não exista.
      * @author Brunoggdev
      */
-    public static function query_string(?string $chave = null, $higienizar = false): ?string
+    public static function query_string(): ?string
     {
-        $retorno = $chave
-            ? $_GET[$chave] ?? null
-            : $_SERVER['QUERY_STRING'] ?? null;
+        return $_SERVER['QUERY_STRING'] ?? null;
+    }
 
-        return $higienizar ? higienizar($retorno) : $retorno;
+
+    /**
+     * Verifica (sem acessar) se existem quaisquer dados na requisição post ou, opcionalmente, em uma chave especifica
+    */
+    public static function temPost(?string $chave):bool
+    {
+        return $chave ? isset($_POST[$chave]) : !empty($_POST);
+    }
+
+
+    /**
+     * Verifica (sem acessar) se existem quaisquer dados na requisição get ou, opcionalmente, em uma chave especifica
+    */
+    public static function temGet(?string $chave):bool
+    {
+        return $chave ? isset($_GET[$chave]) : !empty($_GET);
     }
 
 
