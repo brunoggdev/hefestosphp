@@ -31,10 +31,15 @@ class Requisicao
      */
     public static function dadosPost(null|string|array $index = null, $higienizar = true): mixed
     {
+        // Decidindo se a fonte de dados é campos de formulário POST padrão ou um JSON
+        $fonte_de_dados = str_contains($_SERVER['CONTENT_TYPE'] ?? '', "application/json")
+            ? json_decode(file_get_contents('php://input'), true) ?? []
+            : $_POST;
+
         $retorno = match (gettype($index)) {
-            'string' => $_POST[$index] ?? null,
-            'array' => array_intersect_key($_POST, array_flip($index)),
-            default => $_POST
+            'string' => $fonte_de_dados[$index] ?? null,
+            'array' => array_intersect_key($fonte_de_dados, array_flip($index)),
+            default => $fonte_de_dados
         };
 
         return $higienizar ? higienizar($retorno) : $retorno;
@@ -70,8 +75,8 @@ class Requisicao
 
     /**
      * Verifica (sem acessar) se existem quaisquer dados na requisição post ou, opcionalmente, em uma chave especifica
-    */
-    public static function temPost(?string $chave):bool
+     */
+    public static function temPost(?string $chave): bool
     {
         return $chave ? isset($_POST[$chave]) : !empty($_POST);
     }
@@ -79,14 +84,14 @@ class Requisicao
 
     /**
      * Verifica (sem acessar) se existem quaisquer dados na requisição get ou, opcionalmente, em uma chave especifica
-    */
-    public static function temGet(?string $chave):bool
+     */
+    public static function temGet(?string $chave): bool
     {
         return $chave ? isset($_GET[$chave]) : !empty($_GET);
     }
 
 
-    
+
     /**
      * Retorna a instancia da classe contendo informações sobre a requisição atual (singleton).
      * @author Brunoggdev
