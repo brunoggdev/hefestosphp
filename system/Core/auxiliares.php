@@ -99,7 +99,7 @@ function dd(mixed ...$params)
     $terminal =  http_response_code() === false;
 
     if (!$terminal) {
-        echo '<pre>';
+        echo '<html><pre>';
     }
 
     echo  $terminal ? PHP_EOL : '<br>';
@@ -533,4 +533,28 @@ function config(string $arquivo_config): mixed
     }
 
     return require $arquivo;
+}
+
+
+/**
+ * Acessa e retorna a chave desejada (ou null caso não exista) utilizando "dot notation"
+ * @author Brunoggdev
+ */
+function dot_notation(string $chaves, array $array)
+{
+    if (empty($chaves)) {
+        return null;
+    }
+
+    $chaves = explode('.', $chaves);
+
+    foreach ($chaves as $chave) {
+        if (isset($array[$chave])) {
+            $array = $array[$chave];
+        } else {
+            return null;
+        }
+    }
+
+    return $array;
 }
