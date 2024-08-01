@@ -312,21 +312,22 @@ function modal(id_modal) {
 
 
 /**
- * Adiciona um novo toast com o conteúdo desejado na stack
- * @param {string} corpo Mensagem do corpo do toast
- * @param {string} header_principal Mensagem principal do header
- * @param {string} header_secundario Mensagem secundária do header
+ * Adiciona um novo toast (notificação temporária) com o conteúdo desejado na pilha de toasts
+ * @param {string} corpo - Conteúdo da notificação, que pode estar em formato HTML.
+ * @param {string} cor_bs - Cor Bootstrap opcional para personalizar a cor da notificação.
+ * @param {string} header_principal - Texto opcional para o cabeçalho principal da notificação. O padrão é 'Mensagem'.
+ * @param {string} header_secundario - Texto opcional para o cabeçalho secundário da notificação. O padrão é 'agora'.
  * @author Brunoggdev
 */
-function toast(corpo, cor_bg = 'success', header_principal = 'Mensagem', header_secundario = 'agora') {
+function toast(corpo, cor_bs = '', header_principal = 'Mensagem', header_secundario = 'agora') {
     const toast_id = 'toast-' + Date.now()
 
     const toast = `
       <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" id="${toast_id}">
-        <div class="toast-header bg-${cor_bg}">
-            <img src="favicon.ico" class="rounded me-2">
+        <div class="toast-header text-bg-${cor_bs}">
+            <img src="favicon.ico" class="rounded me-2" style="max-height:20px; max-width:20px">
             <strong class="me-auto">${header_principal}</strong>
-            <small class="text-body-secondary">${header_secundario}</small>
+            <small class="">${header_secundario}</small>
             <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
         <div class="toast-body">
@@ -344,17 +345,19 @@ function toast(corpo, cor_bg = 'success', header_principal = 'Mensagem', header_
 /**
  * Atalho para abrir a modal de alerta
  * @param {string} texto mensagem do corpo da modal (pode ser em formato html)
+ * @param {string} cor_bs - Cor Bootstrap opcional para personalizar a cor da modal.
  * @param {function(object):void|false} fechar Funcao opcional quando fechar a modal
  * @author Brunoggdev
 */
-function alertar(texto, cor_bg_header = '', fechar = () => { }) {
+function alertar(texto, cor_bs = '', fechar = () => { }) {
     $('#alerta-hefestos-mensagem').html(texto)
-    $('#alerta-hefestos .modal-header').addClass(`bg-${cor_bg_header}`)
+    $('#alerta-hefestos .modal-header').addClass(`text-bg-${cor_bs}`)
 
     const alerta = modal('alerta-hefestos')
     alerta.hide()
 
     $('#alerta-hefestos').off('hidden.bs.modal').on('hidden.bs.modal', function () {
+        $('#alerta-hefestos .modal-header').removeClass(`text-bg-${cor_bs}`)
         fechar()
     })
 
@@ -368,19 +371,23 @@ function alertar(texto, cor_bg_header = '', fechar = () => { }) {
  * @param {string} texto mensagem do corpo da modal (pode ser em formato html)
  * @param {function(object):void} callback Funcao a ser executada caso confirme
  * @param {function(object):void|false} cancelar Funcao opcional para caso cancelar
+ * @param {string} cor_bs - Cor Bootstrap opcional para personalizar a cor da modal.
  * @author Brunoggdev
 */
-function confirmar(texto, callback, cancelar = () => { }) {
+function confirmar(texto, callback, cancelar = () => { }, cor_bs = '') {
     $('#confirmacao-hefestos-texto').html(texto)
+    $('#confirmacao-hefestos .modal-header').addClass(`text-bg-${cor_bs}`)
 
     const confirmacao = modal('confirmacao-hefestos')
     confirmacao.hide()
 
     onClick('#confirmacao-hefestos-confirmar', function () {
+        $('#confirmacao-hefestos .modal-header').removeClass(`text-bg-${cor_bs}`)
         callback()
         confirmacao.hide()
     })
     onClick('#confirmacao-hefestos-cancelar', function () {
+        $('#confirmacao-hefestos .modal-header').removeClass(`text-bg-${cor_bs}`)
         cancelar()
         confirmacao.hide()
     })
