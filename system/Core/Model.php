@@ -6,6 +6,8 @@ use Hefestos\Database\Database;
 
 abstract class Model 
 {
+    protected ?Database $db = null;
+
     /** Tabela do banco de dados ao qual o model está relacionado */
     protected string $tabela;
 
@@ -18,8 +20,12 @@ abstract class Model
      * invés da conexão padrão do sistema.
      * @author Brunoggdev
     */
-    public function __construct(private ?Database $db = null)
-    {}
+    public function __construct(?Database $db = null)
+    {
+        if (!is_null($db)) {
+            $this->db = $db;
+        }
+    }
 
 
     /**
