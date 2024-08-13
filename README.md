@@ -7,16 +7,4 @@ Um framework PHP em português com 0 dependências onde o intuito principal é d
 
 #### Documentação Online: <a href="https://brunoggdev.github.io/hefestosphp-docs/" target="_blank">brunoggdev.github.io/hefestosphp-docs/</a>
 
-
-# TO-DO (por prioridade)
-   - Documentar funções auxiliares
-   - Documentar funções API de esperar()
-   - Auxiliar de upload
-   - Auxiliar de validação
-   - Adicionar mais testes (corrigir contem())
-   - Adicionar mais metodos para colecoes
-   - Branch com sistemas de autenticação de usuario e roteamento padrão para páginas estáticas
-
-
-
 ##### *Obrigado aos madrigais por todo o enorme apoio e aos que carinhosamente conhecem o framework como "Fruno"
