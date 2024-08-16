@@ -30,5 +30,7 @@ require 'auxiliares.php';
 // funções auxiliares do usuário
 require PASTA_RAIZ . 'app/auxiliares.php';
 
+require_once PASTA_RAIZ . 'app/Config/inicializacao.php';
+
 // carregar roteador
 require PASTA_RAIZ . '/app/Config/rotas.php';
