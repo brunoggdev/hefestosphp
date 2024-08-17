@@ -197,11 +197,13 @@ class Database
      */
     public function update(array|object|null $params = null, array|string $where = []): bool
     {
+        // se a query estiver vazia o set() não foi chamado ainda
         if (empty($this->query)) {
             $this->set($params);
         }
 
-        if (empty($this->query) && !str_contains($this->query, 'WHERE')) {
+        // Se foi informado um where, nós o usaremos apenas se já não tiver algum definido anteriormente
+        if (!empty($where) && !str_contains($this->query, 'WHERE')) {
             $this->where($where);
         }
 
