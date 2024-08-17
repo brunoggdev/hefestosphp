@@ -1,6 +1,7 @@
 <?php
 
 use Hefestos\Core\Controller;
+use Hefestos\Core\Entidade;
 use Hefestos\Core\Model;
 use Hefestos\Database\Database;
 use Hefestos\Database\Tabela;
@@ -125,6 +126,17 @@ function controller(string $controller): Controller
 {
     $controller = "\\App\\Controllers\\$controller";
     return new $controller;
+}
+
+
+/**
+ * Atalho conveniente para retornar uma instancia do controller desejada
+ * @author Brunoggdev
+ */
+function entidade(string $entidade, mixed $dados = null): Entidade
+{
+    $entidade = "\\App\\Entidades\\$entidade";
+    return new $entidade($dados);
 }
 
 

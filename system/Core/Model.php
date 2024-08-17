@@ -4,7 +4,7 @@ namespace Hefestos\Core;
 
 use Hefestos\Database\Database;
 
-abstract class Model 
+abstract class Model
 {
     protected ?Database $db = null;
 
@@ -19,7 +19,7 @@ abstract class Model
      * Pode receber uma conexão alternativa com o banco para utilizar na model
      * invés da conexão padrão do sistema.
      * @author Brunoggdev
-    */
+     */
     public function __construct(?Database $db = null)
     {
         if (!is_null($db)) {
@@ -29,10 +29,10 @@ abstract class Model
 
 
     /**
-    * Retorna todas as linhas do Model em questão com todas as colunas
-    * @author Brunoggdev
-    */
-    public function todos(bool $coluna_unica = false):mixed
+     * Retorna todas as linhas do Model em questão com todas as colunas
+     * @author Brunoggdev
+     */
+    public function todos(bool $coluna_unica = false): mixed
     {
         return $this->db()->todos($coluna_unica);
     }
@@ -41,8 +41,8 @@ abstract class Model
     /**
      * Retorna toda a linha (ou coluna especifica) com o id informado.
      * @author Brunoggdev
-    */
-    public function buscar(int|string $id, ?string $coluna = null):mixed
+     */
+    public function buscar(int|string $id, ?string $coluna = null): mixed
     {
         return $this->db()->buscar($id, $coluna);
     }
@@ -50,28 +50,28 @@ abstract class Model
 
     /**
      * Retorna o primeiro resultado para o 'where' informado
-    */
-    public function primeiroOnde(array|string $where):mixed
+     */
+    public function primeiroOnde(array|string $where): mixed
     {
         return $this->db()->primeiroOnde($where);
     }
 
 
     /**
-    * Atalho para interagir com o método select do query builder
-    * @author Brunoggdev
-    */
-    public function select(array $colunas = ['*']):Database
+     * Atalho para interagir com o método select do query builder
+     * @author Brunoggdev
+     */
+    public function select(array $colunas = ['*']): Database
     {
         return $this->db()->select($colunas);
     }
 
 
     /**
-    * Atalho para interagir com o método where do query builder
-    * @author Brunoggdev
-    */
-    public function where(array|string $params):Database
+     * Atalho para interagir com o método where do query builder
+     * @author Brunoggdev
+     */
+    public function where(array|string $params): Database
     {
         return $this->select()->where($params);
     }
@@ -81,35 +81,68 @@ abstract class Model
      * Atalho para interagir com o método insert do query builder;
      * Retorna o id inserido (por padrão) ou um bool para sucesso ou falha.
      * @author Brunoggdev
-    */
-    public function insert(array|object $params, bool $retornar_id = true):string|bool
+     */
+    public function insert(array|object $params, bool $retornar_id = true): string|bool
     {
+        if ($params instanceof Entidade) {
+            $entidade = $params;
+            $params = $entidade->paraArray();
+            extrair_item($entidade->chavePrimaria(), $params);
+        }
+        
         return $this->db()->insert($params, $retornar_id);
+    }
+
+    
+    /**
+     * Atalho para interagir com o metodo set() do query builder (objetos tentarão ser convertidos para array)
+     */
+    public function set(array|object $params): Database
+    {
+        if ($params instanceof Entidade) {
+            $params = $params->paraArray();
+        }
+
+        return $this->db()->set($params);
     }
 
 
     /**
-     * Atalho para interagir com o método update do query builder
+     * Atalho para interagir com o método update() do query builder
      * e editar um registro, sendo a condição padrão o id;
      * @return bool true se sucesso, false caso contrário;
      * @author Brunoggdev
-    */
-    public function update(int|string|array $condicao, array $params):bool
+     */
+    public function update(array|object $params, array|string $where = []): bool
     {
-        $where = is_array($condicao) ? $condicao : ['id' => $condicao];
+        if ($params instanceof Entidade) {
+            $entidade = $params;
+            $params = $params->paraArray();
+
+            if (empty($where)) {
+                $where = [
+                    $entidade->chavePrimaria() => $entidade->paraArray()[$entidade->chavePrimaria()] ?? null
+                ];
+            }
+        }
+
 
         return $this->db()->update($params, $where);
     }
 
 
     /**
-    * Atalho para interagir com o método delete do query builder.
-    * Recebe o id da linha desejada para deletar ou uma condição diferente se desejar
-    * @author Brunoggdev
-    */
-    public function delete(int|string|array $condicao)
-    {
-        $where = is_numeric($condicao) ? ['id' => $condicao] : $condicao;
+     * Atalho para interagir com o método delete do query builder.
+     * Se apenas um número for informado na condição será assumido como da coluna "id"
+     * @author Brunoggdev
+     */
+    public function delete(int|string|array|object $condicao)
+    {   
+        $where = match (true) {
+            $condicao instanceof Entidade => [$condicao->chavePrimaria() => $condicao->paraArray()[$condicao->chavePrimaria()] ?? null],
+            is_numeric($condicao) => ['id' => $condicao],
+            default => $condicao
+        };
 
         return $this->db()->delete($where);
     }
@@ -118,28 +151,28 @@ abstract class Model
     /**
      * Retorna o último id inserido pela sql mais recente
      * @author Brunoggdev
-    */
-    public function idInserido():string|false
+     */
+    public function idInserido(): string|false
     {
         return $this->db()->idInserido();
     }
 
 
     /**
-    * Retorna os erros que ocorreram durante a execução da SQL
-    * @author Brunoggdev
-    */
-    public function erros():array
+     * Retorna os erros que ocorreram durante a execução da SQL
+     * @author Brunoggdev
+     */
+    public function erros(): array
     {
         return $this->db()->erros();
     }
 
 
     /**
-    * Define que o retorno da Database será um array associativo
-    * @author Brunoggdev
-    */
-    public function comoArray():self
+     * Define que o retorno da Database será um array associativo
+     * @author Brunoggdev
+     */
+    public function comoArray(): self
     {
         $this->db()->comoArray();
 
@@ -152,8 +185,8 @@ abstract class Model
      * O array de resultados será passado para o construtor da classe desejada.
      * @param string $classe SuaClasse::class - O "nome qualificado" da classe desejada
      * @author Brunoggdev
-    */
-    public function comoObjeto(string $classe):self
+     */
+    public function comoObjeto(string $classe): self
     {
         $this->db()->comoObjeto($classe);
 
@@ -164,17 +197,17 @@ abstract class Model
     /**
      * Retorna a instancia do query builder conecato ao banco de dados
      * @author Brunoggdev
-    */
-    public function db():Database
+     */
+    public function db(): Database
     {
         if (!is_null($this->db)) {
             return $this->db;
         }
-        
+
         $this->db = Database::instancia();
 
         $this->db->tabela($this->tabela);
-        
+
         if (isset($this->retorno_padrao) && class_exists($this->retorno_padrao)) {
             $this->db->comoObjeto($this->retorno_padrao);
         }
