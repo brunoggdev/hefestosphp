@@ -120,7 +120,10 @@ final class App
      */
     private function encerrar(string $resposta): void
     {
+        sessao()->limparSessoesFlash();
+
         echo $resposta;
+
         exit;
     }
 }
