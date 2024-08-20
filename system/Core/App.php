@@ -7,6 +7,9 @@ use Hefestos\Rotas\Roteador;
 
 final class App
 {
+
+    protected static array $excecoes = [];
+
     /**
      * Utiliza o roteador para buscar a devida resposta à requisicao.
      * @author Brunoggdev
@@ -26,6 +29,14 @@ final class App
 
             $app->encerrar($resposta);
         } catch (\Throwable $erro) {
+
+            foreach (static::$excecoes as $excecao => $tratador) {
+                if ($erro instanceof $excecao) {
+                    $tratador($erro);
+                    return;
+                }
+            }
+
             $app->lidarComErro($erro);
         }
     }
@@ -39,9 +50,15 @@ final class App
             ob_end_clean();
         }
 
-        $retorno = AMBIENTE === 'desenvolvimento' // se for desenvolvimento
-            ? view('debug', ['erro' => $erro])    // carregue view de debug com erros
-            : view($codigo_http);                 // e, se não, uma view de erro genérica
+        $retorno = match (true) {
+            requisicao()->ajax() => json(
+                ['status' => $codigo_http,'message' => $erro->getMessage()]
+                + (AMBIENTE === 'desenvolvimento' ? ['trace' => $erro->getTrace()] : [])
+            ),
+            AMBIENTE === 'desenvolvimento' => view('debug', ['erro' => $erro]),
+            AMBIENTE === 'producao' => view($codigo_http),
+            default => null
+        };
 
 
         if (AMBIENTE != 'desenvolvimento') {
@@ -62,6 +79,18 @@ final class App
 
 
         abortar($codigo_http, $retorno);
+    }
+
+
+
+    /**
+     * Permite definir funções para tratar exceções específicas no último nível
+     * @param string $nome_excecao O 'nome qualificado' da exceção a ser tratada (Ex: Exception::class)
+     * @param callable $tratador Função a ser invocada se a exceção informada não for tratada em um try/catch prévio (A Exceção será passado como argumento).
+     */
+    public static function tratarExcecao(string $nome_excecao, callable $tratador):void
+    {
+        self::$excecoes[$nome_excecao] = $tratador;
     }
 
 
