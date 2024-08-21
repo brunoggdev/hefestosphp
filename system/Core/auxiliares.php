@@ -191,7 +191,11 @@ function json(mixed $param, int $codigo_http = 200, $flags = JSON_PRETTY_PRINT):
 {
     header('Content-Type: application/json');
     http_response_code($codigo_http);
-
+    
+    if ($param instanceof Entidade) {
+        $param = $param->paraArray();
+    }
+    
     return json_encode($param, $flags);
 }
 
