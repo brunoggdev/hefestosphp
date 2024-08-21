@@ -1,7 +1,6 @@
 <?php
 
 use Hefestos\Core\Controller;
-use Hefestos\Core\Entidade;
 use Hefestos\Core\Model;
 use Hefestos\Database\Database;
 use Hefestos\Database\Tabela;
@@ -129,17 +128,6 @@ function controller(string $controller): Controller
 }
 
 
-/**
- * Atalho conveniente para retornar uma instancia do controller desejada
- * @author Brunoggdev
- */
-function entidade(string $entidade, mixed $dados = null): Entidade
-{
-    $entidade = "\\App\\Entidades\\$entidade";
-    return new $entidade($dados);
-}
-
-
 
 /**
  * Atalho conveniente para retornar uma instancia da model desejada
@@ -191,11 +179,7 @@ function json(mixed $param, int $codigo_http = 200, $flags = JSON_PRETTY_PRINT):
 {
     header('Content-Type: application/json');
     http_response_code($codigo_http);
-    
-    if ($param instanceof Entidade) {
-        $param = $param->paraArray();
-    }
-    
+
     return json_encode($param, $flags);
 }
 

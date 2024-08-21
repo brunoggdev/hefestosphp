@@ -66,8 +66,8 @@ class CLI
             $tipo_arquivo = readline('> ');
         }
 
-        if (! in_array(strtolower($tipo_arquivo), ['controller', 'model', 'filtro', 'tabela', 'js', 'entidade']) ) {
-            echo("\n\033[93m# O tipo de arquivo informado não parece válido. Qual deseja criar? [controller, model, filtro, tabela, js ou entidade].\033[0m\n\n");
+        if (! in_array(strtolower($tipo_arquivo), ['controller', 'model', 'filtro', 'tabela', 'js']) ) {
+            echo("\n\033[93m# O tipo de arquivo informado não parece válido. Qual deseja criar? [controller, model, filtro ou tabela].\033[0m\n\n");
             $tipo_arquivo = readline('> ');
             $this->criar($tipo_arquivo, $nome, $flags);
             return;
@@ -114,7 +114,6 @@ class CLI
         $caminho = match ($tipo_arquivo) {
             'Controller' =>  PASTA_RAIZ . 'app/Controllers/',
             'Model' => PASTA_RAIZ . 'app/Models/',
-            'Entidade' => PASTA_RAIZ . 'app/Entidades/',
             'Filtro' => PASTA_RAIZ . 'app/Filtros/',
             'Js' => PASTA_PUBLIC . '/js/',
             'Tabela' => PASTA_RAIZ . 'app/Database/tabelas/',
