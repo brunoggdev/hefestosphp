@@ -537,7 +537,8 @@ function config(string $arquivo_config): mixed
 
 
 /**
- * Acessa e retorna a chave desejada (ou null caso não exista) utilizando "dot notation"
+ * Acessa e retorna a chave desejada (ou null caso não exista) utilizando "dot notation" (chaves separadas por pontos)
+ * @example $chaves 'chave1.chave2.chave3' equivale a $array['chave1']['chave2']['chave3]
  * @author Brunoggdev
  */
 function dot_notation(string $chaves, array $array)
@@ -547,14 +548,15 @@ function dot_notation(string $chaves, array $array)
     }
 
     $chaves = explode('.', $chaves);
+    $retorno = $array;
 
     foreach ($chaves as $chave) {
-        if (isset($array[$chave])) {
-            $array = $array[$chave];
-        } else {
+        if (!isset($retorno[$chave])) {
             return null;
-        }
+        } 
+
+        $retorno = $retorno[$chave];
     }
 
-    return $array;
+    return $retorno;
 }
