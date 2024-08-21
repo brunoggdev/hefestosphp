@@ -524,15 +524,21 @@ function gerar_log(string $mensagem)
  * (geralmente um array, mas não limitado a isso).
  * @return array|mixed
  */
-function config(string $arquivo_config): mixed
+function config(string $config): mixed
 {
-    $arquivo = pasta_app("/Config/$arquivo_config.php");
+    if (str_contains($config, '.')) {
+        [$config, $chaves] = explode('.', $config, 2);
+    }
+
+    $arquivo = pasta_app("/Config/$config.php");
 
     if (!is_file($arquivo)) {
         throw new Exception("O arquivo de configuração desejado não foi encontrado em '$arquivo'.");
     }
 
-    return require $arquivo;
+    $arquivo = require $arquivo;
+
+    return isset($chaves) ? dot_notation($chaves, $arquivo) : $arquivo;
 }
 
 
