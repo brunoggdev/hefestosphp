@@ -536,20 +536,27 @@ function gerar_log(string $mensagem)
  * (geralmente um array, mas não limitado a isso).
  * @return array|mixed
  */
-function config(string $arquivo_config): mixed
+function config(string $config): mixed
 {
-    $arquivo = pasta_app("/Config/$arquivo_config.php");
+    if (str_contains($config, '.')) {
+        [$config, $chaves] = explode('.', $config, 2);
+    }
+
+    $arquivo = pasta_app("/Config/$config.php");
 
     if (!is_file($arquivo)) {
         throw new Exception("O arquivo de configuração desejado não foi encontrado em '$arquivo'.");
     }
 
-    return require $arquivo;
+    $arquivo = require $arquivo;
+
+    return isset($chaves) ? dot_notation($chaves, $arquivo) : $arquivo;
 }
 
 
 /**
- * Acessa e retorna a chave desejada (ou null caso não exista) utilizando "dot notation"
+ * Acessa e retorna a chave desejada (ou null caso não exista) utilizando "dot notation" (chaves separadas por pontos)
+ * @example $chaves 'chave1.chave2.chave3' equivale a $array['chave1']['chave2']['chave3]
  * @author Brunoggdev
  */
 function dot_notation(string $chaves, array $array)
@@ -559,14 +566,15 @@ function dot_notation(string $chaves, array $array)
     }
 
     $chaves = explode('.', $chaves);
+    $retorno = $array;
 
     foreach ($chaves as $chave) {
-        if (isset($array[$chave])) {
-            $array = $array[$chave];
-        } else {
+        if (!isset($retorno[$chave])) {
             return null;
-        }
+        } 
+
+        $retorno = $retorno[$chave];
     }
 
-    return $array;
+    return $retorno;
 }

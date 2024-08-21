@@ -5,12 +5,11 @@ namespace Hefestos\Ferramentas;
 class Sessao
 {
 
-
     /**
      * Inicia a sessão e a chave flash caso não estejam ativas
      * @author Brunoggdev
      */
-    public function __construct()
+    public static function iniciar()
     {
         if (session_status() !== PHP_SESSION_ACTIVE) {
             session_start();
@@ -25,7 +24,7 @@ class Sessao
      * Guarda um item na sessão
      * @author Brunoggdev
      */
-    public function guardar(string $chave, mixed $valor): void
+    public static function guardar(string $chave, mixed $valor): void
     {
         $_SESSION[$chave] = $valor;
     }
@@ -35,7 +34,7 @@ class Sessao
      * Pega um item da sessão, retorna null caso não exista
      * @author Brunoggdev
      */
-    public function pegar(string $chave, $higienizar = true): mixed
+    public static function pegar(string $chave, $higienizar = true): mixed
     {
         $retorno = $_SESSION[$chave] ?? null;
 
@@ -47,7 +46,7 @@ class Sessao
      * Verifica se o a chave desejada existe na sessão
      * @author Brunoggdev
      */
-    public function tem(string $chave): bool
+    public static function tem(string $chave): bool
     {
         return isset($_SESSION[$chave]);
     }
@@ -57,10 +56,10 @@ class Sessao
      * Adiciona um novo campo flash na sessão
      * @author Brunoggdev
      */
-    public function flash(string $chave, mixed $valor): void
+    public static function flash(string $chave, mixed $valor): void
     {
         // Adiciona item na sessão normalmente
-        $this->guardar($chave, $valor);
+        self::guardar($chave, $valor);
 
         // Marca que esse item é do tipo flash
         $_SESSION['__flash'][] = $chave;
@@ -72,7 +71,7 @@ class Sessao
      * de chaves caso seja informado um array de chaves
      * @author Brunoggdev
      */
-    public function limpar(string|array $chave): void
+    public static function limpar(string|array $chave): void
     {
         if (is_array($chave)) {
             foreach ($chave as $item) {
@@ -89,7 +88,7 @@ class Sessao
     /**
      * Limpa as chaves de sessão que foram marcadas como flash
      */
-    public function limparSessoesFlash()
+    public static function limparSessoesFlash()
     {
         foreach ($_SESSION['__flash'] as $chave) {
             // removendo a chave da sessão e sua marca como flash
@@ -100,10 +99,20 @@ class Sessao
 
 
     /**
+     * Update the current session id with a newly generated one
+     * @author Brunoggdev
+     */
+    public static function regenerarId(): void
+    {
+        session_regenerate_id(true);
+    }
+
+
+    /**
      * Destroi por completo a sessao
      * @author Brunoggdev
      */
-    public function destruir(): void
+    public static function destruir(): void
     {
         session_destroy();
     }
