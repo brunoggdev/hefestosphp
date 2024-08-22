@@ -74,6 +74,16 @@ class Requisicao
 
 
     /**
+     * Retorna o http referer (útil para saber de onde veio o request)
+     * @author Brunoggdev
+     */
+    public static function referer(): ?string
+    {
+        return $_SERVER['HTTP_REFERER'] ?? null;
+    }
+
+
+    /**
      * Verifica (sem acessar) se existem quaisquer dados na requisição post ou, opcionalmente, em uma chave especifica
      */
     public static function temPost(?string $chave): bool

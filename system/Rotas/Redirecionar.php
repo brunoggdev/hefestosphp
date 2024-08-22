@@ -34,4 +34,15 @@ class Redirecionar{
         sessao()->flash($chave, $valor);
         return $this;
     }
+
+
+    /**
+    * Define a url de retorno como a url que chamou o endpoint atual
+    * @author Brunoggdev
+    */
+    public function deVolta():self
+    {
+        $this->para(requisicao()->referer());
+        return $this;
+    }
 }

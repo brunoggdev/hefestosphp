@@ -12,13 +12,12 @@ Dessa forma, é necessário apenas baixar o arquivo zip ou criar um repositório
 
 Isso significa que o framework não necessita do composer, mas este pode sim ser utilizado para importar quaisquer outras bibliotecas que o usuário desejar.
 
-#### Documentação Online: <a href="https://brunoggdev.github.io/hefestosphp-docs/" target="_blank">brunoggdev.github.io/hefestosphp-docs/</a>
+- ##### Documentação Online: <a href="https://brunoggdev.github.io/hefestosphp-docs/" target="_blank">brunoggdev.github.io/hefestosphp-docs/</a>
 
-
+- ##### Duvidas, sugestões ou curiosidades? Sinta-se livre para entrar em contato através do e-mail brunoggdev@gmail.com.
 
 # Forje algo incrível!
 Sendo suas maiores inspirações o Laravel, framework para artesãos da web, e o CodeIgniter, HefestosPHP leva o nome do deus grego das forjas, dos artesãos e do fogo, não só fazendo alusão a estas inspirações mas também incentivando o iniciante a criar e experimentar.
 
 
 ##### *Obrigado aos madrigais por todo o enorme apoio e aos que carinhosamente conhecem o framework como "Fruno"
-

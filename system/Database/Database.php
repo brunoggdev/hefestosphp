@@ -6,9 +6,9 @@ use Exception;
 use PDO, PDOStatement;
 
 /**
-* Responsável pela conexão, montagem e execução de queries no banco de dados.
-* @author brunoggdev
-*/
+ * Responsável pela conexão, montagem e execução de queries no banco de dados.
+ * @author brunoggdev
+ */
 class Database
 {
     protected static ?self $instancia = null;
@@ -28,7 +28,7 @@ class Database
      * Pode receber uma conexão alternativa na forma de um array 
      * com as mesmas chaves do padrão na pasta config.
      * @author brunoggdev
-    */
+     */
     public function __construct(?array $db_config = null)
     {
         $db_config ??= config('database');
@@ -43,7 +43,7 @@ class Database
 
         $this->conexao = new PDO($dsn, $usuario, $senha, [
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-        ]);  
+        ]);
     }
 
 
@@ -52,14 +52,14 @@ class Database
     /**
      * Formata as informações de conexão com o banco, retornando o dsn, usuario e senha
      * @author Brunoggdev
-    */
-    private function formatarConexao(array $config):array
+     */
+    private function formatarConexao(array $config): array
     {
         $dsn = $this->driver_mysql
             ? "mysql:host=$config[host];dbname=$config[nome_db]"
             : 'sqlite:' . PASTA_RAIZ . $config['sqlite'];
 
-        return [$dsn, $config['usuario']??null, $config['senha']??null];
+        return [$dsn, $config['usuario'] ?? null, $config['senha'] ?? null];
     }
 
 
@@ -70,8 +70,8 @@ class Database
      * @param array $config Array associativo com as chaves 'driver' (sqlite ou mysql),
      * 'usuario', 'senha', 'host' e 'nome_db' se for mysql ou, caso contrário, 'sqlite' com o caminho do arquivo.
      * @author Brunoggdev
-    */
-    public static function instancia(?array $config = null):self
+     */
+    public static function instancia(?array $config = null): self
     {
         if (!is_null(self::$instancia)) {
             self::$instancia->tabela('');
@@ -90,8 +90,8 @@ class Database
     /**
      * Fecha a conexão com o banco de dados.
      * @author Brunoggdev
-    */
-    public function fechar():void
+     */
+    public function fechar(): void
     {
         $this->conexao = null;
         $this->query_info = null;
@@ -102,7 +102,7 @@ class Database
 
     /**
      * Define a tabela na qual o as próximas consultas serão executadas
-    */
+     */
     public function tabela(string $tabela): self
     {
         $this->tabela = $tabela;
@@ -114,12 +114,14 @@ class Database
 
 
     /**
-    * Adiciona um SELECT na consulta
-    * @author brunoggdev
-    */
-    public function select(array $colunas = ['*']): self
+     * Adiciona um SELECT na consulta
+     * @author brunoggdev
+     */
+    public function select(string|array $colunas = '*'): self
     {
-        $colunas = implode(', ', $colunas);
+        if (is_array($colunas)) {
+            $colunas = implode(', ', $colunas);
+        }
 
         $this->query = "SELECT $colunas FROM $this->tabela";
 
@@ -134,8 +136,8 @@ class Database
      * Se informado um objeto como parâmetro ele será convertido para array.
      * Retorna o id inserido (por padrão) ou um bool para sucesso ou falha.
      * @author brunoggdev
-    */
-    public function insert(array|object $params, bool $retornar_id = true):string|bool
+     */
+    public function insert(array|object $params, bool $retornar_id = true): string|bool
     {
         $this->params = (array) $params;
 
@@ -148,16 +150,16 @@ class Database
 
         return $retornar_id ? $this->idInserido() : $resultado;
     }
-   
-   
 
-   
+
+
+
     /**
      * Cria uma sql para DELETE
      * @return bool true se sucesso, false caso contrário;
      * @author Brunoggdev
-    */
-    public function delete(array|string $where):bool
+     */
+    public function delete(array|string $where): bool
     {
 
         $this->query = "DELETE FROM $this->tabela";
@@ -169,20 +171,42 @@ class Database
 
 
 
+    /**
+     * Define o SET de um UPDATE no SQL
+     */
+    public function set(array|object $params): self
+    {
+        if (empty($params)) {
+            return $this;
+        }
+
+        $this->params = (array) $params;
+
+        $novos_valores = implode(', ', array_map(fn($key) => "$key = :$key", array_keys($params)));
+
+        $this->query = "UPDATE $this->tabela SET $novos_valores";
+
+        return $this;
+    }
+
+
 
     /**
-    * Adiciona um UPDATE na consulta
-    * @author brunoggdev
-    */
-    public function update(array|object $params, array $where = []): bool
+     * Executa o UPDATE definido com o set() **OU** pelos parametros informados aqui
+     * @author brunoggdev
+     */
+    public function update(array|object|null $params = null, array|string $where = []): bool
     {
-        $this->params = (array) $params;
-    
-        $novos_valores = implode(', ', array_map(fn($key) => "$key = :$key", array_keys($params)));
-    
-        $this->query = "UPDATE $this->tabela SET $novos_valores";
-        $this->where($where);
-        
+        // se a query estiver vazia o set() não foi chamado ainda
+        if (empty($this->query)) {
+            $this->set($params);
+        }
+
+        // Se foi informado um where, nós o usaremos apenas se já não tiver algum definido anteriormente
+        if (!empty($where) && !str_contains($this->query, 'WHERE')) {
+            $this->where($where);
+        }
+
         return $this->executarQuery();
     }
 
@@ -190,13 +214,17 @@ class Database
 
 
     /**
-    * Adiciona um WHERE na consulta
-    * @param array|string $params string ou array associativo
-    * @example $params ['id' => '2'] equals: id = 2 in the sql
-    * @example $params ['id >=' => '1'] equals: id >= 1 in the sql
-    * @author brunoggdev
-    */
-    public function where(array|string $params): self
+     * Adiciona um WHERE na consulta.
+     * Suporta três sintaxes:
+     * - Se dois parametros forem informados serão tratados como coluna e valor;
+     * - Se apenas um for informado e for um array associativo as chave => valor serão coluna e valor;
+     * - Se apenas um for informado e for uma string será tratada como uma SQL pura (cuidado com SQL injection).
+     * Onde quer que seja informada a coluna ela pode ser acompanhada de operadores como '>', '!=', 'like' etc (padrão é =).
+     * @example $params ['id' => '2'] significa: id = 2 na sql
+     * @example $params ['id >=' => '1'] significa: id >= 1 na sql
+     * @author brunoggdev
+     */
+    public function where(array|string $params, ?mixed $valor = null): self
     {
         if (empty($params)) {
             return $this;
@@ -206,32 +234,36 @@ class Database
             $this->select();
         }
 
-        if (! str_contains($this->query, 'WHERE') ) {
+        if (! str_contains($this->query, 'WHERE')) {
             $this->query .= ' WHERE ';
         }
 
-        if(is_string($params)){
-            $this->query .= $params;
-            return $this;
+        if (is_string($params)) {
+            if (func_num_args() === 1) {
+                $this->query .= $params;
+                return $this;
+            }
+
+            $params = [$params => $valor];
         }
+
 
         foreach ($params as $key => $value) {
             // retirando pontos pois não são aceitos nas chaves de array
             $chave = str_replace('.', '', $key);
-            
+
             // Assume "=" caso nenhum operador seja informado no valor
-            if(!preg_match('/(=|<|>|<=|>=|like)$/i', $chave)){
+            if (!preg_match('/(=|<|>|<=|>=|like)$/i', $chave)) {
                 $this->params[] = $value;
                 $this->query .= "$key = ? ";
-            }else{
+            } else {
                 $this->params[] = $value;
                 $this->query .= "$chave ? ";
             }
-            
-            if($key !== array_key_last($params)){
+
+            if ($key !== array_key_last($params)) {
                 $this->query .= 'AND ';
             }
-
         }
 
         return $this;
@@ -239,16 +271,37 @@ class Database
 
 
 
-
-    /**
-    * Adiciona um OR na consulta e em seguida um where novamente
-    * @author Brunoggdev
-    */
-    public function orWhere(array $params):self
+    public function whereIn(string $coluna, array $valores): self
     {
+        if (empty($coluna) || empty($valores)) {
+            return $this;
+        }
+
+        if (empty($this->query)) {
+            $this->select();
+        }
+
+        if (! str_contains($this->query, 'WHERE')) {
+            $this->query .= ' WHERE ';
+        }
+
+        $this->params[] = implode(', ', $valores);
+        $this->query .= "$coluna IN (?) ";
+
+        return $this;
+    }
+
+
+    public function orWhereIn(string $coluna, array $valores): self
+    {
+        if (empty($coluna) || empty($valores)) {
+            return $this;
+        }
+
         $this->query .= ' OR ';
-        $this->where($params);
-        
+        $this->query .= "$coluna IN (?) ";
+        $this->params[] = implode(', ', $valores);
+
         return $this;
     }
 
@@ -256,10 +309,76 @@ class Database
 
 
     /**
-    * Adiciona um JOIN na consulta
-    * @author Brunoggdev
-    */
-    public function join(string $tabela_para_join, string $condicao, ?string $tipo_de_join = 'INNER'):self
+     * Adiciona um OR na consulta e em seguida um where novamente
+     * @author Brunoggdev
+     */
+    public function orWhere(array|string $params, ?mixed $valor = null): self
+    {
+        $this->query .= ' OR ';
+        $this->where($params, $valor);
+
+        return $this;
+    }
+
+
+
+    /**
+     * Adiciona um like na consulta para o valor informado
+     * @author Brunoggdev
+     */
+    public function like(string $coluna, mixed $valor): self
+    {
+        $this->where("$coluna like", $valor);
+
+        return $this;
+    }
+
+
+
+    /**
+     * Adiciona um OR na consulta e em seguida um like
+     * @author Brunoggdev
+     */
+    public function orLike(string $coluna, mixed $valor): self
+    {
+        $this->query .= ' OR ';
+        $this->where("$coluna like", $valor);
+
+        return $this;
+    }
+
+
+
+    /**
+     * Adiciona uma verificação de coluna com valor nulo na consulta
+     */
+    public function ondeForNulo(string $coluna): self
+    {
+        $this->where("$coluna IS NULL");
+
+        return $this;
+    }
+
+
+
+    /**
+     * Adiciona uma verificação de coluna com valor diferente de nulo na consulta
+     */
+    public function ondeNaoForNulo(string $coluna): self
+    {
+        $this->where("$coluna IS NOT NULL");
+
+        return $this;
+    }
+
+
+
+
+    /**
+     * Adiciona um JOIN na consulta
+     * @author Brunoggdev
+     */
+    public function join(string $tabela_para_join, string $condicao, ?string $tipo_de_join = 'INNER'): self
     {
         $this->query .= " $tipo_de_join JOIN $tabela_para_join ON $condicao";
 
@@ -270,20 +389,58 @@ class Database
 
 
     /**
-    * Adiciona um ORDER BY na query
-    * @author brunoggdev
-    */
-    public function orderBy(string $coluna, string $order = 'ASC'):self
+     * Adiciona um ORDER BY na query
+     * @author brunoggdev
+     */
+    public function orderBy(string $coluna, string $order = 'ASC'): self
     {
         if (empty($this->query)) {
-            $this->select(['*']);
+            $this->select('*');
         }
 
         $this->query .= "ORDER BY $coluna $order ";
-        
+
         return $this;
     }
 
+
+
+    /**
+     * Adiciona um GROUP BY na query
+     * @author brunoggdev
+     */
+    public function groupBy(string|array $colunas): self
+    {
+        if (empty($this->query)) {
+            $this->select('*');
+        }
+
+        if (is_array($colunas)) {
+            $colunas = implode(', ', $colunas);
+        }
+
+        $this->query .= "GROUP BY $colunas";
+
+        return $this;
+    }
+
+
+
+    /**
+     * Adiciona um LIMIT na query
+     * @author brunoggdev
+     */
+    public function limit(string|int $quantidade): self
+    {
+        if (empty($this->query)) {
+            $this->select('*');
+        }
+
+
+        $this->query .= "LIMIT $quantidade";
+
+        return $this;
+    }
 
 
 
@@ -294,7 +451,7 @@ class Database
      * @example $params ['id' => 1]
      * @return bool|PDOStatement false em caso de falha ou PDOStatement em caso de sucesso (que avalila para true)
      * @author brunoggdev
-    */
+     */
     public function executar(string $sql, array|object $params = []): bool|PDOStatement
     {
         $this->query = $sql;
@@ -314,16 +471,16 @@ class Database
     /**
      * Pega o primeiro resultado da consulta, podendo retornar uma coluna especifica
      * @author brunoggdev
-    */
+     */
     public function primeiro(?string $coluna = null): mixed
     {
         if (empty($this->query)) {
-            $this->select(['*']);
+            $this->select('*');
         }
-        
+
         $resultado = $this->executarQuery(true)->fetch($this->fetch_mode);
 
-        if($coluna){
+        if ($coluna) {
             return $resultado[$coluna] ?? null;
         }
 
@@ -338,11 +495,11 @@ class Database
      * @param bool $coluna_unica retorna diretamente os valores da coluna sendo buscada
      * @example $coluna_unica $db->tabela('pets')->select('nome')->todos(true);  //retorna diretamente um array com todos os nomes
      * @author brunoggdev
-    */
+     */
     public function todos(bool $coluna_unica = false): array
     {
         if (empty($this->query)) {
-            $this->select(['*']);
+            $this->select('*');
         }
 
         $fetch_mode = $coluna_unica ? PDO::FETCH_COLUMN : $this->fetch_mode;
@@ -355,8 +512,8 @@ class Database
 
     /**
      * Retorna o resultado da consulta no formato do objeto definido
-    */
-    public function retornarObjeto(array $resultado, bool $todos = false):mixed
+     */
+    public function retornarObjeto(array $resultado, bool $todos = false): mixed
     {
 
         $classe = $this->classe_de_retorno;
@@ -374,8 +531,8 @@ class Database
      * Executa a sql no banco de dados e retorna o boolean do resultado ou,
      * opcionalmente, o PDOStatement;
      * @author brunoggdev
-    */
-    protected function executarQuery(bool $retornar_query = false):bool|PDOStatement
+     */
+    protected function executarQuery(bool $retornar_query = false): bool|PDOStatement
     {
 
         if (empty($this->tabela) && $this->checar_nome_tabela) {
@@ -386,9 +543,9 @@ class Database
         $this->checar_nome_tabela = true;
 
         $query = $this->conexao->prepare($this->query);
-        
+
         $this->query_info = $query;
-        
+
         $resultado = $query->execute($this->params);
 
         $this->query_info = $query;
@@ -402,10 +559,10 @@ class Database
 
 
     /**
-    * Retorna a string montada da consulta
-    * @author brunoggdev
-    */
-    public function stringDaConsultaSql():string
+     * Retorna a string montada da consulta
+     * @author brunoggdev
+     */
+    public function stringDaConsultaSql(): string
     {
         return $this->query;
     }
@@ -416,8 +573,8 @@ class Database
     /**
      * Retorna o número de linhas afetadas pela ultima sql
      * @author Brunoggdev
-    */
-    public function linhasAfetadas():int
+     */
+    public function linhasAfetadas(): int
     {
         return $this->query_info->rowCount();
     }
@@ -428,8 +585,8 @@ class Database
     /**
      * Retorna o último id inserido pela sql mais recente
      * @author Brunoggdev
-    */
-    public function idInserido():string|false
+     */
+    public function idInserido(): string|false
     {
         return $this->conexao->lastInsertId();
     }
@@ -438,30 +595,30 @@ class Database
 
 
     /**
-    * Retorna os erros que ocorreram durante a execução da SQL
-    * @author brunoggdev
-    */
-    public function erros():array
+     * Retorna os erros que ocorreram durante a execução da SQL
+     * @author brunoggdev
+     */
+    public function erros(): array
     {
         return $this->query_info->errorInfo();
     }
 
 
     /**
-    * Retorna o PDO da conexão atual.
-    * @author brunoggdev
-    */
-    public function pdo():?PDO
+     * Retorna o PDO da conexão atual.
+     * @author brunoggdev
+     */
+    public function pdo(): ?PDO
     {
         return $this->conexao;
     }
 
 
     /**
-    * Retorna o PDOStatement da última operação.
-    * @author brunoggdev
-    */
-    public function pdoStatement():?PDOStatement
+     * Retorna o PDOStatement da última operação.
+     * @author brunoggdev
+     */
+    public function pdoStatement(): ?PDOStatement
     {
         return $this->query_info;
     }
@@ -470,17 +627,17 @@ class Database
 
 
     /**
-    * Define o retorno do banco de dados como um array associativo
-    * @author Brunoggdev
-    */
-    public function comoArray():self
+     * Define o retorno do banco de dados como um array associativo
+     * @author Brunoggdev
+     */
+    public function comoArray(): self
     {
         $this->como_array = true;
 
         return $this;
     }
 
-    
+
 
 
     /**
@@ -488,8 +645,8 @@ class Database
      * O array de resultados será passado para o construtor da classe desejada.
      * @param string $classe SuaClasse::class - O "nome qualificado" da classe desejada
      * @author Brunoggdev
-    */
-    public function comoObjeto(string $classe):self
+     */
+    public function comoObjeto(string $classe): self
     {
         $this->como_array = false;
         $this->classe_de_retorno = $classe;
@@ -501,10 +658,10 @@ class Database
 
 
     /**
-    * Define o fetch mode do PDO
-    * @author Brunoggdev
-    */
-    public function fetchMode(int $fetch_mode):self
+     * Define o fetch mode do PDO
+     * @author Brunoggdev
+     */
+    public function fetchMode(int $fetch_mode): self
     {
         $this->fetch_mode = $fetch_mode;
 
@@ -516,8 +673,8 @@ class Database
     /**
      * Retorna da tabela desejada a linha (ou coluna especifica) com o id informado, podendo retornar uma coluna especifica
      * @author Brunoggdev
-    */
-    public function buscar(int|string $id, ?string $coluna = null):mixed
+     */
+    public function buscar(int|string $id, ?string $coluna = null): mixed
     {
         return $this->primeiroOnde(['id' => $id], $coluna);
     }
@@ -526,8 +683,8 @@ class Database
 
     /**
      * Retorna o primeiro resultado para o 'where' informado, podendo retornar uma coluna especifica
-    */
-    public function primeiroOnde(array|string $where, ?string $coluna = null):mixed
+     */
+    public function primeiroOnde(array|string $where, ?string $coluna = null): mixed
     {
 
         if ($coluna) {
@@ -549,8 +706,8 @@ class Database
      * 
      * ATENÇÃO: A engine MyISAM do MySQL não suporta transações, use InnoDB. 
      * @see https://www.php.net/manual/en/pdo.begintransaction.php
-    */
-    public function transacao(callable $operacoes):bool
+     */
+    public function transacao(callable $operacoes): bool
     {
         $this->conexao->beginTransaction();
 
@@ -564,12 +721,10 @@ class Database
             }
 
             return true;
-
         } catch (\Throwable) {
 
             $this->conexao->rollBack();
             return false;
-
         }
     }
 
@@ -578,12 +733,12 @@ class Database
     /**
      * Retorna um array com os nomes de todas as tabelas existentes no banco de dados da conexão atual
      * @return string[]
-    */
-    public function listarTabelas():array
+     */
+    public function listarTabelas(): array
     {
         $consulta = $this->driver_mysql
             ? 'SHOW TABLES'
-            :'SELECT name FROM sqlite_master WHERE type="table";';
+            : 'SELECT name FROM sqlite_master WHERE type="table";';
 
         return $this->executar($consulta)->fetchAll(PDO::FETCH_COLUMN);
     }
@@ -593,8 +748,8 @@ class Database
     /**
      * Retorna um array com os nomes de todas as colunas da tabela definida
      * @return string[]
-    */
-    public function listarColunas():array
+     */
+    public function listarColunas(): array
     {
         if (empty($this->tabela) && $this->checar_nome_tabela) {
             throw new Exception('Não foi definida a tabela onde deve ser realizada a consulta.');
@@ -602,7 +757,7 @@ class Database
 
         if ($this->driver_mysql) {
             return $this->executar("SHOW COLUMNS FROM $this->tabela")->fetchAll(PDO::FETCH_COLUMN, 0);
-        } 
+        }
 
         return $this->executar("PRAGMA table_info($this->tabela);")->fetchAll(PDO::FETCH_COLUMN, 1);
     }
@@ -611,8 +766,8 @@ class Database
     /**
      * Retorna um array com os nomes de todas as colunas que possuem uma foreign key na tabela definida
      * @return string[]
-    */
-    public function listarForeignKeys():array
+     */
+    public function listarForeignKeys(): array
     {
         if (empty($this->tabela) && $this->checar_nome_tabela) {
             throw new Exception('Não foi definida a tabela onde deve ser realizada a consulta.');
@@ -628,9 +783,8 @@ class Database
                     TABLE_NAME = '$this->tabela' AND 
                     CONSTRAINT_NAME != 'PRIMARY'
             ")->fetchAll(PDO::FETCH_COLUMN, 0);
-        } 
+        }
 
         return $this->executar("PRAGMA foreign_key_list($this->tabela);")->fetchAll(PDO::FETCH_COLUMN, 1);
     }
-    
 }
