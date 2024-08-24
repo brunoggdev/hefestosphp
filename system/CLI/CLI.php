@@ -14,6 +14,7 @@ class CLI
     public function __construct(array $comando)
     {
         match ($comando[1]??false) {
+            'c', 'custom', 'u', 'usuario' => $this->comandosDoUsuario(array_slice($comando, 2)),
             'iniciar', 'servir', 'serve' => $this->iniciar(),
             'criar', 'forjar', 'fazer', 'gerar' => $this->criar($comando[2]??'', $comando[3]??'', $comando[4]??false),
             'migrar' => $this->migrar($comando[2]??'tabelas', $comando[3]??''),
@@ -62,12 +63,12 @@ class CLI
         }
 
         if( empty($tipo_arquivo) ){
-            echo("\n\033[93m# Qual tipo de arquivo deseja criar? [controller, model, filtro ou tabela].\033[0m\n\n");
+            echo("\n\033[93m# Qual tipo de arquivo deseja criar? [controller, model, filtro, tabela, entidade, comando ou js].\033[0m\n\n");
             $tipo_arquivo = readline('> ');
         }
 
-        if (! in_array(strtolower($tipo_arquivo), ['controller', 'model', 'filtro', 'tabela', 'js', 'entidade']) ) {
-            echo("\n\033[93m# O tipo de arquivo informado não parece válido. Qual deseja criar? [controller, model, filtro, tabela, js ou entidade].\033[0m\n\n");
+        if (! in_array(strtolower($tipo_arquivo), ['controller', 'model', 'filtro', 'tabela', 'js', 'entidade', 'comando']) ) {
+            echo("\n\033[93m# O tipo de arquivo informado não parece válido. Qual deseja criar? [controller, model, filtro, tabela, entidade, comando ou js].\033[0m\n\n");
             $tipo_arquivo = readline('> ');
             $this->criar($tipo_arquivo, $nome, $flags);
             return;
@@ -112,10 +113,11 @@ class CLI
         $tipo_arquivo = ucfirst($tipo_arquivo);
 
         $caminho = match ($tipo_arquivo) {
+            'Comando' =>  PASTA_RAIZ . 'app/Comandos/',
             'Controller' =>  PASTA_RAIZ . 'app/Controllers/',
-            'Model' => PASTA_RAIZ . 'app/Models/',
             'Entidade' => PASTA_RAIZ . 'app/Entidades/',
             'Filtro' => PASTA_RAIZ . 'app/Filtros/',
+            'Model' => PASTA_RAIZ . 'app/Models/',
             'Js' => PASTA_PUBLIC . '/js/',
             'Tabela' => PASTA_RAIZ . 'app/Database/tabelas/',
             default => die("\n\033[91m# Tipo de arquivo '$tipo_arquivo' não suportado.\033[0m")
@@ -435,6 +437,26 @@ class CLI
             echo "\n\033[92m# Tabela '$tabela->nome' criada/atualizada". ($zerar === 'zero' ? ' do zero ' : ' ') ."com sucesso!\033[0m";
 
         }
+    }
+
+
+
+    /**
+     * Permite que o usuario cadastre os próprios comandos para que sejam executados pela forja
+     */
+    public function comandosDoUsuario(array $argumentos):void
+    {
+        $comando = ucfirst(array_shift($argumentos));
+        $caminho = pasta_app("Comandos/");
+
+        if (!is_file("$caminho/$comando.php")) {
+            echo "\n\033[91m# Comando '$comando' não encontrado em '$caminho'.\033[0m\n\n";
+            exit;
+        }
+
+        $comando = "App\\Comandos\\$comando";
+
+        (new $comando)->executar(...$argumentos);
     }
 
 
