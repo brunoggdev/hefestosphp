@@ -36,7 +36,7 @@ class Sessao
      */
     public static function pegar(string $chave, $higienizar = true): mixed
     {
-        $retorno = $_SESSION[$chave] ?? null;
+        $retorno = dot_notation($chave, $_SESSION);
 
         return $higienizar ? higienizar($retorno) : $retorno;
     }
