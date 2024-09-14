@@ -97,6 +97,11 @@ function url_base(string $caminho_extra = ''): string
  */
 function dd(mixed ...$params)
 {
+    // limpa o buffer de saída se estiver ativo
+    if (ob_get_status()) {
+        ob_clean();
+    }
+    
     $terminal =  http_response_code() === false;
 
     if (!$terminal) {
@@ -191,11 +196,11 @@ function json(mixed $param, int $codigo_http = 200, $flags = JSON_PRETTY_PRINT):
 {
     header('Content-Type: application/json');
     http_response_code($codigo_http);
-    
+
     if ($param instanceof Entidade) {
         $param = $param->paraArray();
     }
-    
+
     return json_encode($param, $flags);
 }
 
@@ -479,7 +484,7 @@ function tabela(string $tabela): Tabela
 {
     $tabelas = array_values(array_filter(
         scandir(pasta_app('Database/tabelas')),
-        fn ($item) =>  str_ends_with($item, "$tabela.php")
+        fn($item) =>  str_ends_with($item, "$tabela.php")
     ));
 
     if (empty($tabelas)) {
@@ -575,7 +580,7 @@ function dot_notation(string $chaves, array $array)
     foreach ($chaves as $chave) {
         if (!isset($retorno[$chave])) {
             return null;
-        } 
+        }
 
         $retorno = $retorno[$chave];
     }
