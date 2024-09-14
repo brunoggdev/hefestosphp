@@ -42,16 +42,17 @@ class Upload
      * @param string $campo_arquivo Nome do campo do arquivo no formulário
      * @author Brunoggdev
      */
-    public function arquivo(string $campo_arquivo): self
+    public static function arquivo(string $campo_arquivo): self
     {
+        $upload = new self();
         $arquivo = $_FILES[$campo_arquivo] ?? null;
 
         if (!$arquivo || !isset($arquivo['name']) || !isset($arquivo['tmp_name']) || !isset($arquivo['error'])) {
             throw new Exception('Arquivo inválido.');
         }
 
-        $this->arquivo = $arquivo;
-        return $this;
+        $upload->arquivo = $arquivo;
+        return $upload;
     }
 
     /**
@@ -60,16 +61,17 @@ class Upload
      * @param string $campo_arquivo Nome do campo dos arquivos no formulário
      * @author Brunoggdev
      */
-    public function arquivos(string $campo_arquivos): self
+    public static function arquivos(string $campo_arquivos): self
     {
+        $upload = new self();
         $arquivos = $_FILES[$campo_arquivos] ?? null;
 
         if (!$arquivos || !isset($arquivos['name'])) {
             throw new Exception('Arquivo(s) inválido(s).');
         }
 
-        $this->arquivos = $this->organizarArquivos($arquivos);
-        return $this;
+        $upload->arquivos = $upload->organizarArquivos($arquivos);
+        return $upload;
     }
 
 
