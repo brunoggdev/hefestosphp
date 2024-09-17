@@ -14,7 +14,7 @@ class Redirecionar{
             throw new \Exception('Nenhuma URL recebida para redirecionamento.');
         }
 
-        if (!str_starts_with($url, 'http') || !str_starts_with($url, 'www')) {
+        if (!str_starts_with($url, 'http') && !str_starts_with($url, 'www')) {
             $url = url_base($url);
         }
         
