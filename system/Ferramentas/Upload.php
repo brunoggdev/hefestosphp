@@ -101,7 +101,7 @@ class Upload
 
 
     /**
-     * Retorna o conteúdo do arquivo como um buffer
+     * Retorna o conteúdo em texto do arquivo  
      * @throws Exception
      * @author Brunoggdev
      */
@@ -116,6 +116,43 @@ class Upload
         // Retorna o conteúdo do arquivo como uma string
         return file_get_contents($this->arquivo['tmp_name']);
     }
+
+
+    /**
+     * Retorna o caminho temporário do arquivo no servidor
+     * @throws Exception
+     * @author Brunoggdev
+     */
+    public function caminhoTemporario()
+    {
+        $this->verificarErros();
+
+        if (!is_file($this->arquivo['tmp_name'])) {
+            throw new Exception('Arquivo temporário não encontrado.');
+        }
+
+        // Retorna o conteúdo do arquivo como uma string
+        return $this->arquivo['tmp_name'];
+    }
+ 
+ 
+    /**
+     * Retorna os caminhos temporários dos arquivos no servidor
+     * @throws Exception
+     * @author Brunoggdev
+     */
+    public function caminhosTemporarios()
+    {
+        $caminhos = [];
+        
+        foreach ($this->arquivos as $arquivo) {
+            $this->arquivo = $arquivo;
+            $caminhos[] = $this->caminhoTemporario();
+        }
+
+        return $caminhos;
+    }
+
 
 
     /**
