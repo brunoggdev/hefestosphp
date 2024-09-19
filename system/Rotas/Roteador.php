@@ -93,7 +93,7 @@ class Roteador
     protected function adicionar(string $verbo_http, string $uri, string|array|callable $acao): void
     {
         $this->rotas[] = [
-            'uri' => str_replace('{param}', '(.*)', strip_tags($uri)),
+            'uri' => preg_replace('/\{[^}]+\}/', '(.*)', strip_tags($uri)),
             'verbo_http' => $verbo_http,
             'acao' => $this->formatarAcao($acao),
             'filtro' => ''
