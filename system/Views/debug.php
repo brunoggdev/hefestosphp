@@ -17,7 +17,7 @@
     if (AMBIENTE === 'producao'){
         echo '<h1>Ops, tivemos um problema.</h1>';
     }else{
-        $trace = $erro->getTrace()[ is_int($code = $erro->getCode()) ? $code : 0 ];
+        $trace = $erro->getTrace()[$erro->getCode()] ?? $erro->getTrace()[0];
         echo '<br>';
         echo '<h1>HefestosPHP</h1>';
         echo '<h3>Encontramos um erro.</h3>';
