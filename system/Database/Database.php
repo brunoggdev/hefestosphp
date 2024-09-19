@@ -224,7 +224,7 @@ class Database
      * @example $params ['id >=' => '1'] significa: id >= 1 na sql
      * @author brunoggdev
      */
-    public function where(array|string $params, ?mixed $valor = null): self
+    public function where(array|string $params, mixed $valor = null): self
     {
         if (empty($params)) {
             return $this;
@@ -312,7 +312,7 @@ class Database
      * Adiciona um OR na consulta e em seguida um where novamente
      * @author Brunoggdev
      */
-    public function orWhere(array|string $params, ?mixed $valor = null): self
+    public function orWhere(array|string $params, mixed $valor = null): self
     {
         $this->query .= ' OR ';
         $this->where($params, $valor);
