@@ -63,12 +63,12 @@ class CLI
         }
 
         if( empty($tipo_arquivo) ){
-            echo("\n\033[93m# Qual tipo de arquivo deseja criar? [controller, model, filtro, tabela, entidade, comando ou js].\033[0m\n\n");
+            echo("\n\033[93m# Qual tipo de arquivo deseja criar? [controller, model, filtro, tabela, js, entidade, comando, view ou componente/comp].\033[0m\n\n");
             $tipo_arquivo = readline('> ');
         }
 
-        if (! in_array(strtolower($tipo_arquivo), ['controller', 'model', 'filtro', 'tabela', 'js', 'entidade', 'comando']) ) {
-            echo("\n\033[93m# O tipo de arquivo informado não parece válido. Qual deseja criar? [controller, model, filtro, tabela, entidade, comando ou js].\033[0m\n\n");
+        if (! in_array(strtolower($tipo_arquivo), ['controller', 'model', 'filtro', 'tabela', 'js', 'entidade', 'comando', 'view', 'componente', 'comp']) ) {
+            echo("\n\033[93m# O tipo de arquivo informado não parece válido. Qual deseja criar? [controller, model, filtro, tabela, js, entidade, comando, view ou componente/comp].\033[0m\n\n");
             $tipo_arquivo = readline('> ');
             $this->criar($tipo_arquivo, $nome, $flags);
             return;
@@ -120,11 +120,14 @@ class CLI
             'Model' => PASTA_RAIZ . 'app/Models/',
             'Js' => PASTA_PUBLIC . '/js/',
             'Tabela' => PASTA_RAIZ . 'app/Database/tabelas/',
+            'View' => PASTA_RAIZ . 'app/Views/',
+            'Componente', 'Comp' => PASTA_RAIZ . 'app/Views/componentes/',
             default => die("\n\033[91m# Tipo de arquivo '$tipo_arquivo' não suportado.\033[0m")
         };
+
         $template = ($tipo_arquivo == 'Controller' && $flags == '--recurso') ? 'ControllerRecurso' : $tipo_arquivo;
 
-        $template = require "templates/$template.php";
+        $template = in_array($tipo_arquivo, ['View', 'Componente', 'Comp']) ? "<?=dd('Estou na view/comp $nome.php')?>" : require "templates/$template.php"; 
 
         if (str_contains($nome, '/')) {
             $caminho_full = dirname($caminho.$nome);
@@ -162,7 +165,7 @@ class CLI
         if ( file_put_contents($caminho.$nome.$extensao, $arquivo) ) {
             $resposta = "\n\033[92m# $tipo_arquivo $nome criado com sucesso em: \n\033[0m$caminho$nome$extensao.\n\n";
         } else {
-            $resposta = "\n\033[91m# Algo deu errado ao gerar o $tipo_arquivo.\n\033[0m";
+            $resposta = "\n\033[91m# Algo deu errado ao gerar o(a) $tipo_arquivo.\n\033[0m";
         }
 
         echo($resposta);
