@@ -236,6 +236,8 @@ class Database
 
         if (! str_contains($this->query, 'WHERE')) {
             $this->query .= ' WHERE ';
+        } else {
+            $this->query .= ' AND ';
         }
 
         if (is_string($params)) {
