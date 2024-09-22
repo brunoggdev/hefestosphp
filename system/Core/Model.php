@@ -49,11 +49,12 @@ abstract class Model
 
 
     /**
-     * Retorna o primeiro resultado para o 'where' informado
+     * Retorna o primeiro resultado para o 'where' informado; Opcionalmente, recebe o nome 
+     * de coluna especifica para que apenas os dados dessa coluna sejam retornados.
      */
-    public function primeiroOnde(array|string $where): mixed
+    public function primeiroOnde(array|string $where, ?string $nome_coluna_especifica = null): mixed
     {
-        return $this->db()->primeiroOnde($where);
+        return $this->db()->primeiroOnde($where, $nome_coluna_especifica);
     }
 
 
