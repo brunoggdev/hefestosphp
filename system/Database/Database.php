@@ -236,6 +236,8 @@ class Database
 
         if (! str_contains($this->query, 'WHERE')) {
             $this->query .= ' WHERE ';
+        } else {
+            $this->query .= ' AND ';
         }
 
         if (is_string($params)) {
@@ -469,19 +471,19 @@ class Database
 
 
     /**
-     * Pega o primeiro resultado da consulta, podendo retornar uma coluna especifica
+     * Pega o primeiro resultado da consulta; Opcionalmente, recebe o nome de coluna especifica para que apenas o valor dessa coluna seja retornado.
      * @author brunoggdev
      */
-    public function primeiro(?string $coluna = null): mixed
+    public function primeiro(?string $nome_coluna_especifica = null): mixed
     {
         if (empty($this->query)) {
-            $this->select('*');
+            $this->select($nome_coluna_especifica ?? '*');
         }
 
         $resultado = $this->executarQuery(true)->fetch($this->fetch_mode);
 
-        if ($coluna) {
-            return $resultado[$coluna] ?? null;
+        if ($nome_coluna_especifica) {
+            return $resultado[$nome_coluna_especifica] ?? null;
         }
 
         return $this->como_array ? $resultado : $this->retornarObjeto($resultado);
@@ -682,16 +684,16 @@ class Database
 
 
     /**
-     * Retorna o primeiro resultado para o 'where' informado, podendo retornar uma coluna especifica
+     * Retorna o primeiro resultado para o 'where' informado; Opcionalmente, recebe o nome de coluna especifica para que apenas os dados dessa coluna sejam retornados.
      */
-    public function primeiroOnde(array|string $where, ?string $coluna = null): mixed
+    public function primeiroOnde(array|string $where, ?string $nome_coluna_especifica = null): mixed
     {
 
-        if ($coluna) {
-            $this->select([$coluna]);
+        if ($nome_coluna_especifica) {
+            $this->select([$nome_coluna_especifica]);
         }
 
-        return $this->where($where)->primeiro($coluna);
+        return $this->where($where)->primeiro($nome_coluna_especifica);
     }
 
 

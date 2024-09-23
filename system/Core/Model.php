@@ -49,11 +49,12 @@ abstract class Model
 
 
     /**
-     * Retorna o primeiro resultado para o 'where' informado
+     * Retorna o primeiro resultado para o 'where' informado; Opcionalmente, recebe o nome 
+     * de coluna especifica para que apenas os dados dessa coluna sejam retornados.
      */
-    public function primeiroOnde(array|string $where): mixed
+    public function primeiroOnde(array|string $where, ?string $nome_coluna_especifica = null): mixed
     {
-        return $this->db()->primeiroOnde($where);
+        return $this->db()->primeiroOnde($where, $nome_coluna_especifica);
     }
 
 
@@ -71,9 +72,9 @@ abstract class Model
      * Atalho para interagir com o método where do query builder
      * @author Brunoggdev
      */
-    public function where(array|string $params): Database
+    public function where(array|string $params, mixed $valor = null): Database
     {
-        return $this->select()->where($params);
+        return $this->db()->where($params, $valor);
     }
 
 
@@ -113,8 +114,14 @@ abstract class Model
      * @return bool true se sucesso, false caso contrário;
      * @author Brunoggdev
      */
-    public function update(array|object $params, array|string $where = []): bool
+    public function update(array|object $params, array|string|int $where = []): bool
     {
+
+        if (is_numeric($where)) {
+            $where = ['id' => $where];
+        }
+
+
         if ($params instanceof Entidade) {
             $entidade = $params;
             $params = $params->paraArray();

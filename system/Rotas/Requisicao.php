@@ -86,7 +86,7 @@ class Requisicao
     /**
      * Verifica (sem acessar) se existem quaisquer dados na requisição post ou, opcionalmente, em uma chave especifica
      */
-    public static function temPost(?string $chave): bool
+    public static function temPost(?string $chave = null): bool
     {
         return $chave ? isset($_POST[$chave]) : !empty($_POST);
     }
@@ -95,7 +95,7 @@ class Requisicao
     /**
      * Verifica (sem acessar) se existem quaisquer dados na requisição get ou, opcionalmente, em uma chave especifica
      */
-    public static function temGet(?string $chave): bool
+    public static function temGet(?string $chave = null): bool
     {
         return $chave ? isset($_GET[$chave]) : !empty($_GET);
     }

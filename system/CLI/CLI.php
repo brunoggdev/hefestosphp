@@ -10,65 +10,65 @@ class CLI
 {
     /**
      * Mapeia o comando recebido para uma função correspondente
-    */
+     */
     public function __construct(array $comando)
     {
-        match ($comando[1]??false) {
+        match ($comando[1] ?? false) {
             'c', 'custom', 'u', 'usuario' => $this->comandosDoUsuario(array_slice($comando, 2)),
             'iniciar', 'servir', 'serve' => $this->iniciar(),
-            'criar', 'forjar', 'fazer', 'gerar' => $this->criar($comando[2]??'', $comando[3]??'', $comando[4]??false),
-            'migrar' => $this->migrar($comando[2]??'tabelas', $comando[3]??''),
+            'criar', 'forjar', 'fazer', 'gerar' => $this->criar($comando[2] ?? '', $comando[3] ?? '', $comando[4] ?? false),
+            'migrar' => $this->migrar($comando[2] ?? 'tabelas', $comando[3] ?? ''),
             'fornalha', 'soldar', 'brincar' => $this->fornalha(),
-            'testar' => $this->testar($comando[2]??''),
-            'ajuda'=> $this->ajuda(),
+            'testar' => $this->testar($comando[2] ?? ''),
+            'ajuda' => $this->ajuda(),
             default => [$this->imprimir("Você precisa informar algum comando válido."), $this->ajuda()],
         };
     }
 
 
-    
+
     /**
-    * Inicia um servidor embutido do PHP para a pasta public 
-    * na porta desejada (padrão 8080)
-    * @author Brunoggdev
-    */
-    private function iniciar():void
+     * Inicia um servidor embutido do PHP para a pasta public 
+     * na porta desejada (padrão 8080)
+     * @author Brunoggdev
+     */
+    private function iniciar(): void
     {
         $url = URL_BASE;
 
-        echo("\n\033[92m# Servidor de desenvolvimento do HefestosPHP deve ser iniciado em http://$url.\n");
-        echo("\033[93m# Pressione ctrl+c para interromper.\033[0m\n");
-        exec("php -S $url -t ". '"'. PASTA_PUBLIC . '"');
+        echo ("\n\033[92m# Servidor de desenvolvimento do HefestosPHP deve ser iniciado em http://$url.\n");
+        echo ("\033[93m# Pressione ctrl+c para interromper.\033[0m\n");
+        exec("php -S $url -t " . '"' . PASTA_PUBLIC . '"');
     }
 
 
 
     /**
-    * Cria um novo arquivo com as propriedades desejadas
-    * @author Brunoggdev
-    */
-    private function criar(string $tipo_arquivo, string $nome, string|false $flags = false):void
+     * Cria um novo arquivo com as propriedades desejadas
+     * @author Brunoggdev
+     */
+    private function criar(string $tipo_arquivo, string $nome, string|false $flags = false): void
     {
         if ($tipo_arquivo == 'composer') {
-            echo("\n\033[93m# Atenção: Caso já tenha um arquivo \"composer.json\" na raiz do projeto ele será reescrito.\033[0m\n");
-            echo("\n# Confirma que possui composer está instalado e deseja habilita-lo no hefestos? [s/n]\n\n");
+            echo ("\n\033[93m# Atenção: Caso já tenha um arquivo \"composer.json\" na raiz do projeto ele será reescrito.\033[0m\n");
+            echo ("\n# Confirma que possui composer está instalado e deseja habilita-lo no hefestos? [s/n]\n\n");
 
-            if((in_array(readline('> '), ['y', 'yes', 's', 'sim', 'Y', 'YES', 'S', 'SIM'] ))){
+            if ((in_array(readline('> '), ['y', 'yes', 's', 'sim', 'Y', 'YES', 'S', 'SIM']))) {
                 $this->habilitarComposer();
-            }else{
-                echo("\n\033[91m# Nada foi feito...\033[0m\n\n");
+            } else {
+                echo ("\n\033[91m# Nada foi feito...\033[0m\n\n");
             }
 
             return;
         }
 
-        if( empty($tipo_arquivo) ){
-            echo("\n\033[93m# Qual tipo de arquivo deseja criar? [controller, model, filtro, tabela, entidade, comando ou js].\033[0m\n\n");
+        if (empty($tipo_arquivo)) {
+            echo ("\n\033[93m# Qual tipo de arquivo deseja criar? [controller, model, filtro, tabela, js, entidade, comando, view ou componente/comp].\033[0m\n\n");
             $tipo_arquivo = readline('> ');
         }
 
-        if (! in_array(strtolower($tipo_arquivo), ['controller', 'model', 'filtro', 'tabela', 'js', 'entidade', 'comando']) ) {
-            echo("\n\033[93m# O tipo de arquivo informado não parece válido. Qual deseja criar? [controller, model, filtro, tabela, entidade, comando ou js].\033[0m\n\n");
+        if (! in_array(strtolower($tipo_arquivo), ['controller', 'model', 'filtro', 'tabela', 'js', 'entidade', 'comando', 'view', 'componente', 'comp'])) {
+            echo ("\n\033[93m# O tipo de arquivo informado não parece válido. Qual deseja criar? [controller, model, filtro, tabela, js, entidade, comando, view ou componente/comp].\033[0m\n\n");
             $tipo_arquivo = readline('> ');
             $this->criar($tipo_arquivo, $nome, $flags);
             return;
@@ -83,16 +83,14 @@ class CLI
 
                 $novo_arquivo = match (true) {
                     $flag == 't' && $tipo_arquivo != 'tabela' => ['tabela', $nome],
-                    $flag == 'm' && $tipo_arquivo != 'model' => ['model', str_ends_with($nome = strtolower($nome), 'model') ? $nome : $nome.'Model'],
-                    $flag == 'c' && $tipo_arquivo != 'controller' => ['controller', str_ends_with($nome = strtolower($nome), 'controller') ? $nome : $nome.'Controller'],
+                    $flag == 'm' && $tipo_arquivo != 'model' => ['model', str_ends_with($nome = strtolower($nome), 'model') ? $nome : $nome . 'Model'],
+                    $flag == 'c' && $tipo_arquivo != 'controller' => ['controller', str_ends_with($nome = strtolower($nome), 'controller') ? $nome : $nome . 'Controller'],
                     default => false
                 };
 
                 if ($novo_arquivo) {
                     $this->criar(...$novo_arquivo);
                 }
-                
-                
             }
         }
 
@@ -105,8 +103,8 @@ class CLI
         //     }
         // }
 
-        if( empty($nome) ){
-            echo("\n\033[93m# Qual o nome do(a) $tipo_arquivo?\033[0m\n\n");
+        if (empty($nome)) {
+            echo ("\n\033[93m# Qual o nome do(a) $tipo_arquivo?\033[0m\n\n");
             $nome = readline('> ');
         }
 
@@ -120,83 +118,92 @@ class CLI
             'Model' => PASTA_RAIZ . 'app/Models/',
             'Js' => PASTA_PUBLIC . '/js/',
             'Tabela' => PASTA_RAIZ . 'app/Database/tabelas/',
+            'View' => PASTA_RAIZ . 'app/Views/',
+            'Componente', 'Comp' => PASTA_RAIZ . 'app/Views/componentes/',
             default => die("\n\033[91m# Tipo de arquivo '$tipo_arquivo' não suportado.\033[0m")
         };
+
         $template = ($tipo_arquivo == 'Controller' && $flags == '--recurso') ? 'ControllerRecurso' : $tipo_arquivo;
 
-        $template = require "templates/$template.php";
+        $template = in_array($tipo_arquivo, ['View', 'Componente', 'Comp']) ? '' : require "templates/$template.php";
 
         if (str_contains($nome, '/')) {
-            $caminho_full = dirname($caminho.$nome);
-            $nome = basename($caminho.$nome);
+            $caminho_full = dirname($caminho . $nome);
+            $nome = basename($caminho . $nome);
             $namespace = '\\' . str_replace('/', '\\', ucwords(substr($caminho_full, strlen($caminho)), '/'));
             $caminho = $caminho_full . '/';
-        }else{
+        } else {
             $namespace = '';
         }
 
-        if($tipo_arquivo !== 'Tabela' && $tipo_arquivo !== 'Js'){
+        if (!in_array($tipo_arquivo, ['Tabela', 'Js', 'View', 'Componente', 'Comp'])) {
             $nome = ucfirst($nome);
         }
 
-        if($tipo_arquivo == 'Model'){
+        if ($tipo_arquivo == 'Model') {
             // sem sufixo model
             $tabela = str_ends_with($tabela = strtolower($nome), 'model') ? substr($tabela, 0, -5) : $tabela;
             // plural
-            $tabela = str_ends_with($tabela, 's') ? $tabela : $tabela.'s';
+            $tabela = str_ends_with($tabela, 's') ? $tabela : $tabela . 's';
             $arquivo = str_replace(['{nome}', '{namespace}', '{tabela}'], [$nome, $namespace, $tabela], $template);
-        }else{
+        } else {
             $arquivo = str_replace(['{nome}', '{namespace}'], [$nome, $namespace], $template);
         }
 
-        if($tipo_arquivo === 'Tabela'){
+        if ($tipo_arquivo === 'Tabela') {
             $nome = date('Y-m-d-His_') . $nome;
         }
 
-        if(!is_dir($caminho)){
+        if (!is_dir($caminho)) {
             mkdir($caminho, recursive: true);
         }
 
         $extensao = strtolower($tipo_arquivo) == 'js' ? '.js' : '.php';
 
-        if ( file_put_contents($caminho.$nome.$extensao, $arquivo) ) {
-            $resposta = "\n\033[92m# $tipo_arquivo $nome criado com sucesso em: \n\033[0m$caminho$nome$extensao.\n\n";
-        } else {
-            $resposta = "\n\033[91m# Algo deu errado ao gerar o $tipo_arquivo.\n\033[0m";
+        if (is_file($caminho . $nome . $extensao)) {
+            $resposta = "\n\033[91m# O arquivo $nome já existe.\n\033[0m";
+            echo ($resposta);
+            return;
         }
 
-        echo($resposta);
+        if (file_put_contents($caminho . $nome . $extensao, $arquivo) !== false) {
+            $resposta = "\n\033[92m# $tipo_arquivo $nome criado com sucesso em: \n\033[0m$caminho$nome$extensao.\n\n";
+        } else {
+            $resposta = "\n\033[91m# Algo deu errado ao gerar o(a) $tipo_arquivo.\n\033[0m";
+        }
+
+        echo ($resposta);
     }
 
 
     /**
      * Habilita e configura o composer para o framework
      * @author Brunoggdev
-    */
-    public function habilitarComposer():void
+     */
+    public function habilitarComposer(): void
     {
-        if (file_put_contents('composer.json', require 'templates/composer.php') ) {
+        if (file_put_contents('composer.json', require 'templates/composer.php')) {
             exec('composer install');
             $resposta = "\n\033[92m# Composer habilitado com sucesso! Caso esteja usando git, lembre-se de adicionar a pasta /vendor/ no seu .gitignore.\n\033[0m";
         } else {
             $resposta = "\n\033[91m# Algo deu errado ao gerar o composer.json.\n\033[0m";
         }
 
-        echo($resposta);
+        echo ($resposta);
     }
 
 
     /**
      * Inicia um idle repl do PHP no terminal
      * @author Brunoggdev
-    */
-    public function fornalha():void
+     */
+    public function fornalha(): void
     {
         if (AMBIENTE !== 'desenvolvimento') {
             die("\n\033[91m# Fornalha não disponível fora do ambiente de desenvolvimento.\033[0m\n");
         }
 
-        set_error_handler(function($errno, $errstr, $errfile, $errline){
+        set_error_handler(function ($errno, $errstr, $errfile, $errline) {
             throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
         });
 
@@ -238,7 +245,7 @@ class CLI
                 if (extension_loaded('readline')) {
                     readline_add_history($_fornalha_entrada);
                 }
-                
+
                 if (preg_match('/(echo|return|var_dump|print_r)/', $_fornalha_entrada) !== 1) {
                     $_fornalha_entrada = 'return ' . $_fornalha_entrada;
                 }
@@ -251,22 +258,21 @@ class CLI
                 $_fornalha_saida = eval($_fornalha_entrada);
                 isset($_fornalha_saida) && var_export($_fornalha_saida);
             } catch (\Throwable $th) {
-                echo 
-                "\033[91m -> Erro encontrado: \033[0m" . $th->getMessage() . "\n" . 
-                "\033[91m -> Na linha: \033[0m" . $th->getLine() . "\n" . 
-                "\033[91m -> Do arquivo: \033[0m" . $th->getFile();
+                echo
+                "\033[91m -> Erro encontrado: \033[0m" . $th->getMessage() . "\n" .
+                    "\033[91m -> Na linha: \033[0m" . $th->getLine() . "\n" .
+                    "\033[91m -> Do arquivo: \033[0m" . $th->getFile();
             }
         }
-
     }
 
 
 
     /**
-    * Executa todas as funcoes de teste e imprime seus resultados
-    * @author Brunoggdev
-    */
-    public function testar(string $caminho):void
+     * Executa todas as funcoes de teste e imprime seus resultados
+     * @author Brunoggdev
+     */
+    public function testar(string $caminho): void
     {
         define('RODANDO_TESTES', true);
 
@@ -274,12 +280,12 @@ class CLI
         $caminho = 'app/Testes/' . $caminho;
 
         // tomando controle dos erros nativos do php
-        set_error_handler(function($errno, $errstr, $errfile, $errline){
+        set_error_handler(function ($errno, $errstr, $errfile, $errline) {
             throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
         });
 
         // Se for um diretorio, busque todos os arquivos dentro
-        if( is_dir($caminho) ){
+        if (is_dir($caminho)) {
             $arquivos = array_merge(
                 glob($caminho . '*.php'),
                 glob($caminho . '**/*.php')
@@ -288,12 +294,11 @@ class CLI
             foreach ($arquivos as $arquivo) {
                 require_once $arquivo;
             }
-
-        }else{
+        } else {
             // se não, busque apenas o arquivo informado
-            try{
+            try {
                 require_once $caminho;
-            }catch(\ErrorException){
+            } catch (\ErrorException) {
                 $this->imprimir('Arquivo não encontrado.');
                 exit;
             }
@@ -301,10 +306,10 @@ class CLI
 
         if (extension_loaded('pdo_sqlite')) {
             ob_start();
-            $this->migrar(zerar:'zero');
+            $this->migrar(zerar: 'zero');
             ob_clean();
         }
-        
+
         $testador = new Testador(SuiteDeTestes::instancia());
         $testes_passaram = 0;
         $testes_falharam = 0;
@@ -317,19 +322,19 @@ class CLI
                 $resultado = $testador->testar($teste['funcao']->bindTo($testador));
             } catch (\Throwable $th) {
                 $resultado = false;
-                $i = is_numeric($i = $th->getCode()) ? (int)$i : (str_starts_with((string)$i, 'HY') ? 2 : 0);      
+                $i = is_numeric($i = $th->getCode()) ? (int)$i : (str_starts_with((string)$i, 'HY') ? 2 : 0);
                 $trace = $th->getTrace()[$i];
 
-                $erro = 
-                    " \033[91m > Erro encontrado: \033[0m" . $th->getMessage() . "\n" . 
-                    " \033[91m > Na linha: \033[0m" .  $trace['line'] . "\n" . 
-                    " \033[91m > Do arquivo: \033[0m" . $trace['file'].' on line '.$trace['line'] . "\n";
+                $erro =
+                    " \033[91m > Erro encontrado: \033[0m" . $th->getMessage() . "\n" .
+                    " \033[91m > Na linha: \033[0m" .  $trace['line'] . "\n" .
+                    " \033[91m > Do arquivo: \033[0m" . $trace['file'] . ' on line ' . $trace['line'] . "\n";
             }
 
-            if($resultado === false) {
+            if ($resultado === false) {
                 $status = "\n\033[41m FALHOU \033[0m";
                 $testes_falharam++;
-            }else{
+            } else {
                 $status = "\033[42m PASSOU \033[0m";
                 $testes_passaram++;
             }
@@ -337,7 +342,7 @@ class CLI
 
             $this->imprimir("$status Testa $teste[descricao]", 0, false);
 
-            if(isset($erro)){
+            if (isset($erro)) {
                 $this->imprimir($erro, 0, false);
                 unset($erro);
             }
@@ -355,15 +360,14 @@ class CLI
         $this->imprimir("\033[92mPassaram:\033[0m $testes_passaram.", 0);
         $this->imprimir("\033[91mFalharam:\033[0m $testes_falharam.", 0);
         $this->imprimir("\033[96mDuração:\033[0m {$cronometro->tempoCorrido()}s.");
-
     }
 
 
     /**
-    * Executa as sql's de criação de tabelas
-    * @author Brunoggdev
-    */
-    public function migrar(string $caminho = 'tabelas', string $zerar = ''):void
+     * Executa as sql's de criação de tabelas
+     * @author Brunoggdev
+     */
+    public function migrar(string $caminho = 'tabelas', string $zerar = ''): void
     {
         if ($caminho === 'zero') {
             $zerar = 'zero';
@@ -375,7 +379,7 @@ class CLI
         $tabelas_no_banco = $db->listarTabelas();
 
         // Se for um diretorio, busque todos os arquivos dentro
-        if( is_dir($caminho) ){
+        if (is_dir($caminho)) {
             $arquivos_tabelas = array_merge(
                 glob($caminho . '*.php'),
                 glob($caminho . '**/*.php')
@@ -385,12 +389,12 @@ class CLI
             foreach ($arquivos_tabelas as $arquivo_tabela) {
                 /** @var \Hefestos\Database\Tabela */
                 $tabela = require $arquivo_tabela;
-                
-                if (! str_starts_with($tabela, 'CREATE TABLE')){
+
+                if (! str_starts_with($tabela, 'CREATE TABLE')) {
                     throw new \Exception('Sql informada não é válida para esta operação:' . PHP_EOL . $tabela);
                 }
 
-                if($zerar === 'zero') {
+                if ($zerar === 'zero') {
                     $db->executar("DROP TABLE IF EXISTS $tabela->nome;");
                 }
 
@@ -405,21 +409,18 @@ class CLI
                         $alter_table_sql = (fn() => $this->atualizarSchema($colunas, $fks))->call($tabela);
                         $db->executar($alter_table_sql);
                     }
-
                 } else {
                     $db->executar($tabela);
                 }
-
             }
 
-            echo "\n\033[92m# Tabelas criadas/atualizadas". ($zerar === 'zero' ? ' do zero ' : ' ') ."com sucesso!\033[0m";
-
-        }else{
+            echo "\n\033[92m# Tabelas criadas/atualizadas" . ($zerar === 'zero' ? ' do zero ' : ' ') . "com sucesso!\033[0m";
+        } else {
             // se não, busque apenas o arquivo informado
-            try{
+            try {
                 /** @var \Hefestos\Database\Tabela */
                 $tabela = is_file($caminho) ? require $caminho : tabela(explode('/', $caminho)[2]);
-            } catch (\ErrorException){
+            } catch (\ErrorException) {
                 $this->imprimir('Arquivo não encontrado.');
                 exit;
             }
@@ -428,14 +429,13 @@ class CLI
                 throw new \Exception('Sql informada não é válida para esta operaçã:' . PHP_EOL . $tabela);
             }
 
-            if($zerar === 'zero') {
+            if ($zerar === 'zero') {
                 $db->executar("DROP TABLE IF EXISTS $tabela->nome;");
             }
 
             $db->executar($tabela);
 
-            echo "\n\033[92m# Tabela '$tabela->nome' criada/atualizada". ($zerar === 'zero' ? ' do zero ' : ' ') ."com sucesso!\033[0m";
-
+            echo "\n\033[92m# Tabela '$tabela->nome' criada/atualizada" . ($zerar === 'zero' ? ' do zero ' : ' ') . "com sucesso!\033[0m";
         }
     }
 
@@ -444,7 +444,7 @@ class CLI
     /**
      * Permite que o usuario cadastre os próprios comandos para que sejam executados pela forja
      */
-    public function comandosDoUsuario(array $argumentos):void
+    public function comandosDoUsuario(array $argumentos): void
     {
         $comando = ucfirst(array_shift($argumentos));
         $caminho = pasta_app("Comandos/");
@@ -462,9 +462,9 @@ class CLI
 
 
     /**
-    * Imprime a resposta desejada no terminal
-    * @author Brunoggdev
-    */
+     * Imprime a resposta desejada no terminal
+     * @author Brunoggdev
+     */
     private function imprimir(string $resposta, int $eol = 2, $com_hashtag = true)
     {
         echo "\n" . ($com_hashtag ? "# " : '') . $resposta . str_repeat(PHP_EOL, $eol);
@@ -473,10 +473,10 @@ class CLI
 
 
     /**
-    * Imprime uma sessão de ajuda listando os 
-    * comandos disponíveis e como usa-los;
-    * @author Brunoggdev
-    */
+     * Imprime uma sessão de ajuda listando os 
+     * comandos disponíveis e como usa-los;
+     * @author Brunoggdev
+     */
     private function ajuda()
     {
         $this->imprimir('-------------------------------------------------------------------------------------------------------', 0);

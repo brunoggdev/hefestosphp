@@ -252,6 +252,22 @@ function importar_js(string $nome_arquivo, bool $defer = false): string
     return '<script ' . ($defer ? 'defer ' : '') . ' src="' . url_base("$arquivo?v=") . VERSAO_APP . '"></script>';
 }
 
+/**
+ * Retorna a string para importação do arquivo css na pasta publica 'css/' 
+ * com o nome informado (se existir).
+ * @author Brunoggdev
+ */
+function importar_css(string $nome_arquivo): string
+{
+    $arquivo = "css/$nome_arquivo.css";
+
+    if (!file_exists(pasta_public($arquivo))) {
+        return '';
+    }
+
+    return '<link rel="stylesheet" href="' . url_base("$arquivo?v=") . VERSAO_APP . '">';
+}
+
 
 /**
  * Define o código http desejado e para a execução; Opcionalmente
