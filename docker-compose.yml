@@ -6,4 +6,4 @@ services:
       - "8080:8080"
     volumes:
       - .:/var/www/html
-    entrypoint: ["php", "forja", "iniciar", "0.0.0.0:8080"]
+    entrypoint: ["php", "forja", "iniciar", "0.0.0.0:8080"] # iniciando o servidor em 0.0.0.0:8080 para que possa ser acessado fora do container
