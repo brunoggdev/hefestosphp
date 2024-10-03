@@ -1,0 +1,10 @@
+# Apenas use "docker compose up" na linha de comando e pronto! servidor rodando em http://localhost:8080
+services:
+  web:
+    image: php:8.3-apache
+    container_name: hefestos_dev
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/var/www/html
+    entrypoint: ["php", "forja", "iniciar", "0.0.0.0:8080"]
