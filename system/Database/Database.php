@@ -787,6 +787,6 @@ class Database
             ")->fetchAll(PDO::FETCH_COLUMN, 0);
         }
 
-        return $this->executar("PRAGMA foreign_key_list($this->tabela);")->fetchAll(PDO::FETCH_COLUMN, 1);
+        return $this->executar("PRAGMA foreign_key_list($this->tabela);")->fetchAll(PDO::FETCH_COLUMN, 3);
     }
 }
