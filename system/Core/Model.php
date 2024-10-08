@@ -62,7 +62,7 @@ abstract class Model
      * Atalho para interagir com o método select do query builder
      * @author Brunoggdev
      */
-    public function select(array $colunas = ['*']): Database
+    public function select(string|array $colunas = '*'): Database
     {
         return $this->db()->select($colunas);
     }

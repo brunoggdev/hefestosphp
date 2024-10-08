@@ -18,5 +18,5 @@ try {
     echo 
     "\033[91m -> Erro encontrado: \033[0m" . $th->getMessage() . "\n" . 
     "\033[91m -> Na linha: \033[0m" . $th->getLine() . "\n" . 
-    "\033[91m -> Do arquivo: \033[0m" . $th->getFile();
+    "\033[91m -> Do arquivo: \033[0m" . $th->getFile().':'.$th->getLine() . "\n";
 }

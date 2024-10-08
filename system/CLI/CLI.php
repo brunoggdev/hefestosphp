@@ -172,7 +172,7 @@ class CLI
             $resposta = "\n\033[91m# Algo deu errado ao gerar o(a) $tipo_arquivo.\n\033[0m";
         }
 
-        echo ($resposta);
+        echo ($resposta."\n");
     }
 
 
@@ -261,7 +261,7 @@ class CLI
                 echo
                 "\033[91m -> Erro encontrado: \033[0m" . $th->getMessage() . "\n" .
                     "\033[91m -> Na linha: \033[0m" . $th->getLine() . "\n" .
-                    "\033[91m -> Do arquivo: \033[0m" . $th->getFile();
+                    "\033[91m -> Do arquivo: \033[0m" . $th->getFile().':'.$th->getLine() . "\n";
             }
         }
     }
@@ -398,7 +398,7 @@ class CLI
                     $db->executar("DROP TABLE IF EXISTS $tabela->nome;");
                 }
 
-                // são 3 da manhã, dá um desconto
+                // são 3 da manhã, dá um desconto kkkkkkkkk
                 // se não for pra zerar e a tabela já existir no banco
                 if ($zerar !== 'zero' && in_array($tabela->nome, $tabelas_no_banco)) {
                     $db->tabela($tabela->nome);
@@ -407,14 +407,17 @@ class CLI
                     if (($colunas = $db->listarColunas()) && ($fks = $db->listarForeignKeys())) {
                         /** @disregard P1013 intelephense error*/
                         $alter_table_sql = (fn() => $this->atualizarSchema($colunas, $fks))->call($tabela);
-                        $db->executar($alter_table_sql);
+
+                        if ($alter_table_sql) {
+                            $db->executar($alter_table_sql);
+                        }
                     }
                 } else {
                     $db->executar($tabela);
                 }
             }
 
-            echo "\n\033[92m# Tabelas criadas/atualizadas" . ($zerar === 'zero' ? ' do zero ' : ' ') . "com sucesso!\033[0m";
+            echo "\n\033[92m# Tabelas criadas/atualizadas" . ($zerar === 'zero' ? ' do zero ' : ' ') . "com sucesso!\033[0m" . PHP_EOL;
         } else {
             // se não, busque apenas o arquivo informado
             try {
