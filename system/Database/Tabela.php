@@ -56,20 +56,29 @@ class Tabela
         $novas_colunas = array_diff(array_keys($this->colunas), $colunas);
         $novas_fks = array_diff(array_keys($this->foreign_keys), $fks);
 
-        $alter_sql = "ALTER TABLE $this->nome ";
+        $alter_sql = '';
 
-        foreach ($novas_colunas as $novas_coluna) {
-            $alter_sql .= 'ADD COLUMN ' . $this->colunas[$novas_coluna] . ', ';
+        if (!empty($novas_colunas)) {
+            $alter_sql = "ALTER TABLE $this->nome ";
+
+            foreach ($novas_colunas as $novas_coluna) {
+                $alter_sql .= 'ADD COLUMN ' . $this->colunas[$novas_coluna] . ', ';
+            }
+
+            $alter_sql = rtrim($alter_sql, ", ") . "; ";
         }
 
-        $alter_sql = rtrim($alter_sql, ", ") . "; ALTER TABLE $this->nome ";
+        if (!empty($novas_fks)) {
+            $alter_sql .= "ALTER TABLE $this->nome ";
 
-        foreach ($novas_fks as $novas_fk) {
-            $alter_sql .= 'ADD ' . $this->foreign_keys[$novas_fk] . ', ';
+            foreach ($novas_fks as $novas_fk) {
+                $alter_sql .= 'ADD ' . $this->foreign_keys[$novas_fk] . ', ';
+            }
+
+            $alter_sql = rtrim($alter_sql, ", ") . ';';
         }
-        $alter_sql = rtrim($alter_sql, ", ") . ';';
 
-        return $alter_sql;
+        return trim($alter_sql);
     }
 
 
