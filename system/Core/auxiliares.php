@@ -101,7 +101,7 @@ function dd(mixed ...$params)
     if (ob_get_status()) {
         ob_clean();
     }
-    
+
     $terminal =  http_response_code() === false;
 
     if (!$terminal) {
@@ -129,8 +129,11 @@ function dd(mixed ...$params)
  */
 function controller(string $controller): Controller
 {
-    $controller = "\\App\\Controllers\\$controller";
-    return new $controller;
+    if (!str_contains($controller, '\\')) {
+        $controller = "\\App\\Controllers\\$controller";
+    }
+
+    return injetar_dependencias($controller);
 }
 
 
@@ -602,4 +605,43 @@ function dot_notation(string $chaves, array $array)
     }
 
     return $retorno;
+}
+
+
+/**
+ * Retorna (de modo recursivo) a instancia do objeto com as dependências injetadas se todos os arumentos forem objetos.
+ * @author Brunoggdev
+ */
+function injetar_dependencias(string $objeto): object
+{
+    $reflectionClass = new ReflectionClass($objeto);
+
+    $params = $reflectionClass->getConstructor()?->getParameters();
+    $args = [];
+
+    if ($params) {
+        foreach ($params as $param) {
+            $type = $param->getType();
+
+            if (!$type || $type->isBuiltin() || $type->allowsNull()) {
+                return $reflectionClass->newInstanceArgs($args);
+            }
+
+            $class_name = $type->getName();
+
+            if (!class_exists($class_name)) {
+                return $reflectionClass->newInstanceArgs($args);
+            }
+
+            $dependencia = injetar_dependencias($class_name);
+
+            if (!$dependencia) {
+                return $reflectionClass->newInstanceArgs($args);
+            }
+
+            $args[] = $dependencia;
+        }
+    }
+
+    return $reflectionClass->newInstanceArgs($args);
 }
