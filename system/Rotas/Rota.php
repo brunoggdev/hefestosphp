@@ -145,16 +145,16 @@ class Rota
      * Realiza o agrupamento de diversas rotas sob um mesmo filtro.
      * @author Brunoggdev
      */
-    public function agrupar(string $filtro, callable $callback): void
+    public static function agrupar(string $filtro, callable $callback): void
     {
-        $rotas_antigas = $this->rotas;
+        $rotas_antigas = self::$rotas;
 
-        $callback($this);
+        $callback(self::instancia());
 
-        $novas_rotas = array_diff_key($this->rotas, $rotas_antigas);
+        $novas_rotas = array_diff_key(self::$rotas, $rotas_antigas);
 
         foreach ($novas_rotas as $key => $rota) {
-            $this->rotas[$key]['filtro'] = $filtro;
+            self::$rotas[$key]['filtro'] = $filtro;
         }
     }
 
