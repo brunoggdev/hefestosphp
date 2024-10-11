@@ -6,12 +6,12 @@ namespace Hefestos\Rotas;
  * Controla todo o sistema de roteamento da aplicação
  * @author Brunoggdev
  */
-class Roteador
+class Rota
 {
 
     protected static ?self $instancia = null;
-    protected $rotas = [];
-    protected $namespace_padrao = '\App\Controllers';
+    protected static array $rotas = [];
+    protected static string $namespace_padrao = '\App\Controllers';
 
     /**
      * Retorna a instancia do roteador do app (singleton).
@@ -31,10 +31,9 @@ class Roteador
      * Adiciona uma rota get no array de rotas
      * @author Brunoggdev
      */
-    public function get(string $uri, string|array|callable $acao)
+    public static function get(string $uri, string|array|callable $acao)
     {
-        $this->adicionar('GET', $uri, $acao);
-        return $this;
+        return self::instancia()->adicionar('GET', $uri, $acao);
     }
 
 
@@ -45,8 +44,7 @@ class Roteador
      */
     public function post(string $uri, string|array|callable $acao)
     {
-        $this->adicionar('POST', $uri, $acao);
-        return $this;
+        return self::instancia()->adicionar('POST', $uri, $acao);
     }
 
 
@@ -57,8 +55,7 @@ class Roteador
      */
     public function put(string $uri, string|array|callable $acao)
     {
-        $this->adicionar('PUT', $uri, $acao);
-        return $this;
+        return self::instancia()->adicionar('PUT', $uri, $acao);
     }
 
 
@@ -69,8 +66,7 @@ class Roteador
      */
     public function patch(string $uri, string|array|callable $acao)
     {
-        $this->adicionar('PATCH', $uri, $acao);
-        return $this;
+        return self::instancia()->adicionar('PATCH', $uri, $acao);
     }
 
 
@@ -81,8 +77,7 @@ class Roteador
      */
     public function delete(string $uri, string|array|callable $acao)
     {
-        $this->adicionar('DELETE', $uri, $acao);
-        return $this;
+        return self::instancia()->adicionar('DELETE', $uri, $acao);
     }
 
 
@@ -90,14 +85,16 @@ class Roteador
      * Adiciona uma nova rota no array de rotas
      * @author Brunoggdev
      */
-    protected function adicionar(string $verbo_http, string $uri, string|array|callable $acao): void
+    protected function adicionar(string $verbo_http, string $uri, string|array|callable $acao): self
     {
-        $this->rotas[] = [
+        static::$rotas[] = [
             'uri' => preg_replace('/\{[^}]+\}/', '(.*)', strip_tags($uri)),
             'verbo_http' => $verbo_http,
             'acao' => $this->formatarAcao($acao),
             'filtro' => ''
         ];
+
+        return $this;
     }
 
 
@@ -119,7 +116,7 @@ class Roteador
         }
 
         return function (...$params) use ($controller, $metodo) {
-            return (new $controller)->$metodo(...$params);
+            return controller($controller)->$metodo(...$params);
         };
     }
 
@@ -128,9 +125,9 @@ class Roteador
      * Configura o namespare padrão para os metodos do controller
      * @author Brunoggdev
      */
-    public function namespacePadrao(string $namespace): void
+    public static function namespacePadrao(string $namespace): void
     {
-        $this->namespace_padrao = $namespace;
+        self::$namespace_padrao = $namespace;
     }
 
 
@@ -140,7 +137,7 @@ class Roteador
      */
     public function filtro(string $filtro): void
     {
-        $this->rotas[array_key_last($this->rotas)]['filtro'] = $filtro;
+        self::$rotas[array_key_last(self::$rotas)]['filtro'] = $filtro;
     }
 
 
@@ -168,7 +165,7 @@ class Roteador
      */
     public function mapear(string $uri, string $verbo_http): array
     {
-        foreach ($this->rotas as $rota) {
+        foreach (static::$rotas as $rota) {
             $verbo_http_corresponde = $rota['verbo_http'] === strtoupper($verbo_http);
             $uri_corresponde = preg_match('#^/?' . rtrim($rota['uri'], '/') . '$#', rtrim($uri, '/'), $params);
 
