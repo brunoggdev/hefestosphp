@@ -10,11 +10,11 @@ Rota::get('/', function() {
     return view('home');
 });
 
-$rotas->get('/demo', function() {
+Rota::get('/demo', function() {
     return montarPagina('demo');
 });
 
-$rotas->get('/outra-demo', function() {
+Rota::get('/outra-demo', function() {
     return json([
         'cor' => 'success',
         'texto' => 'Olá do backend!'
