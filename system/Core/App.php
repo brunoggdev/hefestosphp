@@ -4,7 +4,7 @@ namespace Hefestos\Core;
 
 use Hefestos\Ferramentas\Sessao;
 use Hefestos\Rotas\Redirecionar;
-use Hefestos\Rotas\Roteador;
+use Hefestos\Rotas\Rota;
 use Throwable;
 
 final class App
@@ -29,7 +29,7 @@ final class App
             Sessao::iniciar();
 
             $requisicao = $app->analisarRequisicao();
-            $acao = Roteador::instancia()->mapear(...$requisicao);
+            $acao = Rota::instancia()->mapear(...$requisicao);
             $resposta = $app->processarResposta(...$acao);
 
             $app->encerrar($resposta);
