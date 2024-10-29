@@ -472,6 +472,7 @@ class Database
 
     /**
      * Pega o primeiro resultado da consulta; Opcionalmente, recebe o nome de coluna especifica para que apenas o valor dessa coluna seja retornado.
+     * @return mixed Retorna o primeiro resultado da consulta (ou valor da coluna especifica se informada) ou false caso não exista nenhum resultado.
      * @author brunoggdev
      */
     public function primeiro(?string $nome_coluna_especifica = null): mixed
@@ -481,6 +482,10 @@ class Database
         }
 
         $resultado = $this->executarQuery(true)->fetch($this->fetch_mode);
+
+        if (!$resultado) {
+            return false;
+        }
 
         if ($nome_coluna_especifica) {
             return $resultado[$nome_coluna_especifica] ?? null;
