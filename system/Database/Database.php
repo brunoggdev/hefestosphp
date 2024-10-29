@@ -686,14 +686,14 @@ class Database
     /**
      * Retorna o primeiro resultado para o 'where' informado; Opcionalmente, recebe o nome de coluna especifica para que apenas os dados dessa coluna sejam retornados.
      */
-    public function primeiroOnde(array|string $where, ?string $nome_coluna_especifica = null): mixed
+    public function primeiroOnde(array|string $where, mixed $valor = null, ?string $nome_coluna_especifica = null): mixed
     {
 
         if ($nome_coluna_especifica) {
             $this->select([$nome_coluna_especifica]);
         }
 
-        return $this->where($where)->primeiro($nome_coluna_especifica);
+        return $this->where($where, $valor)->primeiro($nome_coluna_especifica);
     }
 
 

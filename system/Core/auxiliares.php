@@ -101,14 +101,19 @@ function dd(mixed ...$params)
     if (ob_get_status()) {
         ob_clean();
     }
-
     $terminal =  http_response_code() === false;
 
     if (!$terminal) {
         echo '<html><pre>';
     }
 
-    echo  $terminal ? PHP_EOL : '<br>';
+    $chamada = debug_backtrace()[0];
+
+    $chamada = "$chamada[file]:$chamada[line]";
+
+    echo $terminal ? $chamada : '<pre style="margin-bottom: 18px;background: #f7f7f9;border: 1px solid #e1e1e8;padding: 8px;border-radius: 4px;-moz-border-radius: 4px;-webkit-border radius: 4px;display: block;font-size: 12.05px;white-space: pre-wrap;word-wrap: break-word;color: #333;font-family: Menlo,Monaco,Consolas,\'Courier New\',monospace;"></span> <strong>'.$chamada.'</strong></pre>';
+
+    echo  $terminal ? PHP_EOL.PHP_EOL : '<hr><br>';
 
     foreach ($params as $param) {
         if (is_string($param)) {
