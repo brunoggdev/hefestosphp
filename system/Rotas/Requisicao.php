@@ -58,7 +58,7 @@ class Requisicao
         $requested_with_XMLHttpRequest = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest';
         $sec_fetch_mode = isset($_SERVER['HTTP_SEC_FETCH_MODE']) ? $_SERVER['HTTP_SEC_FETCH_MODE'] : '';
 
-        return $requested_with_XMLHttpRequest || $sec_fetch_mode !== 'navigate';
+        return $requested_with_XMLHttpRequest || in_array($sec_fetch_mode, ['cors', 'same-origin']);
     }
 
 

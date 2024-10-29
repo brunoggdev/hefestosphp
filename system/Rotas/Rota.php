@@ -42,7 +42,7 @@ class Rota
      * Adiciona uma rota post no array de rotas
      * @author Brunoggdev
      */
-    public function post(string $uri, string|array|callable $acao)
+    public static function post(string $uri, string|array|callable $acao)
     {
         return self::instancia()->adicionar('POST', $uri, $acao);
     }
@@ -53,7 +53,7 @@ class Rota
      * Adiciona uma rota put no array de rotas
      * @author Brunoggdev
      */
-    public function put(string $uri, string|array|callable $acao)
+    public static function put(string $uri, string|array|callable $acao)
     {
         return self::instancia()->adicionar('PUT', $uri, $acao);
     }
@@ -64,7 +64,7 @@ class Rota
      * Adiciona uma rota patch no array de rotas
      * @author Brunoggdev
      */
-    public function patch(string $uri, string|array|callable $acao)
+    public static function patch(string $uri, string|array|callable $acao)
     {
         return self::instancia()->adicionar('PATCH', $uri, $acao);
     }
@@ -75,7 +75,7 @@ class Rota
      * Adiciona uma rota delete no array de rotas
      * @author Brunoggdev
      */
-    public function delete(string $uri, string|array|callable $acao)
+    public static function delete(string $uri, string|array|callable $acao)
     {
         return self::instancia()->adicionar('DELETE', $uri, $acao);
     }
