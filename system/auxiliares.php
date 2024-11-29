@@ -35,6 +35,9 @@ function pasta_raiz(string $caminho_extra = ''): string
 
 
 
+
+
+
 /**
  * Retorna o caminho da pasta app concatenado ou não 
  * com um parametero opcional de caminho adicional
@@ -51,6 +54,9 @@ function pasta_app(string $caminho_extra = ''): string
 
 
 
+
+
+
 /**
  * Retorna o caminho da pasta public concatenado ou não 
  * com um parametero opcional de caminho adicional
@@ -64,6 +70,9 @@ function pasta_public(string $caminho_extra = ''): string
 
     return PASTA_PUBLIC . $caminho_extra;
 }
+
+
+
 
 
 
@@ -84,6 +93,9 @@ function url_base(string $caminho_extra = ''): string
 
     return $url_completa;
 }
+
+
+
 
 
 
@@ -111,9 +123,9 @@ function dd(mixed ...$params)
 
     $chamada = "$chamada[file]:$chamada[line]";
 
-    echo $terminal ? $chamada : '<pre style="margin-bottom: 18px;background: #f7f7f9;border: 1px solid #e1e1e8;padding: 8px;border-radius: 4px;-moz-border-radius: 4px;-webkit-border radius: 4px;display: block;font-size: 12.05px;white-space: pre-wrap;word-wrap: break-word;color: #333;font-family: Menlo,Monaco,Consolas,\'Courier New\',monospace;"></span> <strong>'.$chamada.'</strong></pre>';
+    echo $terminal ? $chamada : '<pre style="margin-bottom: 18px;background: gray;padding: 8px;display: block;font-size: 12.05px;white-space: pre-wrap;word-wrap: break-word;color: white;font-family: Menlo,Monaco,Consolas,\'Courier New\',monospace;"></span> <strong>'.$chamada.'</strong></pre>';
 
-    echo  $terminal ? PHP_EOL.PHP_EOL : '<hr><br>';
+    echo  $terminal ? PHP_EOL.PHP_EOL : '';
 
     foreach ($params as $param) {
         if (is_string($param)) {
@@ -125,6 +137,25 @@ function dd(mixed ...$params)
 
     exit;
 }
+
+
+
+
+
+/**
+ * Retorna a variável de ambiente desejada ou o valor informado como padrão
+ * @author Brunoggdev
+ */
+function env($chave_desejada, $retorno_padrao = null) {
+    return getenv($chave_desejada, true) 
+        ?: getenv($chave_desejada) 
+        ?: $_ENV[$chave_desejada] 
+        ?? $_SERVER[$chave_desejada] 
+        ?? $retorno_padrao;
+}
+
+
+
 
 
 
@@ -142,6 +173,10 @@ function controller(string $controller): Controller
 }
 
 
+
+
+
+
 /**
  * Atalho conveniente para retornar uma instancia do controller desejada
  * @author Brunoggdev
@@ -154,6 +189,9 @@ function entidade(string $entidade, mixed $dados = null): Entidade
 
 
 
+
+
+
 /**
  * Atalho conveniente para retornar uma instancia da model desejada
  * @author Brunoggdev
@@ -163,6 +201,9 @@ function model(string $model, ?Database $db = null): Model
     $model = "\\App\\Models\\$model";
     return new $model($db);
 }
+
+
+
 
 
 
@@ -193,6 +234,9 @@ function view(string $nome_view, ?array $dados = []): string
 
 
 
+
+
+
 /**
  * Usada para retornar uma resposta em formato JSON;
  * Retorna o array ou objeto informado para JSON, 
@@ -214,6 +258,9 @@ function json(mixed $param, int $codigo_http = 200, $flags = JSON_PRETTY_PRINT):
 
 
 
+
+
+
 /**
  * Retorna uma string com o conteúdo de um componente especificado se existir ou vazia caso contrário.
  * Também receber um array associativo de dados a serem utilizados.
@@ -226,6 +273,10 @@ function componente(string $nome_componente, ?array $dados = []): string
 
     return $componente_existe ? view($componente, $dados) : '';
 }
+
+
+
+
 
 
 /**
@@ -244,6 +295,11 @@ function comp(string $nome_componente, ?array $dados = []): string
     return view($componente, $dados);
 }
 
+
+
+
+
+
 /**
  * Retorna a string para importação do arquivo JavaScript na pasta publica 'js/' 
  * com o nome informado (se existir), podendo "defer".
@@ -260,6 +316,11 @@ function importar_js(string $nome_arquivo, bool $defer = false): string
     return '<script ' . ($defer ? 'defer ' : '') . ' src="' . url_base("$arquivo?v=") . VERSAO_APP . '"></script>';
 }
 
+
+
+
+
+
 /**
  * Retorna a string para importação do arquivo css na pasta publica 'css/' 
  * com o nome informado (se existir).
@@ -275,6 +336,10 @@ function importar_css(string $nome_arquivo): string
 
     return '<link rel="stylesheet" href="' . url_base("$arquivo?v=") . VERSAO_APP . '">';
 }
+
+
+
+
 
 
 /**
@@ -295,6 +360,10 @@ function abortar(int $codigo_http, string $retorno = ''): void
 }
 
 
+
+
+
+
 /**
  * Redireciona o usuario para a rota informada, 
  * além de atualizar o código http (302 por padrão).
@@ -310,6 +379,10 @@ function redirecionar(string $url = '', int $codigo = 302): Redirecionar
 
     return $redirecionar;
 }
+
+
+
+
 
 
 /**
@@ -328,6 +401,9 @@ function sessao(string|false $chave = false): mixed
 
 
 
+
+
+
 /**
  * Atalho para interagir com a classe de ClienteHttp para 
  * realizar uma requisicao get simples; 
@@ -340,6 +416,10 @@ function requisicao_get(string $endpoint): ClienteHttp
 }
 
 
+
+
+
+
 /**
  * Atalho para interagir com a classe de ClienteHttp para 
  * realizar uma requisicao post simples; 
@@ -350,6 +430,11 @@ function requisicao_post(string $endpoint, array|string $dados): ClienteHttp
 {
     return (new ClienteHttp())->post($endpoint, $dados);
 }
+
+
+
+
+
 
 /**
  * Higieniza o parametro informado (com strip_tags).
@@ -384,6 +469,9 @@ function higienizar(null|string|array $param): null|string|array
 
 
 
+
+
+
 /**
  * Retorna a criptografia da senha informada no padrão adotado pelo PHP
  * @author Brunoggdev
@@ -392,6 +480,9 @@ function encriptar(string $senha): string
 {
     return password_hash($senha, PASSWORD_DEFAULT);
 }
+
+
+
 
 
 
@@ -405,6 +496,10 @@ function url_igual(string $url): bool
 }
 
 
+
+
+
+
 /**
  * Checa se a url atual contém a parte informada
  * @author Brunoggdev
@@ -416,6 +511,9 @@ function url_contem(string $parte): bool
 
 
 
+
+
+
 /**
  * Atalho para acessar informações sobre a requisição atual
  */
@@ -423,6 +521,10 @@ function requisicao(): Requisicao
 {
     return Requisicao::instancia();
 }
+
+
+
+
 
 
 
@@ -439,6 +541,8 @@ function query_string(?string $chave = null, $higienizar = false): ?string
 
 
 
+
+
 /**
  * Adiciona um input hidden para especificar o tipo de requisicao desejado
  * @author Brunoggdev
@@ -448,6 +552,10 @@ function form_metodo_http(string $metodo_http): string
     $metodo_http = strtoupper($metodo_http);
     return "<input type='hidden' name='_method' value=$metodo_http>";
 }
+
+
+
+
 
 
 /**
@@ -470,6 +578,10 @@ function abre_form(string $metodo_http, string $action): string
 }
 
 
+
+
+
+
 /**
  * Fecha a tag form
  * @author Brunoggdev
@@ -478,6 +590,10 @@ function fecha_form(): string
 {
     return '</form>';
 }
+
+
+
+
 
 
 /**
@@ -489,6 +605,11 @@ function coletar(array $array): Colecao
     return new Colecao($array);
 }
 
+
+
+
+
+
 /**
  * Atalho conveniente para retornar uma instancia da Database;
  * Pode receber um array de configuração customizado.
@@ -498,6 +619,10 @@ function db(?array $config = null): Database
 {
     return Database::instancia($config);
 }
+
+
+
+
 
 
 /**
@@ -518,6 +643,11 @@ function tabela(string $tabela): Tabela
     return require pasta_app("Database/tabelas/$tabelas[0]");
 }
 
+
+
+
+
+
 /**
  * Extrai e retorna um item de um array associativo, modificando o array original 
  * (retorna null caso a chave não seja encontrada.)
@@ -533,6 +663,10 @@ function extrair_item(string $chave, array &$array): mixed
     }
     return $item;
 }
+
+
+
+
 
 
 /**
@@ -564,6 +698,10 @@ function gerar_log(string $mensagem)
 
 
 
+
+
+
+
 /**
  * Acessa o arquivo de configuração desejado e devolve o que quer que seja retornado nele 
  * (geralmente um array, mas não limitado a isso).
@@ -585,6 +723,10 @@ function config(string $config): mixed
 
     return isset($chaves) ? dot_notation($chaves, $arquivo) : $arquivo;
 }
+
+
+
+
 
 
 /**
@@ -611,6 +753,10 @@ function dot_notation(string $chaves, array $array)
 
     return $retorno;
 }
+
+
+
+
 
 
 /**

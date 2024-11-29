@@ -1,8 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-const PASTA_PUBLIC = __DIR__ . '/public';
-require 'system/Core/iniciar_app.php';
+require 'system/iniciar_app.php';
 
 
 //Exemplo de como impedir acesso à forja baseado em alguma condição
