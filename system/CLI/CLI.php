@@ -276,7 +276,7 @@ class CLI
     {
         define('RODANDO_TESTES', true);
 
-        require_once PASTA_RAIZ . 'system/Testes/auxiliares_de_testes.php';
+        require_once PASTA_RAIZ . 'system/auxiliares_de_testes.php';
         $caminho = 'app/Testes/' . $caminho;
 
         // tomando controle dos erros nativos do php

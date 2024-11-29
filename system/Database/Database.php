@@ -31,7 +31,11 @@ class Database
      */
     public function __construct(?array $db_config = null)
     {
-        $db_config ??= config('database');
+        $db_config ??= config('database.' . AMBIENTE);
+
+        if (!$db_config) {
+            throw new Exception("Nenhuma conexão com o banco de dados foi encontrada.");
+        }
 
         $this->driver_mysql = $db_config['driver'] == 'mysql';
 
