@@ -24,14 +24,14 @@ class Cronometro
     }
 
     /**
-     * Retorna o tempo corrido no cronometro em segundos (com 3 casas decimais). Retorna nulo se não tiver sido iniciado ou parado.
+     * Retorna o tempo corrido no cronometro em segundos (com 5 casas decimais por padrão). Retorna nulo se não tiver sido iniciado ou parado.
     */
-    public function tempoCorrido():?float
+    public function tempoCorrido(int $casas_decimais = 5):?float
     {
         if (!$this->inicio || !$this->fim) {
             return null;
         } 
 
-        return number_format($this->fim - $this->inicio, 3);
+        return number_format($this->fim - $this->inicio, $casas_decimais);
     }
 }
