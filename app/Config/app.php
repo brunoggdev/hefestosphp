@@ -3,19 +3,15 @@
 Neste você pode definir algumas constantes do seu projeto.
 ---------------------------------------------------------------------- */
 
+
 return [
-    // Se em "desenvolvimento" ou "producao"
-    'ambiente' => 'desenvolvimento', 
+    'ambiente' => 'desenvolvimento', // Se em "desenvolvimento" ou "producao"
 
-    // A url base do seu projeto. Ex: exemplo.com.br
-    'url_base' => 'localhost:8080', 
+    'url_base' => 'localhost:8080',  // A url base do seu projeto. Ex: exemplo.com.br
 
-    // Identificador da versão do seu projeto, usado para cache busting
-    'versao_app' => '0.0.0',
+    'versao_app' => '0.0.0', // Identificador da versão do seu projeto, usado para cache busting
 
-    // O timezone do seu projeto
-    'timezone' => 'America/Fortaleza',
+    'timezone' => 'America/Fortaleza', // O timezone do seu projeto
 
-    // Mude para true para suspender acesso ao app com uma tela de manutenção
-    'manutencao' => false,
+    'manutencao' => false, // Mude para true para suspender acesso ao app com uma tela de manutenção
 ];
