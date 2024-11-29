@@ -30,11 +30,11 @@ if (file_exists($composer_autoload = PASTA_RAIZ . '/vendor/autoload.php')) {
 require 'auxiliares.php';
 
 
-define('AMBIENTE', config('app.AMBIENTE'));
-define('URL_BASE', config('app.URL_BASE'));
-define('VERSAO_APP', config('app.VERSAO_APP'));
-define('TIMEZONE', config('app.TIMEZONE'));
-define('MANUTENCAO', config('app.MANUTENCAO'));
+define('AMBIENTE', config('app.ambiente'));
+define('URL_BASE', config('app.url_base'));
+define('VERSAO_APP', config('app.versao_app'));
+define('TIMEZONE', config('app.timezone'));
+define('MANUTENCAO', config('app.manutencao'));
 
 date_default_timezone_set(TIMEZONE);
 
