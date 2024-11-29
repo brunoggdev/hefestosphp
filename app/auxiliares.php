@@ -11,7 +11,3 @@ que desejar e elas ficarão disponíveis em toda sua aplicação.
 // function exemploSegundaFuncao($param){
 //     // seu outro codigo aqui
 // }
-
-function adicionar($a, $b){
-    return pasta_app('Database/tabelas/teste.php');
-}
