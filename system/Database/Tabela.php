@@ -16,7 +16,7 @@ class Tabela
 
     public function __construct(public string $nome)
     {
-        $this->driver_mysql = config('database')['driver'] == 'mysql';
+        $this->driver_mysql = config('database.' . AMBIENTE )['driver'] == 'mysql';
         $this->sql = "CREATE TABLE $nome (";
     }
 
