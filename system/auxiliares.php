@@ -146,12 +146,12 @@ function dd(mixed ...$params)
  * Retorna a variável de ambiente desejada ou o valor informado como padrão
  * @author Brunoggdev
  */
-function env($chave_desejada, $retorno_padrao = null) {
+function env($chave_desejada, $retorno_padrao = 'jogar_excecao') {
     return getenv($chave_desejada, true) 
         ?: getenv($chave_desejada) 
         ?: $_ENV[$chave_desejada] 
         ?? $_SERVER[$chave_desejada] 
-        ?? $retorno_padrao;
+        ?? ($retorno_padrao === 'jogar_excecao' ? throw new Exception("A variável de ambiente '$chave_desejada' não foi encontrada.") : $retorno_padrao);
 }
 
 
