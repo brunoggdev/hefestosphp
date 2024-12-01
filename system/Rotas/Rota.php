@@ -154,7 +154,7 @@ class Rota
         $novas_rotas = array_diff_key(self::$rotas, $rotas_antigas);
 
         foreach ($novas_rotas as $key => $rota) {
-            self::$rotas[$key]['filtro'] = $filtro;
+            self::$rotas[$key]['filtro'] ??= $filtro;
         }
     }
 
