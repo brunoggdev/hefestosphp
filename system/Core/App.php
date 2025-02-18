@@ -49,7 +49,7 @@ final class App
      */
     private function analisarRequisicao(): array
     {
-        $url = parse_url($_SERVER['REQUEST_URI'])['path'];
+        $url = parse_url(preg_replace('/\/+/', '/', $_SERVER['REQUEST_URI']), PHP_URL_PATH);
         $metodo_http = strip_tags($_POST['_method'] ?? $_SERVER['REQUEST_METHOD']);
 
         if (isset($_POST['_method'])) {
