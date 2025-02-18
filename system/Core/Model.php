@@ -14,6 +14,8 @@ abstract class Model
     /** Indica o tipo de retorno pela database - 'array' ou 'nome qualificado' da classe desejada (SuaClasse::class) */
     protected string $retorno_padrao;
 
+    /** Nome da coluna que é a chave primária */
+    protected string $chave_primaria = 'id';
 
     /**
      * Pode receber uma conexão alternativa com o banco para utilizar na model
@@ -88,7 +90,7 @@ abstract class Model
         if ($params instanceof Entidade) {
             $entidade = $params;
             $params = $entidade->paraArray();
-            extrair_item($entidade->chavePrimaria(), $params);
+            extrair_item($this->chave_primaria, $params);
         }
         
         return $this->db()->insert($params, $retornar_id);
@@ -128,7 +130,7 @@ abstract class Model
 
             if (empty($where)) {
                 $where = [
-                    $entidade->chavePrimaria() => $entidade->paraArray()[$entidade->chavePrimaria()] ?? null
+                    $this->chave_primaria => $entidade->paraArray()[$this->chave_primaria] ?? null
                 ];
             }
         }
@@ -146,7 +148,7 @@ abstract class Model
     public function delete(int|string|array|object $condicao)
     {   
         $where = match (true) {
-            $condicao instanceof Entidade => [$condicao->chavePrimaria() => $condicao->paraArray()[$condicao->chavePrimaria()] ?? null],
+            $condicao instanceof Entidade => [$this->chave_primaria => $condicao->paraArray()[$this->chave_primaria] ?? null],
             is_numeric($condicao) => ['id' => $condicao],
             default => $condicao
         };
