@@ -460,7 +460,7 @@ function higienizar(null|string|array $param): null|string|array
     foreach ($param as &$item) {
         if (is_array($item)) {
             $item = higienizar($item);
-        } else {
+        } elseif (is_string($item)) {
             $item = strip_tags($item);
         }
     }
