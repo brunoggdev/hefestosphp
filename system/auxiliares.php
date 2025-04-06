@@ -9,6 +9,7 @@ use Hefestos\Ferramentas\ClienteHttp;
 use Hefestos\Rotas\Redirecionar;
 use Hefestos\Ferramentas\Colecao;
 use Hefestos\Ferramentas\Sessao;
+use Hefestos\Ferramentas\Validador;
 use Hefestos\Rotas\Requisicao;
 
 /* ----------------------------------------------------------------------
@@ -521,6 +522,20 @@ function url_contem(string $parte): bool
 function requisicao(): Requisicao
 {
     return Requisicao::instancia();
+}
+
+
+
+
+
+
+
+/**
+ * Atalho para acessar o validador
+ */
+function validador(): Validador
+{
+    return Validador::instancia();
 }
 
 
