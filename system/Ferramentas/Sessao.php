@@ -38,7 +38,11 @@ class Sessao
     {
         $retorno = dot_notation($chave, $_SESSION);
 
-        return $higienizar ? higienizar($retorno) : $retorno;
+        if ($higienizar && (is_null($retorno) || is_string($retorno) || is_array($retorno))) {
+            $retorno = higienizar($retorno);
+        }
+
+        return $retorno;
     }
 
 
