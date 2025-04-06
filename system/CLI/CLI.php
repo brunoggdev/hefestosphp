@@ -398,7 +398,9 @@ class CLI
                     $db->executar("DROP TABLE IF EXISTS $tabela->nome;");
                 }
 
-                // são 3 da manhã, dá um desconto kkkkkkkkk
+                // Se você veio parar aqui por conta de algum erro que encontrou, você provavelmente está fazendo errado.
+                // Não seja como o Olavo, por favor, me mande um email em brunoggdev@gmail.com que eu te ajudo :)
+                
                 // se não for pra zerar e a tabela já existir no banco
                 if ($zerar !== 'zero' && in_array($tabela->nome, $tabelas_no_banco)) {
                     $db->tabela($tabela->nome);

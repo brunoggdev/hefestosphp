@@ -9,6 +9,7 @@ use Hefestos\Ferramentas\ClienteHttp;
 use Hefestos\Rotas\Redirecionar;
 use Hefestos\Ferramentas\Colecao;
 use Hefestos\Ferramentas\Sessao;
+use Hefestos\Ferramentas\Validador;
 use Hefestos\Rotas\Requisicao;
 
 /* ----------------------------------------------------------------------
@@ -460,7 +461,7 @@ function higienizar(null|string|array $param): null|string|array
     foreach ($param as &$item) {
         if (is_array($item)) {
             $item = higienizar($item);
-        } else {
+        } elseif (is_string($item)) {
             $item = strip_tags($item);
         }
     }
@@ -521,6 +522,20 @@ function url_contem(string $parte): bool
 function requisicao(): Requisicao
 {
     return Requisicao::instancia();
+}
+
+
+
+
+
+
+
+/**
+ * Atalho para acessar o validador
+ */
+function validador(): Validador
+{
+    return Validador::instancia();
 }
 
 

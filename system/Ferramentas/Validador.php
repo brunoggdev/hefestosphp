@@ -4,8 +4,25 @@ namespace Hefestos\Ferramentas;
 
 class Validador
 {
+    protected static ?self $instancia = null;
+
     protected array $erros = [];
     protected array $mensagens = [];
+
+
+    /**
+     * Retorna a instancia do validador (singleton).
+     * @author Brunoggdev
+     */
+    public static function instancia(): self
+    {
+        if (is_null(self::$instancia)) {
+            self::$instancia = new self();
+        }
+
+        return self::$instancia;
+    }
+
 
     /**
      * Valida um conjunto de dados baseado nas regras fornecidas
@@ -212,7 +229,7 @@ class Validador
         return true;
     }
 
-    
+
 
     /**
      * Valida se o campo é uma URL válida
