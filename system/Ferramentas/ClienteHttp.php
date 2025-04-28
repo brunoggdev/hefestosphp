@@ -8,12 +8,12 @@ namespace Hefestos\Ferramentas;
 class ClienteHttp
 {
 
-    private $curl;
-    private $resposta;
-    private $status;
-    private $erros;
-    private $url_base;
-    private $headers;
+    private \CurlHandle|false $curl;
+    private string $resposta;
+    private int $status;
+    private array $erros;
+    private string $url_base;
+    private array $headers = [];
 
 
     /**
@@ -41,42 +41,50 @@ class ClienteHttp
     }
 
 
-    public function get(string $endpoint)
+    public function get(string $url)
     {
         curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, 'GET');
-        $this->requisitar($endpoint);
+        $this->requisitar($url);
         return $this;
     }
 
-
-    public function post(string $endpoint, $data)
+    /**
+     * @param string $url URL do endpoint
+     * @param array $options Mesmas opções do método post():
+     *    - 'body' => string
+     *    - 'json' => array
+     *    - 'form_params' => array
+     *    - 'multipart' => array
+     *    - 'headers' => array
+     */
+    public function post(string $url, array $dados)
     {
         curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, 'POST');
-        $this->requisitar($endpoint, $data);
+        $this->requisitar($url, $dados);
         return $this;
     }
 
 
-    public function put(string $endpoint, $data)
+    public function put(string $url, array $dados)
     {
         curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, 'PUT');
-        $this->requisitar($endpoint, $data);
+        $this->requisitar($url, $dados);
         return $this;
     }
 
 
-    public function patch(string $endpoint, $data)
+    public function patch(string $url, array $dados)
     {
         curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, 'PATCH');
-        $this->requisitar($endpoint, $data);
+        $this->requisitar($url, $dados);
         return $this;
     }
 
 
-    public function delete(string $endpoint)
+    public function delete(string $url)
     {
         curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, 'DELETE');
-        $this->requisitar($endpoint);
+        $this->requisitar($url);
         return $this;
     }
 
@@ -143,30 +151,99 @@ class ClienteHttp
         return $this->erros;
     }
 
-
-    private function requisitar($endpoint, $data = null)
+    private function prepararMultipart(array $parts)
     {
+        $boundary = '--------------------------' . microtime(true);
+        $this->adicionarHeaders([
+            'Content-Type' => 'multipart/form-data; boundary=' . $boundary
+        ]);
 
-        $url = $this->url_base . $endpoint;
+        $body = '';
+
+        foreach ($parts as $part) {
+            $body .= "--$boundary\r\n";
+
+            if (isset($part['filename'])) {
+                $contents = $part['contents'];
+                if (is_resource($contents)) {
+                    $contents = stream_get_contents($contents);
+                }
+
+                $body .= "Content-Disposition: form-data; name=\"{$part['name']}\"; filename=\"{$part['filename']}\"\r\n";
+                $body .= "Content-Type: {" . $part['headers']['Content-Type'] ?? 'application/octet-stream' . "}\r\n\r\n";
+                $body .= $contents . "\r\n";
+            } else {
+                $body .= "Content-Disposition: form-data; name=\"{$part['name']}\"\r\n\r\n";
+                $body .= $part['contents'] . "\r\n";
+            }
+        }
+
+        $body .= "--$boundary--\r\n";
+
+        return $body;
+    }
+
+    private function prepararDados(array $dados): null|string|array
+    {
+        if (isset($dados['headers'])) {
+            $this->adicionarHeaders($dados['headers']);
+        }
+        
+        if (isset($dados['json'])) {
+            $this->adicionarHeaders([
+                'Content-Type' => 'application/json',
+            ]);
+            return json_encode($dados['json']);
+        }
+
+        if (isset($dados['form_params'])) {
+            return $dados['form_params'];
+        }
+
+        if (isset($dados['body'])) {
+            return $dados['body'];
+        }
+
+        if (isset($dados['multipart'])) {
+            return $this->prepararMultipart($dados['multipart']);
+        }
+
+        return null;
+    }
+
+    /**
+     * Retorna um array com informações de debug sobre a requisição feita.
+     */
+    public function debug()
+    {
+        return [
+            'url' => curl_getinfo($this->curl, CURLINFO_EFFECTIVE_URL),
+            'status' => $this->status,
+            'headers' => $this->headers,
+            'resposta' => $this->resposta,
+            'erros' => $this->erros
+        ];
+    }
+
+
+    private function requisitar(string $url, ?array $dados = null)
+    {
+        if (!str_starts_with($url, 'http')) {
+            $url = $this->url_base . $url;
+        }
+
+        if ($dados) {
+            $dados = $this->prepararDados($dados);
+        }
 
         curl_setopt($this->curl, CURLOPT_URL, $url);
-
-        if ($data) {
-            if (is_string($data)) {
-                $this->adicionarHeaders([
-                    'Content-Type' => 'application/json',
-                    'Content-Length' => strlen($data)
-                ]);
-                curl_setopt($this->curl, CURLOPT_HTTPHEADER, $this->headers);
-            }
-
-            curl_setopt($this->curl, CURLOPT_POSTFIELDS, $data);
-        }
+        curl_setopt($this->curl, CURLOPT_POSTFIELDS, $dados);
+        curl_setopt($this->curl, CURLOPT_HTTPHEADER, $this->headers);
 
         $resposta = curl_exec($this->curl);
         $this->resposta = $resposta ?: curl_error($this->curl);
         $this->erros = [curl_error($this->curl), curl_errno($this->curl)];
-        $this->status = curl_getinfo($this->curl, CURLINFO_HTTP_CODE);
+        $this->status = curl_getinfo($this->curl, CURLINFO_RESPONSE_CODE);
 
         curl_close($this->curl);
     }
