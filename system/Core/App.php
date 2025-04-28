@@ -2,6 +2,7 @@
 
 namespace Hefestos\Core;
 
+use Hefestos\Exceptions\HttpException;
 use Hefestos\Ferramentas\Sessao;
 use Hefestos\Rotas\Redirecionar;
 use Hefestos\Rotas\Rota;
@@ -39,7 +40,7 @@ final class App
     }
 
 
-    
+
 
 
     /**
@@ -59,7 +60,7 @@ final class App
         return [$url, $metodo_http];
     }
 
-    
+
 
 
     /**
@@ -67,7 +68,7 @@ final class App
      * @param string $nome_excecao O 'nome qualificado' da exceção a ser tratada (Ex: Exception::class)
      * @param callable $tratador Função a ser invocada se a exceção informada não for tratada em um try/catch prévio (A Exceção será passado como argumento).
      */
-    public static function tratarExcecao(string $nome_excecao, callable $tratador):void
+    public static function tratarExcecao(string $nome_excecao, callable $tratador): void
     {
         self::$excecoes[$nome_excecao] = $tratador;
     }
@@ -79,7 +80,7 @@ final class App
      * @param string $nome_resposta O 'nome qualificado' da classe de a ser tratada (Ex: MinhaResposta::class)
      * @param callable $tratador Função a ser invocada se a exceção informada não for tratada em um try/catch prévio (A Exceção será passado como argumento).
      */
-    public static function tratarResposta(string $nome_resposta, callable $tratador):void
+    public static function tratarResposta(string $nome_resposta, callable $tratador): void
     {
         self::$respostas[$nome_resposta] = $tratador;
     }
@@ -91,11 +92,12 @@ final class App
         if (ob_get_status()) {
             ob_end_clean();
         }
-        
+
         if (AMBIENTE != 'desenvolvimento') {
             $this->logDeErro($erro);
         }
-        
+
+        // Dando chance aos tratadores de exceções do desenvolvedor
         foreach (static::$excecoes as $excecao => $tratador) {
             if ($erro instanceof $excecao) {
                 $tratador($erro);
@@ -103,19 +105,30 @@ final class App
             }
         }
 
+        if ($erro instanceof HttpException) {
+            abortar(
+                $erro->getCode(),
+                json([
+                    'status' => $erro->getCode(),
+                    'erro' => $erro->getReasonPhrase(),
+                    'mensagem' => $erro->getMessage(),
+                ])
+            );
+        }
+
         $codigo_http = 500;
 
         $retorno = match (true) {
             requisicao()->ajax() => json(
-                ['status' => $codigo_http,'message' => $erro->getMessage()]
-                + (AMBIENTE === 'desenvolvimento' ? ['trace' => $erro->getTrace()] : [])
+                ['status' => $codigo_http, 'message' => $erro->getMessage()]
+                    + (AMBIENTE === 'desenvolvimento' ? ['trace' => $erro->getTrace()] : [])
             ),
             AMBIENTE === 'desenvolvimento' => view('debug', ['erro' => $erro]),
             AMBIENTE === 'producao' => view($codigo_http),
             default => null
         };
 
-        
+
         abortar($codigo_http, $retorno);
     }
 
@@ -124,7 +137,7 @@ final class App
     /**
      * Gera log baseado em uma exeção
      */
-    private function logDeErro(Throwable $erro):void
+    private function logDeErro(Throwable $erro): void
     {
         $log_de_erro = 'Erro encontrado: ' . $erro->getMessage();
 
@@ -133,7 +146,7 @@ final class App
             $log_de_erro .= "\n" . '               > DO ARQUIVO: ' . $traco['file'] ??= 'Não especificado';
             $log_de_erro .= "\n" . '               ' . str_repeat('-', 80);
 
-            if($key == array_key_last($erro->getTrace())){
+            if ($key == array_key_last($erro->getTrace())) {
                 $log_de_erro .= "\n";
             }
         }
@@ -154,7 +167,7 @@ final class App
         if ($resposta instanceof Redirecionar) {
             exit;
         }
-        
+
         // Atualizamos a resposta baseado no tratador definido caso haja um
         foreach (static::$respostas as $resposta_custom => $tratador) {
             if ($resposta instanceof $resposta_custom) {
